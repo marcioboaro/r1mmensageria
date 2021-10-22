@@ -1,0 +1,109 @@
+from typing import Optional
+from pydantic import BaseModel
+from datetime import datetime,time
+
+class Encomendas(BaseModel):
+    ID_Encomenda : str
+    Numero_Mobile_Shopper : str
+    Endereço_de_Email_do_Shopper : str
+    CPF_CNPJ_Shopper : str
+    Moeda_Shopper : str
+    Valor_Encomenda_Shopper : str
+    Numero_Nota_Fiscal_Encomenda_Shopper : str
+    Codigo_País_Shopper : str
+    Cidade_Shopper : str
+    CEP_Shopper : str
+    Bairro_Shopper : str
+    Endereco_Shopper : str
+    Numero_Shopper : str
+    Complemento_Shopper : str
+    Codigo_Rastreamento_Encomenda : str
+    Codigo_barras_conteudo_Encomenda : str
+    Descricao_conteudo_Encomenda : str
+    Encomenda_Assegurada : int
+    Largura_Encomenda: int
+    Altura_Encomenda: int
+    Profundidade_Encomenda: int
+
+class MS05(BaseModel):
+    Codigo_de_MSG : str
+    ID_de_Referencia: str
+    ID_do_Solicitante: str
+    ID_Rede_Lockers: int
+    Data_Hora_Solicitacao: datetime
+    ID_da_Estacao_do_Locker: str
+    Tipo_de_Serviço_Reserva: int
+    ID_Transacao_Unica: str
+    ID_PSL_Designado": str
+    Autenticacao_Login_Operador_Logistico: int
+    Categoria_Porta: int
+    Geracao_de_QRCODE_na_Resposta_MS06: str
+    Geracao_de_Codigo_de_Abertura_de_Porta_na_Resposta_MS06: str
+    Info_Encomendas: list[Encomendas]
+    URL_CALL_BACK: str
+    Versao_Mensageria: str
+
+'''
+{
+  "Codigo_de_MSG": "MS5",
+  "ID_de_Referencia": "1455444",
+  "ID_do_Solicitante": "12023895000169",
+  "ID_Rede_Lockers": "1",
+  "Data_Hora_Solicitacao": null,
+  "ID_da_Estacao_do_Locker": "05087d0d-0433-11ec-ba8c-0022484cea46",
+  "Tipo_de_Serviço_Reserva": null,
+  "ID_Transacao_Unica": "2525",
+  "ID_PSL_Designado": null,
+  "Autenticacao_Login_Operador_Logistico": null,
+  "Categoria_Porta": null,
+  "Geracao_de_QRCODE_na_Resposta_MS06": null,
+  "Geracao_de_Codigo_de_Abertura_de_Porta_na_Resposta_MS06": null,
+  "Info_Encomendas": [{
+    "ID_Encomenda": 33,
+    "Numero_Mobile_Shopper": null,
+    "Endereço_de_Email_do_Shopper": null,
+    "CPF_CNPJ_Shopper": null,
+    "Moeda_Shopper": null,
+    "Valor_Encomenda_Shopper": null,
+    "Numero_Nota_Fiscal_Encomenda_Shopper": null,
+    "Codigo_País_Shopper": null,
+    "Cidade_Shopper": null,
+    "CEP_Shopper": null,
+    "Bairro_Shopper": null,
+    "Endereco_Shopper": null,
+    "Numero_Shopper": null,
+    "Complemento_Shopper": null,
+    "Codigo_Rastreamento_Encomenda": null,
+    "Codigo_barras_conteudo_Encomenda": null,
+    "Descricao_conteudo_Encomenda": null,
+    "Encomenda_Assegurada": null,
+    "Largura_Encomenda": 2,
+    "Altura_Encomenda": null,
+    "Profundidade_Encomenda": null
+  },{
+    "ID_Encomenda": 32,
+    "Numero_Mobile_Shopper": null,
+    "Endereço_de_Email_do_Shopper": null,
+    "CPF_CNPJ_Shopper": null,
+    "Moeda_Shopper": null,
+    "Valor_Encomenda_Shopper": null,
+    "Numero_Nota_Fiscal_Encomenda_Shopper": null,
+    "Codigo_País_Shopper": null,
+    "Cidade_Shopper": null,
+    "CEP_Shopper": null,
+    "Bairro_Shopper": null,
+    "Endereco_Shopper": null,
+    "Numero_Shopper": null,
+    "Complemento_Shopper": null,
+    "Codigo_Rastreamento_Encomenda": "2555611333",
+    "Codigo_barras_conteudo_Encomenda": "15465444566",
+    "Descricao_conteudo_Encomenda": null,
+    "Encomenda_Assegurada": null,
+    "Largura_Encomenda": 2,
+    "Altura_Encomenda": null,
+    "Profundidade_Encomenda": null
+  }],
+  "URL_CALL_BACK": null,
+  "Versao_Mensageria": null
+}
+'''

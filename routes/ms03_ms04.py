@@ -16,6 +16,10 @@ from auth.auth import AuthHandler
 from schemas.ms03 import MS03
 from schemas.ms04 import MS04, Locker, PortaLocker
 from cryptography.fernet import Fernet
+import pika
+import sys
+import os
+import json
 
 ms03_ms04 = APIRouter()
 key = Fernet.generate_key()
@@ -268,4 +272,5 @@ def ms03(ms03: MS03, public_id=Depends(auth_handler.auth_wrapper)):
                 locker['Portas'] = portas
     ms04['lockers'] = lockers
     ms04['Versao_Mensageria'] = ms03.Versao_Mensageria
+
     return ms04
