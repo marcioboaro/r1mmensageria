@@ -1,5 +1,5 @@
 from typing import Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError, validator
 from datetime import datetime,time
 
 class Encomendas(BaseModel):
@@ -18,8 +18,8 @@ class Encomendas(BaseModel):
     Numero_Shopper : str
     Complemento_Shopper : str
     Codigo_Rastreamento_Encomenda : str
-    Codigo_barras_conteudo_Encomenda : str
-    Descricao_conteudo_Encomenda : str
+    Codigo_Barras_Conteudo_Encomenda : str
+    Descricao_Conteudo_Encomenda : str
     Encomenda_Assegurada : int
     Largura_Encomenda: int
     Altura_Encomenda: int
@@ -34,14 +34,23 @@ class MS05(BaseModel):
     ID_da_Estacao_do_Locker: str
     Tipo_de_Serviço_Reserva: int
     ID_Transacao_Unica: str
-    ID_PSL_Designado": str
+    ID_PSL_Designado: str
     Autenticacao_Login_Operador_Logistico: int
-    Categoria_Porta: int
+    Categoria_Porta: str
     Geracao_de_QRCODE_na_Resposta_MS06: str
     Geracao_de_Codigo_de_Abertura_de_Porta_na_Resposta_MS06: str
     Info_Encomendas: list[Encomendas]
     URL_CALL_BACK: str
     Versao_Mensageria: str
+
+    class Config:
+        json_encoders = {
+            datetime: lambda v: v.isoformat(),
+        }
+
+    @validator('Data_Hora_Solicitacao', pre=True)
+    def time_validate(cls, v):
+        return datetime.fromisoformat(v)
 
 '''
 {
@@ -106,4 +115,5 @@ class MS05(BaseModel):
   "URL_CALL_BACK": null,
   "Versao_Mensageria": null
 }
+
 '''

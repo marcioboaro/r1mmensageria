@@ -3,6 +3,7 @@ from routes.pais import pais
 from routes.user import user
 from routes.ms01_ms02 import ms01_ms02
 from routes.ms03_ms04 import ms03_ms04
+from routes.ms05_ms06 import ms05_ms06
 import uuid  
 from config.db import conn
 from auth.auth import AuthHandler
@@ -132,3 +133,4 @@ app.include_router(user)
 app.include_router(pais)
 app.include_router(ms01_ms02)
 app.include_router(ms03_ms04)
+app.include_router(ms05_ms06)

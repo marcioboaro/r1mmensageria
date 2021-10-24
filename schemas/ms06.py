@@ -13,6 +13,8 @@ class MS06(BaseModel):
     ID_de_Referencia: str
     ID_do_Solicitante: str
     ID_Rede_Lockers: int
+    ID_da_Estacao_do_Locker: str
+    Codigo_Resposta_MS06: str
     Data_Hora_Resposta: datetime
     Codigo_Pais_Locker: str
     Cidade_Locker: str
