@@ -160,14 +160,17 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
         command_sql = command_sql.replace("'None'", "Null")
         command_sql = command_sql.replace("None", "Null")
         conn.execute(command_sql)
+
     now = datetime.now()
     dt_string = now.strftime("%Y-%m-%dT%H:%M:%S")
+
     ms06 = {}
     ms06['Codigo_de_MSG'] = "MS06"
     ms06['ID_de_Referencia'] = ms05.ID_de_Referencia
     ms06['ID_do_Solicitante'] = ms05.ID_do_Solicitante
     ms06['ID_Rede_Lockers'] = ms05.ID_Rede_Lockers
     ms06['ID_da_Estacao_do_Locker'] = ms05.ID_da_Estacao_do_Locker
+
     command_sql = f"""SELECT `locker`.`idPais`,
                              `locker`.`cep`,
                              `locker`.`LockerCidade`,
@@ -178,6 +181,7 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
                     FROM `rede1minuto`.`locker`
                     where locker.idLocker = '{ms05.ID_da_Estacao_do_Locker}';"""
     record = conn.execute(command_sql).fetchone()
+
     ms06['Codigo_Resposta_MS06'] = 'M06000 - Solicitação executada com sucesso'
     ms06['Data_Hora_Resposta'] = dt_string
     ms06['Codigo_Pais_Locker'] = record[0]
@@ -187,113 +191,123 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
     ms06['Endereco_Locker'] = record[4]
     ms06['Numero_Locker'] = record[5]
     ms06['Complemento_Locker'] = record[6]
+
     command_sql = f"""SELECT idLockerPorta, 
                              idLockerPortaFisica, 
                              idOperadorLogistico
                         FROM `rede1minuto`.`locker_porta`
                         where locker_porta.idLocker = '{ms05.ID_da_Estacao_do_Locker}'
-                        and idLockerPortaStatus = 1;"""
+                         and idLockerPortaCategoria = '{ms05.Categoria_Porta}'
+                         and idLockerPortaStatus = 1;"""
     record_Porta = conn.execute(command_sql).fetchone()   
+    if record_Porta is None:
+        ms06['Codigo_Resposta_MS06'] = 'M06001 - Não existe porta disponível para esta categoria'
+        ms06['ID_PSL_Designado'] = None
+        ms06['ID_Operador_Logistico'] = None
+        ms06['ID_da_Porta_do_Locker'] = None
+        ms06['ID_Transacao_Unica'] = 0
+        ms06['Tipo_de_Servico_Reserva'] = 0
+        ms06['DataHora_Inicio_Reserva'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        ms06['DataHora_Final_Reserva'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    else:
+        ms06['Codigo_Resposta_MS06'] = 'M06000 - Sucesso'
+        ms06['ID_da_Porta_do_Locker'] = record_Porta[0]
+        ms06['ID_do_Operador_da_Porta_Locker'] = record_Porta[2]
+        command_sql = f"""UPDATE `rede1minuto`.`locker_porta`
+                            SET `idLockerPortaStatus` = 2
+                        where locker_porta.idLockerPorta = '{record_Porta[0]}'
+                            AND idLockerPortaCategoria = '{ms05.Categoria_Porta}';"""
+        conn.execute(command_sql)  
 
-    command_sql = f"""UPDATE `rede1minuto`.`locker_porta`
-                         SET `idLockerPortaStatus` = 2
-                       where locker_porta.idLockerPorta = '{record[0]}';"""
-    conn.execute(command_sql)  
+        ms06['ID_Transacao_Unica'] = idTransacaoUnica
+        ms06['Tipo_de_Servico_Reserva'] = 5 # Contratação de Serviço de Reserva Com encomendas em Lockers Inteligentes
 
-    ms06['ID_do_Operador_da_Porta_Locker'] = record_Porta[2]
-    ms06['ID_da_Porta_do_Locker'] = record_Porta[0]
-    ms06['ID_Transacao_Unica'] = idTransacaoUnica
-    ms06['Tipo_de_Servico_Reserva'] = 5 # Contratação de Serviço de Reserva Com encomendas em Lockers Inteligentes
+        Inicio_reserva =  datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        date_after = datetime.now() + relativedelta(days=3) # 3 é o valor Default
+        Final_reserva = date_after.strftime('%Y-%m-%d %H:%M:%S')
 
-    Inicio_reserva =  datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    date_after = datetime.now() + relativedelta(days=3) # 3 é o valor Default
-    Final_reserva = date_after.strftime('%Y-%m-%d %H:%M:%S')
+        ms06['DataHora_Inicio_Reserva'] = Inicio_reserva
+        ms06['DataHora_Final_Reserva'] = Final_reserva
 
-    ms06['DataHora_Inicio_Reserva'] = Inicio_reserva
-    ms06['DataHora_Final_Reserva'] = Final_reserva
+        Codigo_Abertura_Porta = random.randint(100000000000, 1000000000000)
 
-    Codigo_Abertura_Porta = random.randint(100000000000, 1000000000000)
+        encomenda = {}
+        encomendas = []
+        info_encomendas = ms05.Info_Encomendas  
+        for encomenda in info_encomendas:
+            enc_temp = {}
+            enc_temp['ID_Encomenda'] = encomenda.ID_Encomenda
+            enc_temp['Etiqueta_Encomenda_Rede1minuto'] = "rede1minuto"
+            enc_temp['Geracao_QRCODE'] = idTransacaoUnica
+            enc_temp['Geracao_Codigo_Abertura_Porta'] = Codigo_Abertura_Porta
+            encomendas.append(enc_temp)
+        ms06['info_encomendas'] = encomendas
+        ms06['Versao_Mensageria'] = ms05.Versao_Mensageria
+            
+        lc01 = {}
+        lc01["CD_MSG"] = "LC01"
 
-    encomenda = {}
-    encomendas = []
-    info_encomendas = ms05.Info_Encomendas  
-    for in_encomenda in info_encomendas:
-        encomenda['ID_Encomenda'] = in_encomenda.ID_Encomenda
-        encomenda['Etiqueta_Encomenda_Rede1minuto'] = "rede1minuto"
-        encomenda['Geracao_QRCODE'] = idTransacaoUnica
-        encomenda['Geracao_Codigo_Abertura_Porta'] = Codigo_Abertura_Porta
-        encomendas.append(encomenda)
-    ms06['info_encomendas'] = encomendas
-    ms06['Versao_Mensageria'] = ms05.Versao_Mensageria
-        
-    #
-    # Envia LC01 para fila do locker - o retorno vai ser feito por R1MWorkerMQ
-    #
+        content = {}
+        content["ID_Referencia"] = ms05.ID_de_Referencia
+        content["ID_Solicitante"] = ms05.ID_do_Solicitante
+        content["ID_Rede"] = ms05.ID_Rede_Lockers
+        content["ID_Transacao"] = idTransacaoUnica
+        content["ServicoTipoAberPorta"] = None
+        content["idLocker"] = ms05.ID_da_Estacao_do_Locker
+        content["idLockerPorta"] = record_Porta[0]
+        content["idLockerPortaFisica"] = record_Porta[1]
+        content["ID_OpLog"] = record_Porta[2]
+        content["OpLogAutenticacao"] = 0
+        content["QRCODE"] = idTransacaoUnica
+        content["CD_PortaAbertura"] = 1
 
-    lc01 = {}
-    lc01["CD_MSG"] = "LC01"
+        encomenda = {}
+        encomendas = []
+        info_encomendas = ms05.Info_Encomendas  
+        for encomenda in info_encomendas:
+            enc_temp = {}
+            enc_temp["ID_Encomenda"] = encomenda.ID_Encomenda
+            enc_temp["EncomendaRastreio"] = "Não imprementado"
+            enc_temp["EncomendaBarras"] = "Não imprementado"
+            encomendas.append(enc_temp)
+        content["Encomendas"] = encomendas
 
-    content = {}
-    content["ID_Referencia"] = ms05.ID_de_Referencia
-    content["ID_Solicitante"] = ms05.ID_do_Solicitante
-    content["ID_Rede"] = ms05.ID_Rede_Lockers
-    content["ID_Transacao"] = idTransacaoUnica
-    content["ServicoTipoAberPorta"] = None
-    content["idLocker"] = ms05.ID_da_Estacao_do_Locker
-    content["idLockerPorta"] = record_Porta[0]
-    content["idLockerPortaFisica"] = record_Porta[1]
-    content["ID_OpLog"] = record_Porta[2]
-    content["OpLogAutenticacao"] = 0
-    content["QRCODE"] = idTransacaoUnica
-    content["CD_PortaAbertura"] = 1
+        content["ID_LockerPortaAbertura"] = 3
+        content["MascAvisoAbastecimento"] = "Frase com @ numero de Protocolo"
+        content["MascAvisoRetirada"] = "Frase com @ numero de Protocolo"
+        content["ExibTelaLockerprotocolo"] = 0
+        content["EnvProtocoloOpCelular"] = 0
+        content["DT_InicioReservaLocacao"] = Inicio_reserva
+        content["DT_finalReservaLocacao"] = Final_reserva
+        content["Versão_Software"] = "0.1"
+        content["Versao_Mensageria"] = "1.0.0"
 
-    encomenda = {}
-    encomendas = []
-    info_encomendas = ms05.Info_Encomendas  
-    for in_encomenda in info_encomendas:
-        encomenda["ID_Encomenda"] = in_encomenda.ID_Encomenda
-        encomenda["EncomendaRastreio"] = "Não imprementado"
-        encomenda["EncomendaBarras"] = "Não imprementado"
-        encomendas.append(encomenda)
-    content["Encomendas"] = encomendas
+        lc01["Content"] = content
 
-    content["ID_LockerPortaAbertura"] = 3
-    content["MascAvisoAbastecimento"] = "Frase com @ numero de Protocolo"
-    content["MascAvisoRetirada"] = "Frase com @ numero de Protocolo"
-    content["ExibTelaLockerprotocolo"] = 0
-    content["EnvProtocoloOpCelular"] = 0
-    content["DT_InicioReservaLocacao"] = Inicio_reserva
-    content["DT_finalReservaLocacao"] = Final_reserva
-    content["Versão_Software"] = "0.1"
-    content["Versao_Mensageria"] = "1.0.0"
+        MQ_Name = 'Rede1Min_MQ'
+        URL = 'amqp://rede1min:Minuto@167.71.26.87'
+        queue_name = ms05.ID_da_Estacao_do_Locker + '_locker_output'
 
-    lc01["Content"] = content
-    MQ_Name = 'Rede1Min_MQ'
-    URL = 'amqp://rede1min:Minuto@167.71.26.87'
-    url = os.environ.get(MQ_Name, URL)
-    params = pika.URLParameters(url)
-    params.socket_timeout = 6
+        url = os.environ.get(MQ_Name, URL)
+        params = pika.URLParameters(url)
+        params.socket_timeout = 6
 
-    connection = pika.BlockingConnection(params)
-    channel = connection.channel()
+        connection = pika.BlockingConnection(params)
+        channel = connection.channel()
 
-    channel.queue_declare(queue='locker_input999', durable=True)
+        channel.queue_declare(queue=queue_name, durable=True)
 
-    message = json.dumps(lc01)
+        message = json.dumps(lc01)
 
-    channel.basic_publish(
-        exchange='',
-        routing_key='locker_input999',
-        body=message,
-        properties=pika.BasicProperties(
-            delivery_mode=2,  # make message persistent
-        ))
+        channel.basic_publish(
+            exchange='',
+            routing_key=queue_name,
+            body=message,
+            properties=pika.BasicProperties(
+                delivery_mode=2,  # make message persistent
+            ))
 
-    connection.close()
-
-    print("************* message *************")
-    print(" [x] Sent %r" % message)
-    print("************* message *************")
+        connection.close()
 
     return ms06
 
