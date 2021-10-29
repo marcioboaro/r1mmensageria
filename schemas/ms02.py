@@ -2,6 +2,8 @@ from typing import Optional
 from pydantic import BaseModel
 from datetime import datetime,time
 
+# MS02
+
 class Locker(BaseModel):
     Codigo_Pais_Locker: str
     Cidade_Locker: str
@@ -40,4 +42,4 @@ class MS02(BaseModel):
     ID_do_Solicitante: str
     ID_Rede_Lockers: int
     Data_Hora_Resposta: datetime
-    Estacao_Locker: list[Locker] 
+    Estacao_Locker: list[Locker]

@@ -7,8 +7,7 @@ import traceback
 import sys
 import logging.config
 import uuid  # for public id
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
+from datetime import datetime, timedelta
 from functools import wraps
 import ast
 from fastapi import APIRouter, Depends, HTTPException
@@ -223,7 +222,7 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
         ms06['Tipo_de_Servico_Reserva'] = 5 # Contratação de Serviço de Reserva Com encomendas em Lockers Inteligentes
 
         Inicio_reserva =  datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        date_after = datetime.now() + relativedelta(days=3) # 3 é o valor Default
+        date_after = datetime.now() + timedelta(days=3) # 3 é o valor Default
         Final_reserva = date_after.strftime('%Y-%m-%d %H:%M:%S')
 
         ms06['DataHora_Inicio_Reserva'] = Inicio_reserva
