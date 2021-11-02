@@ -18,7 +18,7 @@ app = FastAPI(
 
 auth_handler = AuthHandler()
 
-@app.post('/register', status_code=201)
+@app.post('/signup', status_code=201)
 def register(auth_details: AuthDetails):
     print(auth_details)
     if not re.match(r"[^@]+@[^@]+\.[^@]+", auth_details.email):
