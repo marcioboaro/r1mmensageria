@@ -8,7 +8,7 @@ logger = logging.getLogger('Rede1Minuto Server')
 
 # create console handler and set level to debug
 ch = logging.StreamHandler()
-ch.setLevel(logging.WARNING)
+ch.setLevel(logging.DEBUG) 
 
 # create formatter
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
