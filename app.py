@@ -6,9 +6,11 @@ from routes.ms03_ms04 import ms03_ms04
 from routes.ms05_ms06 import ms05_ms06
 import uuid  
 from config.db import conn
+from config.log import logger
 from auth.auth import AuthHandler
 from schemas.auth import AuthDetails
 import re
+import sys
 
 app = FastAPI(
     title="Users API",
@@ -20,74 +22,83 @@ auth_handler = AuthHandler()
 
 @app.post('/signup', status_code=201)
 def register(auth_details: AuthDetails):
-    print(auth_details)
-    if not re.match(r"[^@]+@[^@]+\.[^@]+", auth_details.email):
-        raise HTTPException(status_code=203, detail="Por favor entre com um endereço de e-mail valido.")
+    try:
+        if auth_handler.check_user_exists(auth_details.username):
+            raise HTTPException(status_code=400, detail="Username já existe")
+        if auth_handler.check_email_exists(auth_details.email):
+            raise HTTPException(status_code=400, detail="Email já existe")
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", auth_details.email):
+            raise HTTPException(status_code=203, detail="Por favor entre com um endereço de e-mail valido.")
 
-    pass_ret = password_check(auth_details.password)
-    if not pass_ret["password_ok"]:
-        if pass_ret["length_error"]:
-            pass_msg = "Por favor a senha deve ter pelo menos 12 posições."
-        elif pass_ret["digit_error"]:
-            pass_msg = "Por favor a senha deve ter pelo menos 1 posição númerica."
-        elif pass_ret["uppercase_error"]:
-            pass_msg = "Por favor a senha deve ter pelo menos 1 posição maiúscula."
-        elif pass_ret["lowercase_error"]:
-            pass_msg = "Por favor a senha deve ter pelo menos 1 posição minúscula."
-        elif pass_ret["symbol_error"]:
-            pass_msg = "Por favor a senha deve ter pelo menos 1 posição caracter especial."
-        raise HTTPException(status_code=203, detail=pass_msg)
+        pass_ret = password_check(auth_details.password)
+        if not pass_ret["password_ok"]:
+            if pass_ret["length_error"]:
+                pass_msg = "Por favor a senha deve ter pelo menos 12 posições."
+            elif pass_ret["digit_error"]:
+                pass_msg = "Por favor a senha deve ter pelo menos 1 posição númerica."
+            elif pass_ret["uppercase_error"]:
+                pass_msg = "Por favor a senha deve ter pelo menos 1 posição maiúscula."
+            elif pass_ret["lowercase_error"]:
+                pass_msg = "Por favor a senha deve ter pelo menos 1 posição minúscula."
+            elif pass_ret["symbol_error"]:
+                pass_msg = "Por favor a senha deve ter pelo menos 1 posição caracter especial."
+            raise HTTPException(status_code=203, detail=pass_msg)
 
-    # checking for existing user
-    command_sql = f'''SELECT `AuthDetails`.`public_id`,
-                            `AuthDetails`.`username`,
-                            `AuthDetails`.`email`,
-                            `AuthDetails`.`password`,
-                            `AuthDetails`.`DateAt`,
-                            `AuthDetails`.`DateUpdate`
-                        FROM `AuthDetails`
-                        where `AuthDetails`.`email` = "{auth_details.email}";'''
-    row = conn.execute(command_sql).fetchone()
-    if row is None:
-        hashed_password = auth_handler.get_password_hash(auth_details.password)
-        public_id = str(uuid.uuid4())
-        command_sql = f'''INSERT INTO `AuthDetails`
-                                    (`public_id`,
-                                    `username`,
-                                    `email`,
-                                    `password`)
-                                VALUES
-                                    ('{public_id}',
-                                    '{auth_details.username}',
-                                    '{auth_details.email}',
-                                    '{hashed_password}');'''
-        command_sql = command_sql.replace("'None'", "Null")
-        row = conn.execute(command_sql)
-    else:
-        raise HTTPException(status_code=400, detail='O nome de usuário já está em uso')
-    return { 'Sucesso': 'Registrado com sucesso.' }
+        # checking for existing user
+        command_sql = f'''SELECT `AuthDetails`.`public_id`,
+                                `AuthDetails`.`username`,
+                                `AuthDetails`.`email`,
+                                `AuthDetails`.`password`,
+                                `AuthDetails`.`DateAt`,
+                                `AuthDetails`.`DateUpdate`
+                            FROM `AuthDetails`
+                            where `AuthDetails`.`email` = "{auth_details.email}";'''
+        row = conn.execute(command_sql).fetchone()
+        if row is None:
+            hashed_password = auth_handler.get_password_hash(auth_details.password)
+            public_id = str(uuid.uuid4())
+            command_sql = f'''INSERT INTO `AuthDetails`
+                                        (`public_id`,
+                                        `username`,
+                                        `email`,
+                                        `password`)
+                                    VALUES
+                                        ('{public_id}',
+                                        '{auth_details.username}',
+                                        '{auth_details.email}',
+                                        '{hashed_password}');'''
+            command_sql = command_sql.replace("'None'", "Null")
+            row = conn.execute(command_sql)
+        else:
+            raise HTTPException(status_code=400, detail='O nome de usuário já está em uso')
+        return { 'Sucesso': 'Registrado com sucesso.' }
+    except:
+        logger.error(sys.exc_info())
+        result = dict()
+        result['Error register'] = sys.exc_info()
+        return result
 
 @app.post('/login')
 def login(auth_details: AuthDetails):
-    command_sql = f'''SELECT    `AuthDetails`.`public_id`,
-                                `AuthDetails`.`password`
-                        FROM    `AuthDetails`
-                        where   `AuthDetails`.`email` = "{auth_details.email}";'''
-    row = conn.execute(command_sql).fetchone()
-    if (row is None) or (not auth_handler.verify_password(auth_details.password, row['password'])):
-        raise HTTPException(status_code=401, detail='Invalid username and/or password')
-    token = auth_handler.encode_token(row['public_id'])
-    return { 'token': token }
-
-@app.get('/unprotected')
-def unprotected():
-    return { 'hello': 'world' }
-
+    try:
+        command_sql = f'''SELECT    `AuthDetails`.`public_id`,
+                                    `AuthDetails`.`password`
+                            FROM    `AuthDetails`
+                            where   `AuthDetails`.`email` = "{auth_details.email}";'''
+        row = conn.execute(command_sql).fetchone()
+        if (row is None) or (not auth_handler.verify_password(auth_details.password, row['password'])):
+            raise HTTPException(status_code=401, detail='Invalid username and/or password')
+        token = auth_handler.encode_token(row['public_id'])
+        return { 'token': token }
+    except:
+        logger.error(sys.exc_info())
+        result = dict()
+        result['Error login'] = sys.exc_info()
+        return result
 
 @app.get('/protected')
 def protected(public_id=Depends(auth_handler.auth_wrapper)):
     return { 'public_id': public_id }
-
 
 def password_check(password):
     """
@@ -100,34 +111,26 @@ def password_check(password):
         1 uppercase letter or more
         1 lowercase letter or more
     """
-
-    # calculating the length
-    length_error = len(password) < 12
-
-    # searching for digits
-    digit_error = re.search(r"\d", password) is None
-
-    # searching for uppercase
-    uppercase_error = re.search(r"[A-Z]", password) is None
-
-    # searching for lowercase
-    lowercase_error = re.search(r"[a-z]", password) is None
-
-    # searching for symbols
-    symbol_error = re.search(r"[ !@#$%&'()*+,-./[\\\]^_`{|}~" + r'"]', password) is None
-
-    # overall result
-    password_ok = not (length_error or digit_error or uppercase_error or lowercase_error or symbol_error)
-
-    return {
-        'password_ok': password_ok,
-        'length_error': length_error,
-        'digit_error': digit_error,
-        'uppercase_error': uppercase_error,
-        'lowercase_error': lowercase_error,
-        'symbol_error': symbol_error,
-    }
-
+    try:
+        length_error = len(password) < 12
+        digit_error = re.search(r"\d", password) is None
+        uppercase_error = re.search(r"[A-Z]", password) is None
+        lowercase_error = re.search(r"[a-z]", password) is None
+        symbol_error = re.search(r"\W", password) is None
+        password_ok = not (length_error or digit_error or uppercase_error or lowercase_error or symbol_error)
+        return {
+            "password_ok": password_ok,
+            "length_error": length_error,
+            "digit_error": digit_error,
+            "uppercase_error": uppercase_error,
+            "lowercase_error": lowercase_error,
+            "symbol_error": symbol_error
+        }
+    except:
+        logger.error(sys.exc_info())
+        result = dict()
+        result['Error password_check'] = sys.exc_info()
+        return result
 
 app.include_router(user)
 app.include_router(pais)
