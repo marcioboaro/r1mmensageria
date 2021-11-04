@@ -6,13 +6,13 @@ from json import dumps
 import logging
 import traceback
 import sys
-import logging.config
 import uuid  # for public id
 from datetime import datetime, timedelta
 from functools import wraps
 import ast
 from fastapi import APIRouter, Depends, HTTPException
 from config.db import conn
+from config.log import logger
 from auth.auth import AuthHandler
 from schemas.ms03 import MS03
 from schemas.ms04 import MS04, Locker, PortaLocker

@@ -396,3 +396,10 @@ ValueError: [TypeError("'traceback' object is not iterable"), TypeError('vars() 
 2021/11/02 07:34:50 PM - uvicorn.error - INFO - Waiting for application shutdown.
 2021/11/02 07:34:50 PM - uvicorn.error - INFO - Application shutdown complete.
 2021/11/02 07:34:50 PM - uvicorn.error - INFO - Finished server process [615]
+2021/11/03 06:20:31 PM - uvicorn.error - INFO - Started server process [10286]
+2021/11/03 06:20:31 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/03 06:20:31 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/03 06:28:02 PM - uvicorn.error - INFO - Shutting down
+2021/11/03 06:28:02 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/03 06:28:02 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/03 06:28:02 PM - uvicorn.error - INFO - Finished server process [10286]

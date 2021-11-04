@@ -20,7 +20,10 @@ auth_handler = AuthHandler()
     description="Carrega um pais a partir de sua sigla",
 )
 def get_pais(idPais: str, public_id=Depends(auth_handler.auth_wrapper)):
-    command_sql = f"""SELECT `Pais`.`PaisNome`
-                        FROM `Pais`
-                        where idPais = '{idPais}';"""
-    return conn.execute(command_sql).first()
+    try:
+        pais = conn.execute(
+            select([func.pais_get(idPais)])
+        ).fetchone()
+        return pais
+    except Exception as e:
+        raise HTTPException(status_code=404, detail=str(e))
