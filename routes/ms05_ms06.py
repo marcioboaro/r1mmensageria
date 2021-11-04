@@ -247,6 +247,30 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
             ms06['info_encomendas'] = encomendas
             ms06['Versao_Mensageria'] = ms05.Versao_Mensageria
                 
+            command_sql = f'''INSERT INTO `rede1minuto`.`reserva_simples`
+                                    (`IdTransacaoUnica`,
+                                    `IdSolicitante`,
+                                    `IdReferencia`,
+                                    `idRede`,
+                                    `idLocker`,
+                                    `idLockerPorta`,
+                                    `DataHoraSolicitacao`,
+                                    `idStatusReserva`,
+                                    `idServicoReserva`,
+                                    `TipoFluxoAtual`)
+                                VALUES
+                                    ({idTransacaoUnica},
+                                    {ms05.IDdo_Solicitante},
+                                    {ms05.ID_de_Referencia},
+                                    {ms05.ID_Rede_Lockers},
+                                    {ms05.ID_da_Estacao_do_Locker},
+                                    {record_Porta[0]},
+                                    {Inicio_reserva},
+                                    {1},  # 1 - Reserva efetivada
+                                    {5},  # Contratação de Serviço de Reserva Com encomendas em Lockers Inteligentes
+                                    {0});'''
+            conn.execute(command_sql)
+        
             lc01 = {}
             lc01["CD_MSG"] = "LC01"
 
