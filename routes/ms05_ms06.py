@@ -38,13 +38,11 @@ def latlong_valid(latlong):
 def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
     try:        
         logger.info("Consulta da disponibilidade de Portas em Locker")
-        logger.info(f"{public_id}")
-        if ms05.ID_de_Referencia is None:
-            raise HTTPException(status_code=422, detail="M06006 - ID_de_Referencia obrigatório")
+        logger.info(f"Usuário que fez a solicitação: {public_id}")
         if ms05.ID_do_Solicitante is None:
-            raise HTTPException(status_code=422, detail="M06007 - ID_do_Solicitante obrigatório")
-        if len(ms05.ID_do_Solicitante) != 14:
-                                                                                                                                                                                                                                                                                                                                                                                                                                        raise HTTPException(status_code=422, detail="M06010 - ID_de_Solicitante inválido")
+            raise HTTPException(status_code=422, detail="M06006 - ID_do_Solicitante obrigatório")
+        if len(ms05.ID_do_Solicitante) != 20: # 20 caracteres
+            raise HTTPException(status_code=422, detail="M06006 - ID_do_Solicitante deve conter 20 caracteres")
         if ms05.ID_Rede_Lockers is None:
             raise HTTPException(status_code=422, detail="M06008 - ID_Rede_Lockers obrigatório")
         if ms05.ID_Rede_Lockers is not None:
@@ -204,8 +202,8 @@ def send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_res
         lc01["Content"] = content
 
         MQ_Name = 'Rede1Min_MQ'
-        URL = 'amqp://rede1min:Minuto@167.71.26.87'
-        queue_name = ms05.ID_da_Estacao_do_Locker + '_locker_output'
+        URL = 'amqp://rede1min:Minuto@167.71.26.87' # URL do RabbitMQ
+        queue_name = ms05.ID_da_Estacao_do_Locker + '_locker_output' # Nome da fila do RabbitMQ
 
         url = os.environ.get(MQ_Name, URL)
         params = pika.URLParameters(url)
@@ -216,7 +214,7 @@ def send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_res
 
         channel.queue_declare(queue=queue_name, durable=True)
 
-        message = json.dumps(lc01)
+        message = json.dumps(lc01) # Converte o dicionario em string
 
         channel.basic_publish(
                     exchange='',

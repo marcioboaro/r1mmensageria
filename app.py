@@ -47,7 +47,7 @@ def register(auth_details: AuthDetails):
             raise HTTPException(status_code=203, detail=pass_msg)
 
         # montando a chave idSolicitante
-        idSolicitante = auth_details.cnpj + str(auth_details.rede).zfill(4) + str(auth_details.idmarketplace).zfill(4)
+        idSolicitante = auth_details.cnpj + str(auth_details.rede).zfill(3) + str(auth_details.idmarketplace).zfill(3)
 
         # checando se já usuário cadastrado
         command_sql = f'''SELECT `AuthDetails`.`public_id`,
@@ -59,7 +59,6 @@ def register(auth_details: AuthDetails):
                             FROM `AuthDetails`
                             where `AuthDetails`.`email` = "{auth_details.email}";'''
         row = conn.execute(command_sql).fetchone()
-
 
         # checando se o usuário cadastrado está na lista de participantes
         if row is None:

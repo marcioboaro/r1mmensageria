@@ -46,12 +46,10 @@ def latlong_valid(latlong):
 def ms03(ms03: MS03, public_id=Depends(auth_handler.auth_wrapper)):
     try:
         logger.info("Consulta ao Catalogo de Estações Lockers")
-        logger.info(ms03)
-        if ms03.ID_de_Referencia is None:
-            raise HTTPException(status_code=422, detail="M04005 - ID_de_Referencia obrigatório")
+        logger.info(f"Usuário que fez a solicitação: {public_id}")
         if ms03.ID_do_Solicitante is None:
-            raise HTTPException(status_code=422, detail="M04006 - ID_do_Solicitante obrigatório")
-        if len(ms03.ID_do_Solicitante) != 14:
+            raise HTTPException(status_code=422, detail="M02006 - ID_do_Solicitante obrigatório")
+        if len(ms03.ID_do_Solicitante) != 20: # 20 caracteres
             raise HTTPException(status_code=422, detail="M04009 - ID_de_Solicitante inválido")
         if ms03.ID_Rede_Lockers is None:
             raise HTTPException(status_code=422, detail="M04007 - ID_Rede_Lockers obrigatório")
