@@ -33,7 +33,6 @@ def latlong_valid(latlong):
     except:
         return False
 
-# Consulta_Portas_Lockers
 # @ms05_ms06.post("/ms05", tags=["ms06"], response_model=MS06, description="Consulta da disponibilidade de Portas em Locker")
 @ms05_ms06.post("/msg/v01/lockers/reservation", tags=["ms06"], description="Consulta da disponibilidade de Portas em Locker")
 def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
