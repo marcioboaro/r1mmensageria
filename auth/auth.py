@@ -2,13 +2,17 @@ import jwt
 from fastapi import HTTPException, Security
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from passlib.context import CryptContext
+from config.log import logger
 from datetime import datetime, timedelta
-
+import sys
 
 class AuthHandler():
-    security = HTTPBearer()
-    pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-    secret = 'SECRET'
+    try:
+        security = HTTPBearer()
+        pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+        secret = 'SECRET'
+    except:
+        logger.error(sys.exc_info())
 
     def get_password_hash(self, password):
         return self.pwd_context.hash(password)
@@ -17,16 +21,22 @@ class AuthHandler():
         return self.pwd_context.verify(plain_password, hashed_password)
 
     def encode_token(self, user_id):
-        payload = {
-            'exp': datetime.utcnow() + timedelta(days=0, minutes=5),
-            'iat': datetime.utcnow(),
-            'sub': user_id
-        }
-        return jwt.encode(
-            payload,
-            self.secret,
-            algorithm='HS256'
-        )
+        try:
+            payload = {
+                'exp': datetime.utcnow() + timedelta(days=0, minutes=5),
+                'iat': datetime.utcnow(),
+                'sub': user_id
+            }
+            return jwt.encode(
+                payload,
+                self.secret,
+                algorithm='HS256'
+            )
+        except:
+            logger.error(sys.exc_info())
+            result = dict()
+            result['Error login'] = sys.exc_info()
+            return result
 
     def decode_token(self, token):
         try:

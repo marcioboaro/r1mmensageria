@@ -396,3 +396,20 @@ ValueError: [TypeError("'traceback' object is not iterable"), TypeError('vars() 
 2021/11/02 07:34:50 PM - uvicorn.error - INFO - Waiting for application shutdown.
 2021/11/02 07:34:50 PM - uvicorn.error - INFO - Application shutdown complete.
 2021/11/02 07:34:50 PM - uvicorn.error - INFO - Finished server process [615]
+2021/11/03 06:20:31 PM - uvicorn.error - INFO - Started server process [10286]
+2021/11/03 06:20:31 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/03 06:20:31 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/03 06:28:02 PM - uvicorn.error - INFO - Shutting down
+2021/11/03 06:28:02 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/03 06:28:02 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/03 06:28:02 PM - uvicorn.error - INFO - Finished server process [10286]
+2021/11/04 10:39:19 PM - uvicorn.error - INFO - Started server process [21433]
+2021/11/04 10:39:19 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/04 10:39:19 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/06 01:30:48 PM - uvicorn.error - INFO - Shutting down
+2021/11/06 01:30:49 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/06 01:30:50 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/06 01:30:50 PM - uvicorn.error - INFO - Finished server process [21433]
+2021/11/06 01:31:05 PM - uvicorn.error - INFO - Started server process [22455]
+2021/11/06 01:31:05 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/06 01:31:05 PM - uvicorn.error - INFO - Application startup complete.
