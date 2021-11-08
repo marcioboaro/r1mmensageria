@@ -43,7 +43,7 @@ def latlong_valid(latlong):
 
 # Consulta_Portas_Lockers
 #@ms03_ms04.post("/ms03", tags=["ms04"], response_model=MS04, description="Consulta ao Catalogo de Estações Lockers")
-@ms03_ms04.post("/ms03", tags=["ms04"], description="Consulta ao Catalogo de Estações Lockers")
+@ms03_ms04.post("/msg/v01/lockers/slots", tags=["ms04"], description="Consulta ao Catalogo de Estações Lockers")
 def ms03(ms03: MS03, public_id=Depends(auth_handler.auth_wrapper)):
     try:
         logger.info("Consulta ao Catalogo de Estações Lockers")
