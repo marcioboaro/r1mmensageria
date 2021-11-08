@@ -1,22 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from typing import Any
-from sqlalchemy import create_engine
-from json import dumps
-import logging
-import traceback
 import sys
-import logging.config
 import uuid  # for public id
 from datetime import datetime, timedelta
-from functools import wraps
-import ast
 from fastapi import APIRouter, Depends, HTTPException
 from config.db import conn
 from config.log import logger
 from auth.auth import AuthHandler
 from schemas.ms05 import MS05
-from schemas.ms06 import MS06
 from cryptography.fernet import Fernet
 import pika
 import random
@@ -47,7 +39,7 @@ def latlong_valid(latlong):
 def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
     try:        
         logger.info("Consulta da disponibilidade de Portas em Locker")
-        logger.info(f"{public_id} - {ms05}")
+        logger.info(f"{public_id}")
         if ms05.ID_de_Referencia is None:
             raise HTTPException(status_code=422, detail="M06006 - ID_de_Referencia obrigatório")
         if ms05.ID_do_Solicitante is None:
@@ -72,97 +64,10 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
             raise HTTPException(status_code=422, detail="M06046 - URL para Call Back é obrigatória")
 
         idTransacaoUnica = str(uuid.uuid1())
-        command_sql = f"""INSERT INTO MS05
-                            ( ID_Transacao_Unica
-                            ,ID_de_Referencia
-                            ,ID_do_Solicitante
-                            ,ID_Rede_Lockers
-                            ,Data_Hora_Solicitacao
-                            ,ID_da_Estacao_do_Locker
-                            ,Tipo_de_Serviço_Reserva
-                            ,ID_PSL_Designado
-                            ,Autenticacao_Login_Operador_Logistico
-                            ,Categoria_Porta
-                            ,Geracao_de_QRCODE_na_Resposta_MS06
-                            ,Geracao_de_Codigo_de_Abertura_de_Porta_na_Resposta_MS06
-                            ,URL_CALL_BACK
-                            ,Versao_Mensageria
-                            )
-                        VALUES
-                            (
-                            '{idTransacaoUnica}' 
-                            , '{ms05.ID_de_Referencia}'
-                            , '{ms05.ID_do_Solicitante}'
-                            , {ms05.ID_Rede_Lockers}
-                            , NOW() 
-                            , '{ms05.ID_da_Estacao_do_Locker}'
-                            , {ms05.Tipo_de_Serviço_Reserva}
-                            , '{ms05.ID_PSL_Designado}'
-                            , '{ms05.Autenticacao_Login_Operador_Logistico}'
-                            , '{ms05.Categoria_Porta}'
-                            , '{ms05.Geracao_de_QRCODE_na_Resposta_MS06}'
-                            , '{ms05.Geracao_de_Codigo_de_Abertura_de_Porta_na_Resposta_MS06}'
-                            , '{ms05.URL_CALL_BACK}'
-                            , '{ms05.Versao_Mensageria}'
-                            );"""
-        command_sql = command_sql.replace("'None'", "Null")
-        command_sql = command_sql.replace("None", "Null")
-        conn.execute(command_sql)
+        insert_ms05(ms05, idTransacaoUnica)
         info_encomendas = ms05.Info_Encomendas
         for encomenda in info_encomendas:
-            command_sql = f"""INSERT INTO MS05_Encomendas
-                                (
-                                    ID_Encomenda
-                                    , ID_Transacao_Unica
-                                    , CPF_CNPJ_Shopper
-                                    , Moeda_Shopper
-                                    , Valor_Encomenda_Shopper
-                                    , Numero_Nota_Fiscal_Encomenda_Shopper
-                                    , Numero_Mobile_Shopper
-                                    , Endereço_de_Email_do_Shopper
-                                    , Codigo_País_Shopper
-                                    , Cidade_Shopper
-                                    , CEP_Shopper
-                                    , Endereco_Shopper
-                                    , Bairro_Shopper
-                                    , Numero_Shopper
-                                    , Complemento_Shopper
-                                    , Codigo_Rastreamento_Encomenda
-                                    , Codigo_Barras_Conteudo_Encomenda
-                                    , Descricao_Conteudo_Encomenda
-                                    , Encomenda_Assegurada
-                                    , Largura_Encomenda
-                                    , Altura_Encomenda
-                                    , Profundidade_Encomenda
-                                )
-                            VALUES
-                                (
-                                '{encomenda.ID_Encomenda}'
-                                , '{idTransacaoUnica}'
-                                , '{encomenda.CPF_CNPJ_Shopper}'
-                                , '{encomenda.Moeda_Shopper}'
-                                , {encomenda.Valor_Encomenda_Shopper}
-                                , '{encomenda.Numero_Nota_Fiscal_Encomenda_Shopper}'
-                                , '{encomenda.Numero_Mobile_Shopper}'
-                                , '{encomenda.Endereço_de_Email_do_Shopper}'
-                                , '{encomenda.Codigo_País_Shopper}'
-                                , '{encomenda.Cidade_Shopper}'
-                                , '{encomenda.CEP_Shopper}'
-                                , '{encomenda.Endereco_Shopper}'
-                                , '{encomenda.Bairro_Shopper}'
-                                , '{encomenda.Numero_Shopper}'
-                                , '{encomenda.Complemento_Shopper}'
-                                , '{encomenda.Codigo_Rastreamento_Encomenda}'
-                                , '{encomenda.Codigo_Barras_Conteudo_Encomenda}'
-                                , '{encomenda.Descricao_Conteudo_Encomenda}'
-                                , '{encomenda.Encomenda_Assegurada}'
-                                , {encomenda.Largura_Encomenda}
-                                , {encomenda.Altura_Encomenda}
-                                , {encomenda.Profundidade_Encomenda}
-                                );"""
-            command_sql = command_sql.replace("'None'", "Null")
-            command_sql = command_sql.replace("None", "Null")
-            conn.execute(command_sql)
+            insert_ms05_encomendas(idTransacaoUnica, encomenda)
 
         now = datetime.now()
         dt_string = now.strftime("%Y-%m-%dT%H:%M:%S")
@@ -247,100 +152,221 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
             ms06['info_encomendas'] = encomendas
             ms06['Versao_Mensageria'] = ms05.Versao_Mensageria
                 
-            command_sql = f'''INSERT INTO `rede1minuto`.`reserva_simples`
-                                    (`IdTransacaoUnica`,
-                                    `IdSolicitante`,
-                                    `IdReferencia`,
-                                    `idRede`,
-                                    `idLocker`,
-                                    `idLockerPorta`,
-                                    `DataHoraSolicitacao`,
-                                    `idStatusReserva`,
-                                    `idServicoReserva`,
-                                    `TipoFluxoAtual`)
-                                VALUES
-                                    ({idTransacaoUnica},
-                                    {ms05.IDdo_Solicitante},
-                                    {ms05.ID_de_Referencia},
-                                    {ms05.ID_Rede_Lockers},
-                                    {ms05.ID_da_Estacao_do_Locker},
-                                    {record_Porta[0]},
-                                    {Inicio_reserva},
-                                    {1},  # 1 - Reserva efetivada
-                                    {5},  # Contratação de Serviço de Reserva Com encomendas em Lockers Inteligentes
-                                    {0});'''
-            conn.execute(command_sql)
-        
-            lc01 = {}
-            lc01["CD_MSG"] = "LC01"
-
-            content = {}
-            content["ID_Referencia"] = ms05.ID_de_Referencia
-            content["ID_Solicitante"] = ms05.ID_do_Solicitante
-            content["ID_Rede"] = ms05.ID_Rede_Lockers
-            content["ID_Transacao"] = idTransacaoUnica
-            content["ServicoTipoAberPorta"] = None
-            content["idLocker"] = ms05.ID_da_Estacao_do_Locker
-            content["idLockerPorta"] = record_Porta[0]
-            content["idLockerPortaFisica"] = record_Porta[1]
-            content["ID_OpLog"] = record_Porta[2]
-            content["OpLogAutenticacao"] = 0
-            content["QRCODE"] = idTransacaoUnica
-            content["CD_PortaAbertura"] = 1
-
-            encomenda = {}
-            encomendas = []
-            info_encomendas = ms05.Info_Encomendas  
-            for encomenda in info_encomendas:
-                enc_temp = {}
-                enc_temp["ID_Encomenda"] = encomenda.ID_Encomenda
-                enc_temp["EncomendaRastreio"] = "Não imprementado"
-                enc_temp["EncomendaBarras"] = "Não imprementado"
-                encomendas.append(enc_temp)
-            content["Encomendas"] = encomendas
-
-            content["ID_LockerPortaAbertura"] = 3
-            content["MascAvisoAbastecimento"] = "Frase com @ numero de Protocolo"
-            content["MascAvisoRetirada"] = "Frase com @ numero de Protocolo"
-            content["ExibTelaLockerprotocolo"] = 0
-            content["EnvProtocoloOpCelular"] = 0
-            content["DT_InicioReservaLocacao"] = Inicio_reserva
-            content["DT_finalReservaLocacao"] = Final_reserva
-            content["Versão_Software"] = "0.1"
-            content["Versao_Mensageria"] = "1.0.0"
-
-            lc01["Content"] = content
-
-            MQ_Name = 'Rede1Min_MQ'
-            URL = 'amqp://rede1min:Minuto@167.71.26.87'
-            queue_name = ms05.ID_da_Estacao_do_Locker + '_locker_output'
-
-            url = os.environ.get(MQ_Name, URL)
-            params = pika.URLParameters(url)
-            params.socket_timeout = 6
-
-            connection = pika.BlockingConnection(params)
-            channel = connection.channel()
-
-            channel.queue_declare(queue=queue_name, durable=True)
-
-            message = json.dumps(lc01)
-
-            channel.basic_publish(
-                exchange='',
-                routing_key=queue_name,
-                body=message,
-                properties=pika.BasicProperties(
-                    delivery_mode=2,  # make message persistent
-                ))
-
-            connection.close()
+            insert_reserva_simples(ms05, idTransacaoUnica, record_Porta, Inicio_reserva)  
+            send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_reserva)
 
         return ms06
     except:
         logger.error(sys.exc_info())
         result = dict()
         result['Error ms05'] = sys.exc_info()
-        return result      
-    
+        return result 
+
+def send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_reserva):
+    try:  # Envia LC01 para fila do RabbitMQ o aplicativo do locker a pega lá
+        lc01 = {}
+        lc01["CD_MSG"] = "LC01"
+
+        content = {}
+        content["ID_Referencia"] = ms05.ID_de_Referencia
+        content["ID_Solicitante"] = ms05.ID_do_Solicitante
+        content["ID_Rede"] = ms05.ID_Rede_Lockers
+        content["ID_Transacao"] = idTransacaoUnica
+        content["ServicoTipoAberPorta"] = None
+        content["idLocker"] = ms05.ID_da_Estacao_do_Locker
+        content["idLockerPorta"] = record_Porta[0]
+        content["idLockerPortaFisica"] = record_Porta[1]
+        content["ID_OpLog"] = record_Porta[2]
+        content["OpLogAutenticacao"] = 0
+        content["QRCODE"] = idTransacaoUnica
+        content["CD_PortaAbertura"] = 1
+
+        encomenda = {}
+        encomendas = []
+        info_encomendas = ms05.Info_Encomendas  
+        for encomenda in info_encomendas:
+            enc_temp = {}
+            enc_temp["ID_Encomenda"] = encomenda.ID_Encomenda
+            enc_temp["EncomendaRastreio"] = "Não imprementado"
+            enc_temp["EncomendaBarras"] = "Não imprementado"
+            encomendas.append(enc_temp)
+        content["Encomendas"] = encomendas
+
+        content["ID_LockerPortaAbertura"] = 3
+        content["MascAvisoAbastecimento"] = "Frase com @ numero de Protocolo"
+        content["MascAvisoRetirada"] = "Frase com @ numero de Protocolo"
+        content["ExibTelaLockerprotocolo"] = 0
+        content["EnvProtocoloOpCelular"] = 0
+        content["DT_InicioReservaLocacao"] = Inicio_reserva
+        content["DT_finalReservaLocacao"] = Final_reserva
+        content["Versão_Software"] = "0.1"
+        content["Versao_Mensageria"] = "1.0.0"
+
+        lc01["Content"] = content
+
+        MQ_Name = 'Rede1Min_MQ'
+        URL = 'amqp://rede1min:Minuto@167.71.26.87'
+        queue_name = ms05.ID_da_Estacao_do_Locker + '_locker_output'
+
+        url = os.environ.get(MQ_Name, URL)
+        params = pika.URLParameters(url)
+        params.socket_timeout = 6
+
+        connection = pika.BlockingConnection(params)
+        channel = connection.channel()
+
+        channel.queue_declare(queue=queue_name, durable=True)
+
+        message = json.dumps(lc01)
+
+        channel.basic_publish(
+                    exchange='',
+                    routing_key=queue_name,
+                    body=message,
+                    properties=pika.BasicProperties(
+                        delivery_mode=2,  # make message persistent
+                    ))
+
+        connection.close()
+        logger.info(sys.exc_info())
+
+    except:
+        logger.error(sys.exc_info())
+        result = dict()
+        result['Error send_lc01_mq'] = sys.exc_info()
+        return result 
+
+def insert_ms05_encomendas(idTransacaoUnica, encomenda):
+    try:
+        command_sql = f"""INSERT INTO MS05_Encomendas
+                        (   ID_Encomenda
+                            , ID_Transacao_Unica
+                            , CPF_CNPJ_Shopper
+                            , Moeda_Shopper
+                            , Valor_Encomenda_Shopper
+                            , Numero_Nota_Fiscal_Encomenda_Shopper
+                            , Numero_Mobile_Shopper
+                            , Endereço_de_Email_do_Shopper
+                            , Codigo_País_Shopper
+                            , Cidade_Shopper
+                            , CEP_Shopper
+                            , Endereco_Shopper
+                            , Bairro_Shopper
+                            , Numero_Shopper
+                            , Complemento_Shopper
+                            , Codigo_Rastreamento_Encomenda
+                            , Codigo_Barras_Conteudo_Encomenda
+                            , Descricao_Conteudo_Encomenda
+                            , Encomenda_Assegurada
+                            , Largura_Encomenda
+                            , Altura_Encomenda
+                            , Profundidade_Encomenda)
+                    VALUES
+                        ('{encomenda.ID_Encomenda}'
+                        , '{idTransacaoUnica}'
+                        , '{encomenda.CPF_CNPJ_Shopper}'
+                        , '{encomenda.Moeda_Shopper}'
+                        , {encomenda.Valor_Encomenda_Shopper}
+                        , '{encomenda.Numero_Nota_Fiscal_Encomenda_Shopper}'
+                        , '{encomenda.Numero_Mobile_Shopper}'
+                        , '{encomenda.Endereço_de_Email_do_Shopper}'
+                        , '{encomenda.Codigo_País_Shopper}'
+                        , '{encomenda.Cidade_Shopper}'
+                        , '{encomenda.CEP_Shopper}'
+                        , '{encomenda.Endereco_Shopper}'
+                        , '{encomenda.Bairro_Shopper}'
+                        , '{encomenda.Numero_Shopper}'
+                        , '{encomenda.Complemento_Shopper}'
+                        , '{encomenda.Codigo_Rastreamento_Encomenda}'
+                        , '{encomenda.Codigo_Barras_Conteudo_Encomenda}'
+                        , '{encomenda.Descricao_Conteudo_Encomenda}'
+                        , '{encomenda.Encomenda_Assegurada}'
+                        , {encomenda.Largura_Encomenda}
+                        , {encomenda.Altura_Encomenda}
+                        , {encomenda.Profundidade_Encomenda});"""
+        command_sql = command_sql.replace("'None'", "Null")
+        command_sql = command_sql.replace("None", "Null")
+        conn.execute(command_sql)
+    except:
+        logger.error(sys.exc_info())
+        result = dict()
+        result['Error insert_ms05_encomendas'] = sys.exc_info()
+        return result
+
+def insert_ms05(ms05, idTransacaoUnica):
+    try:
+        command_sql = f"""INSERT INTO MS05
+                        ( ID_Transacao_Unica
+                        ,ID_de_Referencia
+                        ,ID_do_Solicitante
+                        ,ID_Rede_Lockers
+                        ,Data_Hora_Solicitacao
+                        ,ID_da_Estacao_do_Locker
+                        ,Tipo_de_Serviço_Reserva
+                        ,ID_PSL_Designado
+                        ,Autenticacao_Login_Operador_Logistico
+                        ,Categoria_Porta
+                        ,Geracao_de_QRCODE_na_Resposta_MS06
+                        ,Geracao_de_Codigo_de_Abertura_de_Porta_na_Resposta_MS06
+                        ,URL_CALL_BACK
+                        ,Versao_Mensageria
+                        )
+                    VALUES
+                        (
+                        '{idTransacaoUnica}' 
+                        , '{ms05.ID_de_Referencia}'
+                        , '{ms05.ID_do_Solicitante}'
+                        , {ms05.ID_Rede_Lockers}
+                        , NOW() 
+                        , '{ms05.ID_da_Estacao_do_Locker}'
+                        , {ms05.Tipo_de_Serviço_Reserva}
+                        , '{ms05.ID_PSL_Designado}'
+                        , '{ms05.Autenticacao_Login_Operador_Logistico}'
+                        , '{ms05.Categoria_Porta}'
+                        , '{ms05.Geracao_de_QRCODE_na_Resposta_MS06}'
+                        , '{ms05.Geracao_de_Codigo_de_Abertura_de_Porta_na_Resposta_MS06}'
+                        , '{ms05.URL_CALL_BACK}'
+                        , '{ms05.Versao_Mensageria}'
+                        );"""
+        command_sql = command_sql.replace("'None'", "Null")
+        command_sql = command_sql.replace("None", "Null")
+        conn.execute(command_sql)
+    except:
+        logger.error(sys.exc_info())
+        result = dict()
+        result['Error insert_ms05'] = sys.exc_info()
+        return result
+
+def insert_reserva_simples(ms05, idTransacaoUnica, record_Porta, Inicio_reserva):
+    try:
+        command_sql = f'''INSERT INTO `rede1minuto`.`reserva_simples`
+                                        (`IdTransacaoUnica`,
+                                        `IdSolicitante`,
+                                        `IdReferencia`,
+                                        `idRede`,
+                                        `idLocker`,
+                                        `idLockerPorta`,
+                                        `DataHoraSolicitacao`,
+                                        `idStatusReserva`,
+                                        `idServicoReserva`,
+                                        `TipoFluxoAtual`)
+                                    VALUES
+                                        ('{idTransacaoUnica}',
+                                        '{ms05.ID_do_Solicitante}',
+                                        '{ms05.ID_de_Referencia}',
+                                        {ms05.ID_Rede_Lockers},
+                                        '{ms05.ID_da_Estacao_do_Locker}',
+                                        '{record_Porta[0]}',
+                                        '{Inicio_reserva}',
+                                        {1},  
+                                        {5},  
+                                        {0});''' # 1 - Reserva efetivada, 2 - Reserva cancelada, 3 - Reserva em andamento, 4 - Reserva em espera
+        command_sql = command_sql.replace("'None'", "Null")
+        command_sql = command_sql.replace("None", "Null")
+        conn.execute(command_sql)
+    except:
+        logger.error(sys.exc_info())
+        result = dict()
+        result['Error insert_reserva_simples'] = sys.exc_info()
+        return result
 
