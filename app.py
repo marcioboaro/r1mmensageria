@@ -60,6 +60,7 @@ def register(auth_details: AuthDetails):
                             where `AuthDetails`.`email` = "{auth_details.email}";'''
         row = conn.execute(command_sql).fetchone()
 
+
         # checando se o usuário cadastrado está na lista de participantes
         if row is None:
             command_sql = f'''SELECT `participantes`.`idParticipanteCNPJ`,

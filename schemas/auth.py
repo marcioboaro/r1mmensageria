@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
 
+
 class AuthDetails(BaseModel):
     public_id: Optional[str]
     username: str
