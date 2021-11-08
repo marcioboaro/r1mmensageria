@@ -25,6 +25,8 @@ def register(auth_details: AuthDetails):
     try:
         if auth_handler.check_user_exists(auth_details.username):
             raise HTTPException(status_code=400, detail="Username já existe")
+        if auth_handler.check_user_exists(auth_details.cnpj):
+            raise HTTPException(status_code=400, detail="CNPJ já existe")
         if auth_handler.check_email_exists(auth_details.email):
             raise HTTPException(status_code=400, detail="Email já existe")
         if not re.match(r"[^@]+@[^@]+\.[^@]+", auth_details.email):
@@ -44,7 +46,10 @@ def register(auth_details: AuthDetails):
                 pass_msg = "Por favor a senha deve ter pelo menos 1 posição caracter especial."
             raise HTTPException(status_code=203, detail=pass_msg)
 
-        # checking for existing user
+        # montando a chave idSolicitante
+        idSolicitante = auth_details.cnpj + str(auth_details.rede).zfill(4) + str(auth_details.idmarketplace).zfill(4)
+
+        # checando se já usuário cadastrado
         command_sql = f'''SELECT `AuthDetails`.`public_id`,
                                 `AuthDetails`.`username`,
                                 `AuthDetails`.`email`,
@@ -54,24 +59,44 @@ def register(auth_details: AuthDetails):
                             FROM `AuthDetails`
                             where `AuthDetails`.`email` = "{auth_details.email}";'''
         row = conn.execute(command_sql).fetchone()
+
+        # checando se o usuário cadastrado está na lista de participantes
         if row is None:
-            hashed_password = auth_handler.get_password_hash(auth_details.password)
-            public_id = str(uuid.uuid4())
-            command_sql = f'''INSERT INTO `AuthDetails`
-                                        (`public_id`,
-                                        `username`,
-                                        `email`,
-                                        `password`)
-                                    VALUES
-                                        ('{public_id}',
-                                        '{auth_details.username}',
-                                        '{auth_details.email}',
-                                        '{hashed_password}');'''
-            command_sql = command_sql.replace("'None'", "Null")
-            row = conn.execute(command_sql)
+            command_sql = f'''SELECT `participantes`.`idParticipanteCNPJ`,
+                                    `participantes`.`idRede`,
+                                    `participantes`.`idMarketPlace`
+                                        FROM `participantes`
+                                        where `participantes`.`idParticipanteCNPJ` = "{auth_details.cnpj}"
+                                        and `participantes`.`idRede`= "{auth_details.rede}
+                                        and `participantes`.`idMarketPlace`= "{auth_details.idmarketplace};'''
+            row = conn.execute(command_sql).fetchone()
+
+            # se está na lista de participantes então inserir usuário no banco
+            if row is not None:
+                hashed_password = auth_handler.get_password_hash(auth_details.password)
+                public_id = str(uuid.uuid4())
+                command_sql = f'''INSERT INTO `AuthDetails`
+                                            (`public_id`,
+                                            `idRede`,
+                                            `idMarketPlace`,
+                                            `idParticipanteCNPJ`,
+                                            `username`,
+                                            `email`,
+                                            `password`)
+                                        VALUES
+                                            ('{public_id}',
+                                            '{auth_details.rede}',
+                                            '{auth_details,idmarketplace}',
+                                            '{auth_details.cnpj}',
+                                            '{auth_details.username}',
+                                            '{auth_details.email}',
+                                            '{hashed_password}');'''
+                command_sql = command_sql.replace("'None'", "Null")
+                row = conn.execute(command_sql)
+
         else:
             raise HTTPException(status_code=400, detail='O nome de usuário já está em uso')
-        return { 'Sucesso': 'Registrado com sucesso.' }
+        return { 'idSolicitante': idSolicitante }
     except:
         logger.error(sys.exc_info())
         result = dict()

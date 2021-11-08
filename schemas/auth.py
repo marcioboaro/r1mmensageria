@@ -6,6 +6,9 @@ from datetime import datetime
 class AuthDetails(BaseModel):
     public_id: Optional[str]
     username: str
+    cnpj: str
+    rede: str
+    idmarketplace: str
     email: str
     password: str
     DateAt: Optional[datetime]
