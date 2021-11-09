@@ -68,8 +68,8 @@ def register(auth_details: AuthDetails):
                                     `participantes`.`idMarketPlace`
                                         FROM `participantes`
                                         where `participantes`.`idParticipanteCNPJ` = "{auth_details.cnpj}"
-                                        and `participantes`.`idRede`= "{auth_details.rede}
-                                        and `participantes`.`idMarketPlace`= "{auth_details.idmarketplace};'''
+                                        and `participantes`.`idRede`= "{auth_details.rede}"
+                                        and `participantes`.`idMarketPlace`= "{auth_details.idmarketplace}";'''
             row = conn.execute(command_sql).fetchone()
 
             # se está na lista de participantes então inserir usuário no banco
@@ -101,6 +101,7 @@ def register(auth_details: AuthDetails):
     except:
         logger.error(sys.exc_info())
         result = dict()
+        result["command sql"] = command_sql
         result['Error register'] = sys.exc_info()
         return result
 
