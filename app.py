@@ -4,6 +4,8 @@ from routes.user import user
 from routes.ms01_ms02 import ms01_ms02
 from routes.ms03_ms04 import ms03_ms04
 from routes.ms05_ms06 import ms05_ms06
+from routes.ms07_ms08 import ms07_ms08
+from routes.ms16_ms17 import ms16_ms17
 import uuid  
 from config.db import conn
 from config.log import logger
@@ -164,3 +166,5 @@ app.include_router(pais)
 app.include_router(ms01_ms02)
 app.include_router(ms03_ms04)
 app.include_router(ms05_ms06)
+app.include_router(ms07_ms08)
+app.include_router(ms16_ms17)
