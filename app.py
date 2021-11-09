@@ -25,14 +25,14 @@ auth_handler = AuthHandler()
 @app.post('/signup', status_code=201)
 def register(auth_details: AuthDetails):
     try:
-#        if auth_details.username is None or auth_details.password is None:
-#            raise HTTPException(status_code=400, detail="Username já existe")
+        if auth_details.username is None or auth_details.password is None:
+            return {"status_code":400, "detail":"Username ou Password não informado"}
 #        if auth_handler.check_user_exists(auth_details.cnpj):
 #            raise HTTPException(status_code=400, detail="CNPJ já existe")
 #        if auth_handler.check_email_exists(auth_details.email):
 #            raise HTTPException(status_code=400, detail="Email já existe")
         if not re.match(r"[^@]+@[^@]+\.[^@]+", auth_details.email):
-            raise HTTPException(status_code=203, detail="Por favor entre com um endereço de e-mail valido.")
+            return {"status_code":203, "detail":"Por favor entre com um endereço de e-mail valido."}
 
         pass_ret = password_check(auth_details.password)
         if not pass_ret["password_ok"]:
@@ -46,8 +46,7 @@ def register(auth_details: AuthDetails):
                 pass_msg = "Por favor a senha deve ter pelo menos 1 posição minúscula."
             elif pass_ret["symbol_error"]:
                 pass_msg = "Por favor a senha deve ter pelo menos 1 posição caracter especial."
-            raise HTTPException(status_code=203, detail=pass_msg)
-
+            return {"status_code":203, "detail":pass_msg}
         # montando a chave idSolicitante
         idSolicitante = auth_details.cnpj + str(auth_details.rede).zfill(3) + str(auth_details.idmarketplace).zfill(3)
 
@@ -97,7 +96,7 @@ def register(auth_details: AuthDetails):
                 row = conn.execute(command_sql)
 
         else:
-            raise HTTPException(status_code=400, detail='O nome de usuário já está em uso')
+            return {"status_code":400, "detail":"O nome de usuário já está em uso"}
         return { 'idSolicitante': idSolicitante }
     except:
         logger.error(sys.exc_info())
@@ -114,7 +113,7 @@ def login(auth_details: AuthDetails):
                             where   `AuthDetails`.`email` = "{auth_details.email}";'''
         row = conn.execute(command_sql).fetchone()
         if (row is None) or (not auth_handler.verify_password(auth_details.password, row['password'])):
-            raise HTTPException(status_code=401, detail='Invalid username and/or password')
+            return {'status_code':401, detail:'Invalid username and/or password'}
         token = auth_handler.encode_token(row['public_id'])
         return { 'token': token }
     except:
