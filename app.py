@@ -87,7 +87,7 @@ def register(auth_details: AuthDetails):
                                         VALUES
                                             ('{public_id}',
                                             '{auth_details.rede}',
-                                            '{auth_details,idmarketplace}',
+                                            '{auth_details.idmarketplace}',
                                             '{auth_details.cnpj}',
                                             '{auth_details.username}',
                                             '{auth_details.email}',
