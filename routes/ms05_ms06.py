@@ -4,7 +4,8 @@ from typing import Any
 import sys
 import uuid  # for public id
 from datetime import datetime, timedelta
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
+from fastapi.exceptions import HTTPException
 from config.db import conn
 from config.log import logger
 from auth.auth import AuthHandler

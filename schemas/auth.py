@@ -7,7 +7,7 @@ class AuthDetails(BaseModel):
     public_id: Optional[str]
     username: str
     cnpj:  Optional[str]
-    rede:  Optional[str]
+    rede: Optional[str]
     idmarketplace:  Optional[str]
     email: str
     password: str

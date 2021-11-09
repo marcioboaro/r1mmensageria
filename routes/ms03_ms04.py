@@ -10,7 +10,8 @@ import uuid  # for public id
 from datetime import datetime, timedelta
 from functools import wraps
 import ast
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
+from fastapi.exceptions import HTTPException
 from config.db import conn
 from config.log import logger
 from auth.auth import AuthHandler

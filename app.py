@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends
 from routes.pais import pais
 from routes.user import user
 from routes.ms01_ms02 import ms01_ms02
@@ -9,6 +9,8 @@ from config.db import conn
 from config.log import logger
 from auth.auth import AuthHandler
 from schemas.auth import AuthDetails
+from fastapi.exceptions import HTTPException
+from pydantic import BaseModel
 import re
 import sys
 
@@ -23,12 +25,12 @@ auth_handler = AuthHandler()
 @app.post('/signup', status_code=201)
 def register(auth_details: AuthDetails):
     try:
-        if auth_handler.check_user_exists(auth_details.username):
-            raise HTTPException(status_code=400, detail="Username já existe")
-        if auth_handler.check_user_exists(auth_details.cnpj):
-            raise HTTPException(status_code=400, detail="CNPJ já existe")
-        if auth_handler.check_email_exists(auth_details.email):
-            raise HTTPException(status_code=400, detail="Email já existe")
+#        if auth_details.username is None or auth_details.password is None:
+#            raise HTTPException(status_code=400, detail="Username já existe")
+#        if auth_handler.check_user_exists(auth_details.cnpj):
+#            raise HTTPException(status_code=400, detail="CNPJ já existe")
+#        if auth_handler.check_email_exists(auth_details.email):
+#            raise HTTPException(status_code=400, detail="Email já existe")
         if not re.match(r"[^@]+@[^@]+\.[^@]+", auth_details.email):
             raise HTTPException(status_code=203, detail="Por favor entre com um endereço de e-mail valido.")
 
