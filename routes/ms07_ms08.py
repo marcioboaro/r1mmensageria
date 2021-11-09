@@ -28,24 +28,24 @@ def ms07(ms07: MS07, public_id=Depends(auth_handler.auth_wrapper)):
         logger.info(ms07)
         logger.info(public_id)
         if ms07.ID_do_Solicitante is None:
-            raise HTTPException(status_code=422, detail="M08006 - ID_do_Solicitante obrigatório")
+            return {"status_code": 422, "detail": "M08006 - ID_do_Solicitante obrigatório"}
         if len(ms07.ID_do_Solicitante) != 20: # 20 caracteres
-            raise HTTPException(status_code=422, detail="M08006 - ID_do_Solicitante deve conter 20 caracteres")
+            return {"status_code": 422, "detail": "M08006 - ID_do_Solicitante deve conter 20 caracteres"}   
         if ms07.ID_Rede_Lockers is None:
-            raise HTTPException(status_code=422, detail="M08008 - ID_Rede_Lockers obrigatório")
+            return {"status_code": 422, "detail": "M08008 - ID_Rede_Lockers obrigatório"}
         if ms07.ID_Rede_Lockers is not None:
             command_sql = f"SELECT idRede from rede where rede.idRede = '{ms07.ID_Rede_Lockers}';"
             if conn.execute(command_sql).fetchone() is None:
-                raise HTTPException(status_code=422, detail="M08011 - ID_Rede_Lockers inválido")
+                return {"status_code": 422, "detail": "M08011 - ID_Rede_Lockers inválido"}
         if ms07.Data_Hora_Solicitacao is None:
             ms07.Data_Hora_Solicitacao = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         if ms07.ID_da_Estacao_do_Locker is not None:
             command_sql = f"SELECT idLocker from locker where locker.idLocker = '{ms07.ID_da_Estacao_do_Locker}';"
             if conn.execute(command_sql).fetchone() is None:
-                raise HTTPException(status_code=422, detail="M08023 - ID_da_Estacao_do_ Locker inválido")
+                return {"status_code": 422, "detail": "M08023 - ID_da_Estacao_do_ Locker inválido"}
         if ms07.URL_CALL_BACK is None:
-            raise HTTPException(status_code=422, detail="M08046 - URL para Call Back é obrigatória")
+            return {"status_code": 422, "detail": "M08046 - URL para Call Back é obrigatória"}
 
     except Exception as e:
         logger.error(e)
-        raise HTTPException(status_code=500, detail="MS07 - Cancelamento de reserva")
+        return {"status_code": 500, "detail": "MS07 - Cancelamento de reserva"}

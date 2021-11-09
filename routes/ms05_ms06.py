@@ -41,25 +41,25 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
         logger.info("Consulta da disponibilidade de Portas em Locker")
         logger.info(f"Usuário que fez a solicitação: {public_id}")
         if ms05.ID_do_Solicitante is None:
-            raise HTTPException(status_code=422, detail="M06006 - ID_do_Solicitante obrigatório")
+            return {"status_code": 422, "detail": "M06006 - ID_do_Solicitante obrigatório"}
         if len(ms05.ID_do_Solicitante) != 20: # 20 caracteres
-            raise HTTPException(status_code=422, detail="M06006 - ID_do_Solicitante deve conter 20 caracteres")
+            return {"status_code": 422, "detail": "M06006 - ID_do_Solicitante deve conter 20 caracteres"}
         if ms05.ID_Rede_Lockers is None:
-            raise HTTPException(status_code=422, detail="M06008 - ID_Rede_Lockers obrigatório")
+            return {"status_code": 422, "detail": "M06008 - ID_Rede_Lockers obrigatório"}
         if ms05.ID_Rede_Lockers is not None:
             command_sql = f"SELECT idRede from rede where rede.idRede = '{ms05.ID_Rede_Lockers}';"
             if conn.execute(command_sql).fetchone() is None:
-                raise HTTPException(status_code=422, detail="M06011 - ID_Rede_Lockers inválido")
+                return {"status_code": 422, "detail": "M06011 - ID_Rede_Lockers inválido"}
         if ms05.Data_Hora_Solicitacao is None:
             ms05.Data_Hora_Solicitacao = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
         if ms05.ID_da_Estacao_do_Locker is not None:
             command_sql = f"SELECT idLocker from locker where locker.idLocker = '{ms05.ID_da_Estacao_do_Locker}';"
             if conn.execute(command_sql).fetchone() is None:
-                raise HTTPException(status_code=422, detail="M06023 - ID_da_Estacao_do_ Locker inválido")
+                return {"status_code": 422, "detail": "M06023 - ID_da_Estacao_do_ Locker inválido"}
 
         if ms05.URL_CALL_BACK is None:
-            raise HTTPException(status_code=422, detail="M06046 - URL para Call Back é obrigatória")
+            return {"status_code": 422, "detail": "M06046 - URL para Call Back é obrigatória"}
 
         idTransacaoUnica = str(uuid.uuid1())
         insert_ms05(ms05, idTransacaoUnica)
@@ -367,4 +367,3 @@ def insert_reserva_simples(ms05, idTransacaoUnica, record_Porta, Inicio_reserva)
         result = dict()
         result['Error insert_reserva_simples'] = sys.exc_info()
         return result
-

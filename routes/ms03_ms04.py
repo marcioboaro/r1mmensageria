@@ -49,15 +49,15 @@ def ms03(ms03: MS03, public_id=Depends(auth_handler.auth_wrapper)):
         logger.info("Consulta ao Catalogo de Estações Lockers")
         logger.info(f"Usuário que fez a solicitação: {public_id}")
         if ms03.ID_do_Solicitante is None:
-            raise HTTPException(status_code=422, detail="M02006 - ID_do_Solicitante obrigatório")
+            return {"status_code": 422, "detail": "M02006 - ID_do_Solicitante obrigatório"}
         if len(ms03.ID_do_Solicitante) != 20: # 20 caracteres
-            raise HTTPException(status_code=422, detail="M04009 - ID_de_Solicitante inválido")
+            return {"status_code": 422, "detail": "M04009 - ID_de_Solicitante inválido"}
         if ms03.ID_Rede_Lockers is None:
-            raise HTTPException(status_code=422, detail="M04007 - ID_Rede_Lockers obrigatório")
+            return {"status_code": 422, "detail": "M04007 - ID_Rede_Lockers obrigatório"}
         if ms03.ID_Rede_Lockers is not None:
             command_sql = f"SELECT idRede from rede where rede.idRede = '{ms03.ID_Rede_Lockers}';"
-            if conn.execute(command_sql).fetchone() is None:
-                raise HTTPException(status_code=422, detail="M04010 - ID_Rede_Lockers inválido")
+            if conn.execute(command_sql).fetchone() is None:                
+                return {"status_code": 422, "detail": "M04010 - ID_Rede_Lockers inválido"}
         if ms03.Data_Hora_Solicitacao is None:
             ms03.Data_Hora_Solicitacao = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         if ms03.Codigo_Pais_Locker is None:
@@ -65,53 +65,53 @@ def ms03(ms03: MS03, public_id=Depends(auth_handler.auth_wrapper)):
         else:
             command_sql = f"SELECT idPais from Pais where Pais.idPais = '{ms03.Codigo_Pais_Locker}';"
             if conn.execute(command_sql).fetchone() is None:
-                raise HTTPException(status_code=422, detail="M04012 - Codigo País_Locker inválido")
+                return {"status_code": 422, "detail": "M04012 - Codigo País_Locker inválido"}
         if ms03.Cidade_Locker is not None:
             command_sql = f"SELECT cidade from cepbr_cidade where cidade = '{ms03.Cidade_Locker}';"
             if conn.execute(command_sql).fetchone() is None:
-                raise HTTPException(status_code=422, detail="M04013 - Cidade_Locker inválido")
+                return {"status_code": 422, "detail": "M04011 - Cidade_Locker inválido"}
         if ms03.Cep_Locker is not None:
             command_sql = f"SELECT cep from cepbr_endereco where cepbr_endereco.cep = '{ms03.Cep_Locker}';"
             if conn.execute(command_sql).fetchone() is None:
-                raise HTTPException(status_code=422, detail="M04014 - CEP_Locker inválido")
+                return {"status_code": 422, "detail": "M04014 - CEP_Locker inválido"}
         if ms03.Bairro_Locker is not None:
             command_sql = f"SELECT bairro from cepbr_bairro where bairro = '{ms03.Bairro_Locker}';"
             if conn.execute(command_sql).fetchone() is None:
-                raise HTTPException(status_code=422, detail="M04015 - Bairro_Locker inválido")
+                return {"status_code": 422, "detail": "M04015 - Bairro_Locker inválido"}
         if ms03.Endereco_Locker is not None:
             command_sql = f"SELECT logradouro from cepbr_endereco where cepbr_endereco.logradouro = '{ms03.Endereco_Locker}';"
             if conn.execute(command_sql).fetchone() is None:
-                raise HTTPException(status_code=422, detail="M04016 - Endereco_Locker inválido")
+                return {"status_code": 422, "detail": "M04016 - Endereco_Locker inválido"}
         if ms03.Modelo_uso_Locker is not None:
             command_sql = f"SELECT idLockerPortaUso from locker_porta_uso where idLockerPortaUso = '{ms03.Modelo_uso_Locker}';"
             if conn.execute(command_sql).fetchone() is None:
-                raise HTTPException(status_code=422, detail="M04019 - Modelo_uso_Locker inválido")    
+                return {"status_code": 422, "detail": "M04019 - Modelo_uso_Locker inválido"}
         if ms03.Categoria_Locker is not None:
             command_sql = f"SELECT idLockerCategoria from locker_porta_categoria where idLockerCategoria = '{ms03.Categoria_Locker}';"
             if conn.execute(command_sql).fetchone() is None:
-                raise HTTPException(status_code=422, detail="M04020 - Categoria_Locker inválido")    
+                return {"status_code": 422, "detail": "M04020 - Categoria_Locker inválido"}
         if ms03.Modelo_Operacao_Locker is not None:
             command_sql = f"SELECT locker_porta_operacao from locker_porta_operacao where idLockerOperacao = '{ms03.Modelo_Operacao_Locker}';"
             if conn.execute(command_sql).fetchone() is None:
-                raise HTTPException(status_code=422, detail="M04021 - Modelo_Operacao_Locker inválido")    
+                return {"status_code": 422, "detail": "M04021 - Modelo_Operacao_Locker inválido"}
         if ms03.Tipo_Armazenamento is not None:
             command_sql = f"SELECT `idLockerRefrigeracaoColuna` FROM `locker_refrigeracao_coluna` where idLockerRefrigeracaoColuna = {ms03.Tipo_Armazenamento};"
             if conn.execute(command_sql).fetchone() is None:
-                raise HTTPException(status_code=422, detail="M04021 - Tipo_Armazenamento inválido")
+                return {"status_code": 422, "detail": "M04021 - Tipo_Armazenamento inválido"}
         if ms03.ID_da_Estacao_do_Locker is not None:
             command_sql = f"SELECT idLocker from locker where locker.idLocker = '{ms03.ID_da_Estacao_do_Locker}';"
             if conn.execute(command_sql).fetchone() is None:
-                raise HTTPException(status_code=422, detail="M04022 - ID_da_Estacao_do_ Locker inválido")    
+                return {"status_code": 422, "detail": "M04022 - ID_da_Estacao_do_ Locker inválido"}
         if ms03.LatLong is not None:
             if not latlong_valid(ms03.LatLong):
-                raise HTTPException(status_code=422, detail="M04023 - Latitude e Longitude inválido - (informe 'lat,long')")
+                return {"status_code": 422, "detail": "M04023 - Latitude e Longitude inválido - (informe 'lat,long')"}
         if ms03.Versao_Mensageria is not None:
             if ms03.Versao_Mensageria != "1.0.0":
-                raise HTTPException(status_code=422, detail="M04025 - Versao_Mensageria inválido")    
+                return {"status_code": 422, "detail": "M04025 - Versao_Mensageria inválido"} 
         if ms03.Codigo_Dimensao_Portas_Locker is not None:
             command_sql = f"SELECT `idLockerPortaDimensao` FROM `locker_porta_dimensao` where idLockerPortaDimensao = '{ms03.Codigo_Dimensao_Portas_Locker}';"
             if conn.execute(command_sql).fetchone() is None:
-                raise HTTPException(status_code=422, detail="M04028 - Codigo_Dimensao_Portas_Locker inválido")   
+                return {"status_code": 422, "detail": "M04028 - Codigo_Dimensao_Portas_Locker inválido"}
 
         command_sql = f"""INSERT INTO `MS03`
                             (`IdReferencia`,         

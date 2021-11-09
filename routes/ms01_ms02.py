@@ -63,23 +63,23 @@ def ms01(ms01: MS01, public_id=Depends(auth_handler.auth_wrapper)):
         else:
             command_sql = f"SELECT idPais from Pais where Pais.idPais = '{ms01.Codigo_Pais_Locker}';"
             if conn.execute(command_sql).fetchone() is None:
-                raise HTTPException(status_code=422, detail="M02012 - Codigo País_Locker inválido")
+                return {"status_code":422, "detail":"M02012 - Codigo País_Locker inválido"}
         if ms01.Cidade_Locker is not None:
             command_sql = f"SELECT cidade from cepbr_cidade where cidade = '{ms01.Cidade_Locker}';"
             if conn.execute(command_sql).fetchone() is None:
-                raise HTTPException(status_code=422, detail="M02013 - Cidade_Locker inválido")
+                return {"status_code":422, "detail":"M02013 - Cidade_Locker inválido"}  # Cidade_Locker inválido
         if ms01.Cep_Locker is not None:
             command_sql = f"SELECT cep from cepbr_endereco where cepbr_endereco.cep = '{ms01.Cep_Locker}';"
             if conn.execute(command_sql).fetchone() is None:
-                raise HTTPException(status_code=422, detail="M02014 - CEP_Locker inválido")
+                return {"status_code":422, "detail":"M02014 - CEP_Locker inválido"}
         if ms01.Bairro_Locker is not None:
             command_sql = f"SELECT bairro from cepbr_bairro where bairro = '{ms01.Bairro_Locker}';"
             if conn.execute(command_sql).fetchone() is None:
-                raise HTTPException(status_code=422, detail="M02015 - Bairro_Locker inválido")
+                return {"status_code":422, "detail":"M02015 - Bairro_Locker inválido"} 
         if ms01.Endereco_Locker is not None:
             command_sql = f"SELECT logradouro from cepbr_endereco where cepbr_endereco.logradouro = '{ms01.Endereco_Locker}';"
             if conn.execute(command_sql).fetchone() is None:
-                raise HTTPException(status_code=422, detail="M02016 - Endereco_Locker inválido")
+                return {"status_code":422, "detail":"M02016 - Endereco_Locker inválido"}
     #    if ms01.Modelo_uso_Locker is not None:
     #        command_sql = f"SELECT idLockerPortaUso from locker_porta_uso where idLockerPortaUso = '{ms01.Modelo_uso_Locker}';"
     #        if conn.execute(command_sql).fetchone() is None:
@@ -87,21 +87,21 @@ def ms01(ms01: MS01, public_id=Depends(auth_handler.auth_wrapper)):
         if ms01.Categoria_Locker is not None:
             command_sql = f"SELECT idLockerCategoria from locker_porta_categoria where idLockerCategoria = '{ms01.Categoria_Locker}';"
             if conn.execute(command_sql).fetchone() is None:
-                raise HTTPException(status_code=422, detail="M02020 - Categoria_Locker inválido")    
+                return {"status_code":422, "detail":"M02020 - Categoria_Locker inválido"}
         if ms01.Modelo_Operacao_Locker is not None:
             command_sql = f"SELECT idLockerOperacao FROM locker_operacao where idLockerOperacao = '{ms01.Modelo_Operacao_Locker}';"
             if conn.execute(command_sql).fetchone() is None:
-                raise HTTPException(status_code=422, detail="M02021 - Modelo_Operacao_Locker inválido")    
+                return {"status_code":422, "detail":"M02021 - Modelo_Operacao_Locker inválido"}    
         if ms01.ID_da_Estacao_do_Locker is not None:
             command_sql = f"SELECT idLocker from locker where locker.idLocker = '{ms01.ID_da_Estacao_do_Locker}';"
             if conn.execute(command_sql).fetchone() is None:
-                raise HTTPException(status_code=422, detail="M02022 - ID_da_Estacao_do_ Locker inválido")    
+                return {"status_code":422, "detail":"M02022 - ID_da_Estacao_do_ Locker inválido"}
         if ms01.LatLong is not None:
             if not latlong_valid(ms01.LatLong):
-                raise HTTPException(status_code=422, detail="M02023 - Latitude e Longitude inválido - (informe 'lat,long')")
+                return {"status_code":422, "detail":"M02023 - Latitude e Longitude inválido - (informe 'lat,long')"}
         if ms01.Versao_Mensageria is not None:
             if ms01.Versao_Mensageria != "1.0.0":
-                raise HTTPException(status_code=422, detail="M02025 - Versao_Mensageria inválido")    
+                return {"status_code":422, "detail":"M02025 - Versao_Mensageria inválido"}
         command_sql = f"""INSERT INTO `MS01`
                             (`IdReferencia`,         
                             `IdSolicitante`,         
@@ -146,7 +146,7 @@ def ms01(ms01: MS01, public_id=Depends(auth_handler.auth_wrapper)):
         row = conn.execute(command_sql)
         where = 0
         if ms01.ID_de_Referencia is None:
-            ms01.ID_de_Referencia = "c67a298f-015f-4b65-a62b-8a6e42dc789a"
+            ms01.ID_de_Referencia = "Não informado"
         now = datetime.now()
         dt_string = now.strftime("%Y-%m-%dT%H:%M:%S")
         ms02 = dict()
