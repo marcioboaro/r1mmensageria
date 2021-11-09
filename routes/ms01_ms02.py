@@ -47,11 +47,14 @@ def ms01(ms01: MS01, public_id=Depends(auth_handler.auth_wrapper)):
         logger.info("Consulta ao Catalogo de Estações Lockers")
         logger.info(f"Usuário que fez a solicitação: {public_id}")
         if ms01.ID_do_Solicitante is None:
-            raise HTTPException(status_code=422, detail="M02006 - ID_do_Solicitante obrigatório")
+            error = {"status_code":422, "detail":"M02006 - ID_do_Solicitante obrigatório"}
+            return error
         if len(ms01.ID_do_Solicitante) != 20: # 20 caracteres
-            raise HTTPException(status_code=422, detail="M02009 - ID_de_Solicitante inválido")
+            error = {"status_code":422, "detail":"M02009 - ID_de_Solicitante inválido"}
+            return error
         if ms01.ID_Rede_Lockers is None:
-            raise HTTPException(status_code=422, detail="M02007 - ID_Rede_Lockers obrigatório")
+            error = {"status_code":422, "detail":"M02007 - ID_Rede_Lockers obrigatório"}
+            return error
         if ms01.ID_Rede_Lockers is not None:
             command_sql = f"SELECT idRede from rede where rede.idRede = '{ms01.ID_Rede_Lockers}';"
             if conn.execute(command_sql).fetchone() is None:
