@@ -53,6 +53,8 @@ def ms07(ms07: MS07, public_id=Depends(auth_handler.auth_wrapper)):
             if conn.execute(command_sql).fetchone() is None:
                 return {"status_code": 422, "detail": "M08001 - Reserva não Existe"}
 
+        idStatusEncomenda = "2"
+
         # validando versao mensageria
         if ms07.Versao_Mensageria is None:
             ms07.Versao_Mensageria = "1.0.0"
@@ -60,6 +62,7 @@ def ms07(ms07: MS07, public_id=Depends(auth_handler.auth_wrapper)):
         now = datetime.now()
         dt_string = now.strftime("%Y-%m-%dT%H:%M:%S")
 
+        ms08 = {}
         ms08['Codigo_de_MSG'] = "MS08"
         ms08['ID_de_Referencia'] = ms07.ID_de_Referencia
         ms08['ID_do_Solicitante'] = ms07.ID_do_Solicitante
@@ -83,7 +86,7 @@ def update_reserva_encomenda(ms07, IdTransacaoUnica):
         command_sql = f"""UPDATE `reserva_encomenda`
                                             SET     `IdSolicitante` = '{ms07.ID_do_Solicitante}',
                                                     `IdReferencia` = '{ms07.ID_de_Referencia}',
-                                                    `idStatusEncomenda` = '{2}',
+                                                    `idStatusEncomenda` = '{idStatusEncomenda}',
                                                     `ComentarioCancelamento` = '{ms07.Comentario_Cancelamento_Reserva}',
                                                     `DateUpdate` = now()
                                             WHERE `IdTransacaoUnica` = '{ms07.ID_Transacao_Unica}';"""
@@ -93,5 +96,5 @@ def update_reserva_encomenda(ms07, IdTransacaoUnica):
     except:
         logger.error(sys.exc_info())
         result = dict()
-        result['Error insert_ms05'] = sys.exc_info()
+        result['Error insert_ms06'] = sys.exc_info()
         return result

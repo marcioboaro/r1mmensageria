@@ -236,7 +236,7 @@ def send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_res
 
 def insert_ms05_encomendas(idTransacaoUnica, encomenda):
     try:
-        command_sql = f"""INSERT INTO MS05_Encomendas
+        command_sql = f"""INSERT INTO MS05_Encomendas 
                         (   ID_Encomenda
                             , ID_Transacao_Unica
                             , CPF_CNPJ_Shopper

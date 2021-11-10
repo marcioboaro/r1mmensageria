@@ -2,6 +2,7 @@ from typing import Optional
 from pydantic import BaseModel
 from datetime import datetime,time
 
+
 class MS16(BaseModel):
     Codigo_de_MSG : str
     ID_de_Referencia: str

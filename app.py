@@ -5,6 +5,7 @@ from routes.ms01_ms02 import ms01_ms02
 from routes.ms03_ms04 import ms03_ms04
 from routes.ms05_ms06 import ms05_ms06
 from routes.ms07_ms08 import ms07_ms08
+from routes.ms09_ms10 import ms09_ms10
 from routes.ms16_ms17 import ms16_ms17
 import uuid  
 from config.db import conn
@@ -95,7 +96,10 @@ def register(auth_details: AuthDetails):
                                             '{auth_details.email}',
                                             '{hashed_password}');'''
                 command_sql = command_sql.replace("'None'", "Null")
+                command_sql = command_sql.replace("None", "Null")
                 row = conn.execute(command_sql)
+            else:
+                return {"status_code": 400, "detail": "Usuário não é um participante cadastrado"}
 
         else:
             return {"status_code":400, "detail":"O nome de usuário já está em uso"}
@@ -167,4 +171,5 @@ app.include_router(ms01_ms02)
 app.include_router(ms03_ms04)
 app.include_router(ms05_ms06)
 app.include_router(ms07_ms08)
+app.include_router(ms09_ms10)
 app.include_router(ms16_ms17)
