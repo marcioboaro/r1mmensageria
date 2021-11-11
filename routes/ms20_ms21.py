@@ -19,7 +19,7 @@ key = Fernet.generate_key()
 f = Fernet(key)
 auth_handler = AuthHandler()
 
-@ms20_ms21post("/msg/v01/lockers/tag", tags=["ms20"], description="Solicitação de Geração de Etiquetas")
+@ms20_ms21.post("/msg/v01/lockers/tag", tags=["ms20"], description="Solicitação de Geração de Etiquetas")
 def ms20(ms20: MS20, public_id=Depends(auth_handler.auth_wrapper)):
     try:
         logger.info("MS20 - Solicitação de Geração de Etiquetas")

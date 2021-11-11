@@ -34,7 +34,7 @@ def latlong_valid(latlong):
         return False
 
 
-@ms18_ms19post("/msg/v01/lockers/slot/rent", tags=["ms18"], description="Solicitação de Locação de Porta em Locker")
+@ms18_ms19.post("/msg/v01/lockers/slot/rent", tags=["ms18"], description="Solicitação de Locação de Porta em Locker")
 def ms18(ms18: MS18, public_id=Depends(auth_handler.auth_wrapper)):
     try:
         logger.info("MS18 - Solicitação de Locação de Porta em Locker")
