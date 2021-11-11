@@ -18,9 +18,9 @@ class MS01(BaseModel):
     Complemento_Locker: Optional[str]
     Modelo_Uso_Locker: Optional[str]
     Categoria_Locker: Optional[str]
-    Tipo_Armazenamento: int
-    Codigo_Dimensao_Portas_Locker: int
-    Modelo_Operacao_Locker: int
+    Tipo_Armazenamento: Optional[int]
+    Codigo_Dimensao_Portas_Locker: Optional[int]
+    Modelo_Operacao_Locker: Optional[int]
     ID_da_Estacao_do_Locker: Optional[str]
     LatLong: Optional[str]
-    Versao_Mensageria: str
+    Versao_Mensageria: Optional[str]
