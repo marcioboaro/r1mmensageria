@@ -29,17 +29,17 @@ def ms16(ms16: MS16, public_id=Depends(auth_handler.auth_wrapper)):
 
         # validando ID_do_Solicitante
         if ms16.ID_do_Solicitante is None:
-            return {"status_code": 422, "detail": "M017007 - ID_do_Solicitante obrigatório"}
+            return {"status_code": 422, "detail": "M017001 - ID_do_Solicitante obrigatório"}
         if len(ms16.ID_do_Solicitante) != 20: # 20 caracteres
-            return {"status_code": 422, "detail": "M017011 - ID_do_Solicitante deve conter 20 caracteres"}
+            return {"status_code": 422, "detail": "M017002 - ID_do_Solicitante deve conter 20 caracteres"}
 
         # validando ID_Rede_Lockers
         if ms16.ID_Rede_Lockers is None:
-            return {"status_code": 422, "detail": "M017008 - ID_Rede_Lockers obrigatório"}
+            return {"status_code": 422, "detail": "M017003 - ID_Rede_Lockers obrigatório"}
         if ms16.ID_Rede_Lockers is not None:
-            command_sql = f"SELECT idRede from rede where rede.idRede = '{ms07.ID_Rede_Lockers}';"
+            command_sql = f"SELECT idRede from rede where rede.idRede = '{ms16.ID_Rede_Lockers}';"
             if conn.execute(command_sql).fetchone() is None:
-                return {"status_code": 422, "detail": "M017008 - ID_Rede_Lockers inválido"}
+                return {"status_code": 422, "detail": "M017004 - ID_Rede_Lockers inválido"}
 
         # gerando Data_Hora_Solicitacao
         if ms16.Data_Hora_Solicitacao is None:
@@ -47,27 +47,27 @@ def ms16(ms16: MS16, public_id=Depends(auth_handler.auth_wrapper)):
 
         # validando mensagem "Reserva não Existe"
         if ms16.ID_Transacao_Unica is None:
-            return {"status_code": 422, "detail": "M017009 - ID_Transacao_Unica obrigatório"}
+            return {"status_code": 422, "detail": "M017005 - ID_Transacao_Unica obrigatório"}
         if ms16.ID_Transacao_Unica is not None:
-            command_sql = f"SELECT IdTransacaoUnica from reserva_encomenda where reserva_encomenda.IdTransacaoUnica = '{ms07.ID_Transacao_Unica}';"
+            command_sql = f"SELECT IdTransacaoUnica from reserva_encomenda where reserva_encomenda.IdTransacaoUnica = '{ms16.ID_Transacao_Unica}';"
             if conn.execute(command_sql).fetchone() is None:
-                return {"status_code": 422, "detail": "M017001 - Reserva não Existe"}
+                return {"status_code": 422, "detail": "M017006 - Reserva não Existe"}
 
         # validando Locker
         if ms16.ID_da_Estacao_do_Locker is None:
-            return {"status_code": 422, "detail": "M017008 - ID_da_Estacao_do_Locker obrigatório"}
+            return {"status_code": 422, "detail": "M017007 - ID_da_Estacao_do_Locker obrigatório"}
         if ms16.ID_da_Estacao_do_Locker is not None:
             command_sql = f"SELECT idLocker from locker where locker.idLocker = '{ms16.ID_da_Estacao_do_Locker}';"
             if conn.execute(command_sql).fetchone() is None:
-                return {"status_code": 422, "detail": "M017021 - ID_da_Estacao_do_ Locker inválido"}
+                return {"status_code": 422, "detail": "M017008 - ID_da_Estacao_do_ Locker inválido"}
 
         # validando porta
         if ms16.ID_da_Porta_do_Locker is None:
-            return {"status_code": 422, "detail": "M017010 - ID_da_Porta_do_Locker obrigatório"}
+            return {"status_code": 422, "detail": "M017009 - ID_da_Porta_do_Locker obrigatório"}
         if ms16.ID_da_Porta_do_Locker is not None:
             command_sql = f"SELECT idLockerPorta from locker_porta where locker_porta.idLockerPorta = '{ms16.ID_da_Porta_do_Locker}';"
             if conn.execute(command_sql).fetchone() is None:
-                return {"status_code": 422, "detail": "M017023 - ID_da_Porta_do_Locker inválido"}
+                return {"status_code": 422, "detail": "M017010 - ID_da_Porta_do_Locker inválido"}
 
         # validando versao mensageria
         if ms16.Versao_Mensageria is None:

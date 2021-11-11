@@ -43,17 +43,17 @@ def ms18(ms18: MS18, public_id=Depends(auth_handler.auth_wrapper)):
 
         # validando ID_do_Solicitante
         if ms18.ID_do_Solicitante is None:
-            return {"status_code": 422, "detail": "M010006 - ID_do_Solicitante obrigatório"}
+            return {"status_code": 422, "detail": "M019001 - ID_do_Solicitante obrigatório"}
         if len(ms18.ID_do_Solicitante) != 20: # 20 caracteres
-            return {"status_code": 422, "detail": "M010011 - ID_do_Solicitante deve conter 20 caracteres"}
+            return {"status_code": 422, "detail": "M019002 - ID_do_Solicitante deve conter 20 caracteres"}
 
         # validando ID_Rede_Lockers
         if ms18.ID_Rede_Lockers is None:
-            return {"status_code": 422, "detail": "M010015 - ID_Rede_Lockers obrigatório"}
+            return {"status_code": 422, "detail": "M019003 - ID_Rede_Lockers obrigatório"}
         if ms18.ID_Rede_Lockers is not None:
             command_sql = f"SELECT idRede from rede where rede.idRede = '{ms18.ID_Rede_Lockers}';"
             if conn.execute(command_sql).fetchone() is None:
-                return {"status_code": 422, "detail": "M010015 - ID_Rede_Lockers inválido"}
+                return {"status_code": 422, "detail": "M019004 - ID_Rede_Lockers inválido"}
 
         # gerando Data_Hora_Solicitacao
         if ms18.Data_Hora_Solicitacao is None:
@@ -61,19 +61,19 @@ def ms18(ms18: MS18, public_id=Depends(auth_handler.auth_wrapper)):
 
         # validando ID_da_Estacao_do_Locker
         if ms18.ID_da_Estacao_do_Locker is None:
-            return {"status_code": 422, "detail": "M010015 - ID_da_Estacao_do_Locker obrigatório"}
+            return {"status_code": 422, "detail": "M019005 - ID_da_Estacao_do_Locker obrigatório"}
         if ms18.ID_da_Estacao_do_Locker is not None:
-            command_sql = f"SELECT idLocker from locker where locker.idLocker = '{ms09.ID_da_Estacao_do_Locker}';"
+            command_sql = f"SELECT idLocker from locker where locker.idLocker = '{ms18.ID_da_Estacao_do_Locker}';"
             if conn.execute(command_sql).fetchone() is None:
-                return {"status_code": 422, "detail": "M06023 - ID_da_Estacao_do_ Locker inválido"}
+                return {"status_code": 422, "detail": "M019006 - ID_da_Estacao_do_ Locker inválido"}
 
         # validando Categoria_Porta
         if ms18.Categoria_Porta is None:
-            return {"status_code": 422, "detail": "M010008 - Categoria_Porta obrigatório"}
+            return {"status_code": 422, "detail": "M019007 - Categoria_Porta obrigatório"}
         if ms18.Categoria_Porta is not None:
             command_sql = f"SELECT idLockerPortaCategoria from locker_porta_categoria where locker_porta_categoria.idLockerPortaCategoria = '{ms18.Categoria_Porta}';"
             if conn.execute(command_sql).fetchone() is None:
-                return {"status_code": 422, "detail": "M06023 - Categoria_Porta inválido"}
+                return {"status_code": 422, "detail": "M019008 - Categoria_Porta inválido"}
 
         # validando versao mensageria
         if ms18.Versao_Mensageria is None:
@@ -97,10 +97,10 @@ def ms18(ms18: MS18, public_id=Depends(auth_handler.auth_wrapper)):
                                     and idLockerPortaStatus = 1;"""
         record_Porta = conn.execute(command_sql).fetchone()
         if record_Porta is None:
-            ms19['Codigo_Resposta_MS19'] = 'M06001 - Não existe porta disponível para esta categoria'
+            ms19['Codigo_Resposta_MS19'] = 'M019009 - Não existe porta disponível para esta categoria'
         else:
             ms19['ID_da_Porta_do_Locker'] = record_Porta[0]
-            ms19['Codigo_Resposta_MS19'] = 'M06000 - Sucesso'
+            ms19['Codigo_Resposta_MS19'] = 'M019000 - Sucesso'
 
 
             command_sql = f"""SELECT `locker`.`idPais`,
