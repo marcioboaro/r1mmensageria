@@ -234,54 +234,77 @@ def send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_res
         result['Error send_lc01_mq'] = sys.exc_info()
         return result 
 
-def insert_ms05_encomendas(idTransacaoUnica, encomenda):
+def insert_ms05_encomendas(idTransacaoUnica, encomenda, ms05):
     try:
-        command_sql = f"""INSERT INTO MS05_Encomendas 
-                        (   ID_Encomenda
-                            , ID_Transacao_Unica
-                            , CPF_CNPJ_Shopper
-                            , Moeda_Shopper
-                            , Valor_Encomenda_Shopper
-                            , Numero_Nota_Fiscal_Encomenda_Shopper
-                            , Numero_Mobile_Shopper
-                            , Endereço_de_Email_do_Shopper
-                            , Codigo_País_Shopper
-                            , Cidade_Shopper
-                            , CEP_Shopper
-                            , Endereco_Shopper
-                            , Bairro_Shopper
-                            , Numero_Shopper
-                            , Complemento_Shopper
-                            , Codigo_Rastreamento_Encomenda
-                            , Codigo_Barras_Conteudo_Encomenda
-                            , Descricao_Conteudo_Encomenda
-                            , Encomenda_Assegurada
-                            , Largura_Encomenda
-                            , Altura_Encomenda
-                            , Profundidade_Encomenda)
+        command_sql = f"""INSERT INTO `reserva_encomenda`
+                            (`IdTransacaoUnica`,
+                            `IdEncomenda`,
+                            `idShopperCPFCNPJ`,
+                            `IdSolicitante`,
+                            `IdReferencia`,
+                            `idRede`,
+                            `idLocker`,
+                            `idLockerPorta`,
+                            `DataHoraSolicitacao`,
+                            `idStatusEncomenda`,
+                            `idServicoReserva`,
+                            `TipoFluxoAtual`,
+                            `idLockerPortaCategoria`,
+                            `GeraçãoQRCODERespostaMS06`,
+                            `QRCODE`,
+                            `GeraçãoCodigoAberturaPortaRespostaMS06`,
+                            `CodigoAberturaPorta`,
+                            `URL_CALL_BACK`,
+                            `IdTicketRotaLockers`,
+                            `idStatusEntregaEncomenda`,
+                            `TipoAcao`,
+                            `ComentarioCancelamento`)
                     VALUES
-                        ('{encomenda.ID_Encomenda}'
-                        , '{idTransacaoUnica}'
-                        , '{encomenda.CPF_CNPJ_Shopper}'
-                        , '{encomenda.Moeda_Shopper}'
-                        , {encomenda.Valor_Encomenda_Shopper}
-                        , '{encomenda.Numero_Nota_Fiscal_Encomenda_Shopper}'
-                        , '{encomenda.Numero_Mobile_Shopper}'
-                        , '{encomenda.Endereço_de_Email_do_Shopper}'
-                        , '{encomenda.Codigo_País_Shopper}'
-                        , '{encomenda.Cidade_Shopper}'
-                        , '{encomenda.CEP_Shopper}'
-                        , '{encomenda.Endereco_Shopper}'
-                        , '{encomenda.Bairro_Shopper}'
-                        , '{encomenda.Numero_Shopper}'
-                        , '{encomenda.Complemento_Shopper}'
-                        , '{encomenda.Codigo_Rastreamento_Encomenda}'
-                        , '{encomenda.Codigo_Barras_Conteudo_Encomenda}'
-                        , '{encomenda.Descricao_Conteudo_Encomenda}'
-                        , '{encomenda.Encomenda_Assegurada}'
-                        , {encomenda.Largura_Encomenda}
-                        , {encomenda.Altura_Encomenda}
-                        , {encomenda.Profundidade_Encomenda});"""
+                            ('{idTransacaoUnica}'',
+                            '{encomenda.ID_Encomenda}',
+                            '{encomenda.CPF_CNPJ_Shopper}',
+                            <{IdSolicitante: }>,
+                            '{ms05.ID_do_Solicitante}',
+                            '{ms05.ID_de_Referencia}',
+                             {ms05.ID_Rede_Lockers},
+                            '{ms05.ID_da_Estacao_do_Locker}',
+
+                            {idLockerPorta}>,
+                            {DataHoraSolicitacao}>,
+                            {idStatusEncomenda}>,
+                            {idServicoReserva}>,
+                            {TipoFluxoAtual}>,
+                            {idLockerPortaCategoria}>,
+                            {GeraçãoQRCODERespostaMS06}>,
+                            {QRCODE},
+                            {GeraçãoCodigoAberturaPortaRespostaMS06},
+                            {CodigoAberturaPorta},
+                            {URL_CALL_BACK},
+                            {IdTicketRotaLockers},
+                            {idStatusEntregaEncomenda},
+                            {TipoAcao},
+                            {ComentarioCancelamento})
+                            , '{encomenda.Moeda_Shopper}'
+                            , {encomenda.Valor_Encomenda_Shopper}
+                            , '{encomenda.Numero_Nota_Fiscal_Encomenda_Shopper}'
+                            , '{encomenda.Numero_Mobile_Shopper}'
+                            , '{encomenda.Endereço_de_Email_do_Shopper}'
+                            , '{encomenda.Codigo_País_Shopper}'
+                            , '{encomenda.Cidade_Shopper}'
+                            , '{encomenda.CEP_Shopper}'
+                            , '{encomenda.Endereco_Shopper}'
+                            , '{encomenda.Bairro_Shopper}'
+                            , '{encomenda.Numero_Shopper}'
+                            , '{encomenda.Complemento_Shopper}'
+                            , '{encomenda.Codigo_Rastreamento_Encomenda}'
+                            , '{encomenda.Codigo_Barras_Conteudo_Encomenda}'
+                            , '{encomenda.Descricao_Conteudo_Encomenda}'
+                            , '{encomenda.Encomenda_Assegurada}'
+                            , {encomenda.Largura_Encomenda}
+                            , {encomenda.Altura_Encomenda}
+                            , {encomenda.Profundidade_Encomenda});"""
+
+
         command_sql = command_sql.replace("'None'", "Null")
         command_sql = command_sql.replace("None", "Null")
         conn.execute(command_sql)
@@ -316,7 +339,6 @@ def insert_ms05(ms05, idTransacaoUnica):
                         , '{ms05.ID_do_Solicitante}'
                         , {ms05.ID_Rede_Lockers}
                         , NOW() 
-                        , '{ms05.ID_da_Estacao_do_Locker}'
                         , {ms05.Tipo_de_Serviço_Reserva}
                         , '{ms05.ID_PSL_Designado}'
                         , '{ms05.Autenticacao_Login_Operador_Logistico}'

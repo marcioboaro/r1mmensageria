@@ -34,10 +34,6 @@ def register(auth_details: AuthDetails):
         command_sql = None
         if auth_details.username is None or auth_details.password is None:
             return {"status_code":400, "detail":"Username ou Password não informado"}
-#        if auth_handler.check_user_exists(auth_details.cnpj):
-#            raise HTTPException(status_code=400, detail="CNPJ já existe")
-#        if auth_handler.check_email_exists(auth_details.email):
-#            raise HTTPException(status_code=400, detail="Email já existe")
         if not re.match(r"[^@]+@[^@]+\.[^@]+", auth_details.email):
             return {"status_code":203, "detail":"Por favor entre com um endereço de e-mail valido."}
 
