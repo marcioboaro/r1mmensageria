@@ -19,7 +19,7 @@ key = Fernet.generate_key()
 f = Fernet(key)
 auth_handler = AuthHandler()
 
-@ms12post("/msg/v01/lockers/pod", tags=["ms12"], description="Notificação de Prova de Entrega (POD)")
+@ms12.post("/msg/v01/lockers/pod", tags=["ms12"], description="Notificação de Prova de Entrega (POD)")
 def ms12(ms12: MS12, public_id=Depends(auth_handler.auth_wrapper)):
     try:
         logger.info("MS12 - Notificação de Prova de Entrega (POD)")
