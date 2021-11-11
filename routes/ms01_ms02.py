@@ -248,7 +248,7 @@ def ms01(ms01: MS01, public_id=Depends(auth_handler.auth_wrapper)):
             Locker['Feriados_Hora_Inicio'] = record[28]
             Locker['Feriados_Hora_Fim'] = record[29]
             Estacao_Locker.append(Locker)
-        ms02['Estacao_Locker:'] = Estacao_Locker  
+        ms02['Estacao_Locker'] = Estacao_Locker  
         return ms02
     except:
         logger.error(sys.exc_info())
