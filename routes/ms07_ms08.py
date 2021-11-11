@@ -53,8 +53,6 @@ def ms07(ms07: MS07, public_id=Depends(auth_handler.auth_wrapper)):
             if conn.execute(command_sql).fetchone() is None:
                 return {"status_code": 422, "detail": "M08001 - Reserva não Existe"}
 
-        idStatusEncomenda = "2"
-
         # validando versao mensageria
         if ms07.Versao_Mensageria is None:
             ms07.Versao_Mensageria = "1.0.0"
@@ -70,24 +68,27 @@ def ms07(ms07: MS07, public_id=Depends(auth_handler.auth_wrapper)):
         ms08['Codigo_Resposta_MS08'] = 'M08000 - Sucesso'
         ms08['Data_Hora_Resposta'] = dt_string
         ms08['ID_Transacao_Unica'] = ms07.ID_Transacao_Unica
+        idTransacaoUnica = ms07.ID_Transacao_Unica
         update_ms07(ms07, idTransacaoUnica)
         ms08['Versao_Mensageria'] = ms07.Versao_Mensageria
         return ms08
-    except Exception as e:
-        logger.error(e)
-        logger.info("MS07 - Cancelamento de reserva")
+
+    except:
+        logger.error(sys.exc_info())
+        result = dict()
+        result['Error ms05'] = sys.exc_info()
         return {"status_code": 500, "detail": "MS07 - Cancelamento de reserva"}
 
 #def send_lc01_mq(ms07, idTransacaoUnica, record_Porta, Inicio_reserva, Final_reserva):
     #try:  # Envia LC01 para fila do RabbitMQ o aplicativo do locker a pega lá
 
 
-def update_ms07(ms07, IdTransacaoUnica):
+def update_ms07(ms07, idTransacaoUnica):
     try:
         command_sql = f"""UPDATE `reserva_encomenda`
                                             SET     `IdSolicitante` = '{ms07.ID_do_Solicitante}',
                                                     `IdReferencia` = '{ms07.ID_de_Referencia}',
-                                                    `idStatusEncomenda` = '{idStatusEncomenda}',
+                                                    `idStatusEncomenda` = 2,
                                                     `ComentarioCancelamento` = '{ms07.Comentario_Cancelamento_Reserva}',
                                                     `DateUpdate` = now()
                                             WHERE `IdTransacaoUnica` = '{ms07.ID_Transacao_Unica}';"""

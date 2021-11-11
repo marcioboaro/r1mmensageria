@@ -50,8 +50,8 @@ def ms09(ms09: MS09, public_id=Depends(auth_handler.auth_wrapper)):
                 return {"status_code": 422, "detail": "M010018 - ID_Encomenda inválido"}
 
         # gerando Tipo_de_serviço_abertura_porta
-        if ms09.Tipo_de_serviço_abertura_porta is None:
-            return {"status_code": 422, "detail": "M010009 - Tipo_de_serviço_abertura_porta obrigatório"}
+        if ms09.Tipo_de_servico_abertura_porta is None:
+            return {"status_code": 422, "detail": "M010009 - Tipo_de_servico_abertura_porta obrigatório"}
 
         # gerando Data_Hora_Solicitacao
         if ms09.Data_Hora_Solicitacao is None:
@@ -61,7 +61,7 @@ def ms09(ms09: MS09, public_id=Depends(auth_handler.auth_wrapper)):
         if ms09.ID_Transacao_Unica is None:
             return {"status_code": 422, "detail": "M010008 - ID_Transacao_Unica obrigatório"}
         if ms09.ID_Transacao_Unica is not None:
-            command_sql = f"SELECT IdTransacaoUnica from reserva_encomenda where reserva_encomenda.IdTransacaoUnica = '{ms07.ID_Transacao_Unica}';"
+            command_sql = f"SELECT IdTransacaoUnica from reserva_encomenda where reserva_encomenda.IdTransacaoUnica = '{ms09.ID_Transacao_Unica}';"
             if conn.execute(command_sql).fetchone() is None:
                 return {"status_code": 422, "detail": "M010001 - Reserva não Existe"}
 
@@ -87,7 +87,7 @@ def ms09(ms09: MS09, public_id=Depends(auth_handler.auth_wrapper)):
         ms10['ID_Transacao_Unica'] = ms09.ID_Transacao_Unica
         ms10['ID_Encomenda'] = ms09.ID_Encomenda
         ms10['ID_Geracao_QRCODE'] = record[0]
-        ms10['Geracao_de_Codigo_para_Abertura_Porta'] = record[1]
+        ms10['CodigoAberturaPorta'] = record[1]
         ms10['Data_Hora_Resposta'] = dt_string
         ms10['Versao_Mensageria'] = ms09.Versao_Mensageria
         return ms10

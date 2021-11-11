@@ -86,6 +86,7 @@ def ms16(ms16: MS16, public_id=Depends(auth_handler.auth_wrapper)):
         ms17['ID_da_Estacao_do_Locker'] = ms16.ID_da_Estacao_do_Locker
         ms17['ID_da_Porta_do_Locker'] = ms16.ID_da_Porta_do_Locker
         ms17['ID_Transacao_Unica'] = ms16.ID_Transacao_Unica
+        idTransacaoUnica = ms16.ID_Transacao_Unica
         update_ms16(ms16, idTransacaoUnica)
         ms17['DataHora_Inicio_Reserva'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         ms17['DataHora_Final_Reserva'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -95,7 +96,7 @@ def ms16(ms16: MS16, public_id=Depends(auth_handler.auth_wrapper)):
         logger.error(sys.exc_info())
         result = dict()
         result['Error ms16'] = sys.exc_info()
-        return result
+        return {"status_code": 500, "detail": "MS16 - Prorrogação de reserva"}
 
 #def send_lc01_mq(ms07, idTransacaoUnica, record_Porta, Inicio_reserva, Final_reserva):
     #try:  # Envia LC01 para fila do RabbitMQ o aplicativo do locker a pega lá
@@ -106,7 +107,7 @@ def update_ms16(ms16, IdTransacaoUnica):
         command_sql = f"""UPDATE `reserva_encomenda`
                                             SET     `IdSolicitante` = '{ms16.ID_do_Solicitante}',
                                                     `IdReferencia` = '{ms16.ID_de_Referencia}',
-                                                    `idStatusEncomenda` = {3},
+                                                    `idStatusEncomenda` = 3,
                                                     `DateUpdate` = now()
                                             WHERE `IdTransacaoUnica` = '{ms16.ID_Transacao_Unica}';"""
         command_sql = command_sql.replace("'None'", "Null")
