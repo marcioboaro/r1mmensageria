@@ -86,6 +86,7 @@ def ms16(ms16: MS16, public_id=Depends(auth_handler.auth_wrapper)):
         ms17['ID_da_Estacao_do_Locker'] = ms16.ID_da_Estacao_do_Locker
         ms17['ID_da_Porta_do_Locker'] = ms16.ID_da_Porta_do_Locker
         ms17['ID_Transacao_Unica'] = ms16.ID_Transacao_Unica
+        update_ms16(ms16, idTransacaoUnica)
         ms17['DataHora_Inicio_Reserva'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         ms17['DataHora_Final_Reserva'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         ms17['Versao_Mensageria'] = ms16.Versao_Mensageria
@@ -100,7 +101,7 @@ def ms16(ms16: MS16, public_id=Depends(auth_handler.auth_wrapper)):
     #try:  # Envia LC01 para fila do RabbitMQ o aplicativo do locker a pega lá
 
 
-def update_reserva_encomenda(ms16, IdTransacaoUnica):
+def update_ms16(ms16, IdTransacaoUnica):
     try:
         command_sql = f"""UPDATE `reserva_encomenda`
                                             SET     `IdSolicitante` = '{ms16.ID_do_Solicitante}',

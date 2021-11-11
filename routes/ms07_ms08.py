@@ -70,6 +70,7 @@ def ms07(ms07: MS07, public_id=Depends(auth_handler.auth_wrapper)):
         ms08['Codigo_Resposta_MS08'] = 'M08000 - Sucesso'
         ms08['Data_Hora_Resposta'] = dt_string
         ms08['ID_Transacao_Unica'] = ms07.ID_Transacao_Unica
+        update_ms07(ms07, idTransacaoUnica)
         ms08['Versao_Mensageria'] = ms07.Versao_Mensageria
         return ms08
     except Exception as e:
@@ -81,7 +82,7 @@ def ms07(ms07: MS07, public_id=Depends(auth_handler.auth_wrapper)):
     #try:  # Envia LC01 para fila do RabbitMQ o aplicativo do locker a pega lá
 
 
-def update_reserva_encomenda(ms07, IdTransacaoUnica):
+def update_ms07(ms07, IdTransacaoUnica):
     try:
         command_sql = f"""UPDATE `reserva_encomenda`
                                             SET     `IdSolicitante` = '{ms07.ID_do_Solicitante}',
