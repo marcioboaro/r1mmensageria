@@ -85,7 +85,7 @@ def ms01(ms01: MS01, public_id=Depends(auth_handler.auth_wrapper)):
     #        if conn.execute(command_sql).fetchone() is None:
     #            raise HTTPException(status_code=422, detail="M02019 - Modelo_uso_Locker inválido")    
         if ms01.Categoria_Locker is not None:
-            command_sql = f"SELECT idLockerCategoria from locker_porta_categoria where idLockerCategoria = '{ms01.Categoria_Locker}';"
+            command_sql = f"SELECT idLockerCategoria from locker_categoria where idLockerCategoria = '{ms01.Categoria_Locker}';"
             if conn.execute(command_sql).fetchone() is None:
                 return {"status_code":422, "detail":"M02020 - Categoria_Locker inválido"}
         if ms01.Modelo_Operacao_Locker is not None:
