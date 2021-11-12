@@ -44,19 +44,19 @@ def ms20(ms20: MS20, public_id=Depends(auth_handler.auth_wrapper)):
         if ms20.Data_Hora_Solicitacao is None:
             ms20.Data_Hora_Solicitacao = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        # validando ID_da_Estacao_do_Locker
-        if ms20.ID_da_Estacao_do_Locker is None:
-            return {"status_code": 422, "detail": "M021005 - ID_da_Estacao_do_Locker obrigatório"}
-        if ms20.ID_da_Estacao_do_Locker is not None:
-            command_sql = f"SELECT idLocker from locker where locker.idLocker = '{ms20.ID_da_Estacao_do_Locker}';"
+        # validando ID_da_Estacao_Locker
+        if ms20.ID_da_Estacao_Locker is None:
+            return {"status_code": 422, "detail": "M021005 - ID_da_Estacao_Locker obrigatório"}
+        if ms20.ID_da_Estacao_Locker is not None:
+            command_sql = f"SELECT idLocker from locker where locker.idLocker = '{ms20.ID_da_Estacao_Locker}';"
             if conn.execute(command_sql).fetchone() is None:
-                return {"status_code": 422, "detail": "M021006 - ID_da_Estacao_do_ Locker inválido"}
+                return {"status_code": 422, "detail": "M021006 - ID_da_Estacao_Locker inválido"}
 
         # validando ID_Encomenda
         if ms20.ID_Encomenda is None:
             return {"status_code": 422, "detail": "M021007 - ID_Encomenda obrigatório"}
         if ms20.ID_Encomenda is not None:
-            command_sql = f"SELECT IdEncomenda from reserva_encomenda_encomendas where reserva_encomenda_encomendas.IdEncomenda = '{ms18.ID_Encomenda}';"
+            command_sql = f"SELECT IdEncomenda from reserva_encomenda_encomendas where reserva_encomenda_encomendas.IdEncomenda = '{ms20.ID_Encomenda}';"
             if conn.execute(command_sql).fetchone() is None:
                 return {"status_code": 422, "detail": "M021008 - ID_Encomenda inválido"}
 
@@ -72,7 +72,7 @@ def ms20(ms20: MS20, public_id=Depends(auth_handler.auth_wrapper)):
         ms21['ID_de_Referencia'] = ms20.ID_de_Referencia
         ms21['ID_do_Solicitante'] = ms20.ID_do_Solicitante
         ms21['ID_Rede_Lockers'] = ms20.ID_Rede_Lockers
-        ms21['ID_da_Estacao_do_Locker'] = ms20.ID_da_Estacao_do_Locker
+        ms21['ID_da_Estacao_Locker'] = ms20.ID_da_Estacao_Locker
         ms21['Codigo_Resposta_MS21'] = 'M021000 - Sucesso'
         ms21['Data_Hora_Resposta'] = dt_string
         ms21['ID_Transacao_Unica'] = ms20.ID_Transacao_Unica
@@ -85,19 +85,18 @@ def ms20(ms20: MS20, public_id=Depends(auth_handler.auth_wrapper)):
             enc_temp['Tipo_de_Servico_Reserva'] = encomenda.Tipo_de_Servico_Reserva
             command_sql = f"""SELECT EncomendaEtiqueta
                                         FROM `rede1minuto`.`reserva_encomenda_encomendas`
-                                        where reserva_encomenda_encomendas.IdEncomenda = '{ms20.IdEncomenda}'
+                                        where reserva_encomenda_encomendas.IdEncomenda = '{encomenda.ID_Encomenda}'
                                         and IdTransacaoUnica = '{ms20.ID_Transacao_Unica}';"""
             record_encomenda = conn.execute(command_sql).fetchone()
             enc_temp['Etiqueta_Encomenda_Rede1minuto'] = record_encomenda[0]
             encomendas.append(enc_temp)
         ms21['Info_Encomendas'] = encomendas
         ms21['Versao_Mensageria'] = ms20.Versao_Mensageria
-
         return ms21
     except:
         logger.error(sys.exc_info())
         result = dict()
         result['Error ms20'] = sys.exc_info()
-        return result
+        return {"status_code": 500, "detail": "MS21 - Solicitação de Geração de Etiquetas"}
 
 
