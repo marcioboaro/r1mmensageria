@@ -213,9 +213,9 @@ def ms03(ms03: MS03, public_id=Depends(auth_handler.auth_wrapper)):
         command_sql = command_sql.replace("'None'", "Null")
         command_sql = command_sql.replace("None", "Null")
         records = conn.execute(command_sql).fetchall()
-        locker = {}
         lockers = []
         for row in records:
+            locker = {}
             locker['Id_da_Estacao_do_Locker'] = row[0]
             locker['Codigo_Pais_Locker'] = row[1]
             locker['CEP_Locker'] = row[2]
@@ -254,9 +254,9 @@ def ms03(ms03: MS03, public_id=Depends(auth_handler.auth_wrapper)):
             command_sql = command_sql.replace("'None'", "Null")
             command_sql = command_sql.replace("None", "Null")
             records0 = conn.execute(command_sql).fetchall()
-            portalocker = {}
             portas = []
             for row in records0:
+                portalocker = {}
                 portalocker['ID_da_Porta_do_Locker'] = row[0]
                 portalocker['idLockerPortaFisica'] = row[1]
                 portalocker['Categoria_Porta'] = row[2]
