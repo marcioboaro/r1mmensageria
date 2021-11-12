@@ -214,9 +214,9 @@ def ms01(ms01: MS01, public_id=Depends(auth_handler.auth_wrapper)):
         if ms01.ID_da_Estacao_do_Locker is not None:
             command_sql += f" and `idLocker` = '{ms01.ID_da_Estacao_do_Locker}'"
         records = conn.execute(command_sql).fetchall()
-        Locker = {}
         Estacao_Locker = []    
         for record in records:
+            Locker = {}
             Locker['Codigo_Pais_Locker'] = record[0]
             Locker['Cidade_Locker'] = record[1]
             Locker['Cep_Locker'] = record[2]
