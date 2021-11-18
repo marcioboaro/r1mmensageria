@@ -12,9 +12,9 @@ class MS18(BaseModel):
     ID_da_Estacao_do_Locker: str
     Categoria_Porta: str
     Geração_de_QRCODE_na_Resposta_MS19: str
+    DataHora_Inicio_Locacao: datetime
     DataHora_Final_Locacao: datetime
     Versao_Mensageria: str
-
 
 
 

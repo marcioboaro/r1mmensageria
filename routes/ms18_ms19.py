@@ -90,7 +90,7 @@ def ms18(ms18: MS18, public_id=Depends(auth_handler.auth_wrapper)):
         ms19['ID_da_Estacao_do_Locker'] = ms18.ID_da_Estacao_do_Locker
 
         command_sql = f"""SELECT idLockerPorta,
-                                    idLockerPortaFisica,
+                                    idLockerPortaFisica
                                     FROM `rede1minuto`.`locker_porta`
                                     where locker_porta.idLocker = '{ms18.ID_da_Estacao_do_Locker}'
                                     and idLockerPortaCategoria = '{ms18.Categoria_Porta}'
@@ -100,6 +100,7 @@ def ms18(ms18: MS18, public_id=Depends(auth_handler.auth_wrapper)):
             ms19['Codigo_Resposta_MS19'] = 'M019009 - Não existe porta disponível para esta categoria'
         else:
             ms19['ID_da_Porta_do_Locker'] = record_Porta[0]
+            idLockerPorta = record_Porta[0]
             ms19['Codigo_Resposta_MS19'] = 'M019000 - Sucesso'
 
 
@@ -110,7 +111,7 @@ def ms18(ms18: MS18, public_id=Depends(auth_handler.auth_wrapper)):
                                             `locker`.`LockerEndereco`,
                                             `locker`.`LockerNumero`,
                                             `locker`.`LockerComplemento`,
-                                            `locker`.`LockerLatLong`,
+                                            ST_ASTEXT(`locker`.`LockerLatLong`)LockerLatLong,
                                             `locker`.`idLockerCategoria`,
                                             `locker`.`idLockerOperacao`
                                     FROM `rede1minuto`.`locker`
@@ -120,7 +121,7 @@ def ms18(ms18: MS18, public_id=Depends(auth_handler.auth_wrapper)):
             command_sql = f"""UPDATE `rede1minuto`.`locker_porta`
                                             SET `idLockerPortaStatus` = 2
                                         where locker_porta.idLockerPorta = '{record_Porta[0]}'
-                                            AND idLockerPortaCategoria = '{ms0518.Categoria_Porta}';"""
+                                            AND idLockerPortaCategoria = '{ms18.Categoria_Porta}';"""
             conn.execute(command_sql)
 
             ms19['Data_Hora_Resposta'] = dt_string
@@ -130,13 +131,13 @@ def ms18(ms18: MS18, public_id=Depends(auth_handler.auth_wrapper)):
             ms19['Bairro_Locker'] = record[3]
             ms19['Endereco_Locker'] = record[4]
             ms19['Numero_Locker'] = record[5]
-            ms19['LatLong'] = record[6]
-            ms19['Categoria_Locker'] = record[7]
-            ms19['Modelo_Operacao_Locker'] = record[8]
+            ms19['LockerComplemento'] = record[6]
+            ms19['LatLong'] = record[7]
+            ms19['Categoria_Locker'] = record[8]
+            ms19['Modelo_Operacao_Locker'] = record[9]
             ms19['Categoria_Porta'] = ms18.Categoria_Porta
 
             idTransacaoUnica = str(uuid.uuid1())
-            insert_ms18(ms18, idTransacaoUnica)
 
             ms19['ID_Transacao_Unica'] = idTransacaoUnica
             ms19['ID_Geracao_QRCODE'] = idTransacaoUnica
@@ -148,46 +149,35 @@ def ms18(ms18: MS18, public_id=Depends(auth_handler.auth_wrapper)):
             date_after = datetime.now() + timedelta(days=3)  # 3 é o valor Default
             Final_reserva = date_after.strftime('%Y-%m-%d %H:%M:%S')
 
-            ms19['DataHora_Inicio_Locacao'] = ms18.Inicio_reserva
-            ms19['DataHora_Final_Locacao'] = ms18.Final_reserva
-
+            ms19['DataHora_Inicio_Locacao'] = Inicio_reserva
+            ms19['DataHora_Final_Locacao'] = Final_reserva
+            command_sql = f'''INSERT INTO `rede1minuto`.`reserva_locacao`
+                                                    (`IdTransacaoUnica`,
+                                                    `IdSolicitante`,
+                                                    `IdReferencia`,
+                                                    `idRede`,
+                                                    `idLocker`,
+                                                    `idLockerPorta`,
+                                                    `DataHoraSolicitacao`,
+                                                    `idStatusReserva`,
+                                                    `TipoFluxoAtual`)
+                                                VALUES
+                                                    ('{idTransacaoUnica}',
+                                                    '{ms18.ID_do_Solicitante}',
+                                                    '{ms18.ID_de_Referencia}',
+                                                    {ms18.ID_Rede_Lockers},
+                                                    '{ms18.ID_da_Estacao_do_Locker}',
+                                                    '{idLockerPorta}',
+                                                    '{Inicio_reserva}',
+                                                    {1}, 
+                                                    {0});'''  # 1 - Reserva efetivada, 2 - Reserva cancelada, 3 - Reserva em andamento, 4 - Reserva em espera
+            conn.execute(command_sql)
         return ms19
     except:
         logger.error(sys.exc_info())
         result = dict()
-        result['Error ms19'] = sys.exc_info()
-        return result
+        result['Error ms18'] = sys.exc_info()
+        return {"status_code": 500, "detail": "MS18 - Solicitação de Locação de Porta em Locker"}
 
 ###### Enviar para fila ############
 
-
-def insert_ms18(ms18, idTransacaoUnica, record_Porta, Inicio_reserva):
-    try:
-        command_sql = f'''INSERT INTO `rede1minuto`.`reserva_locacao`
-                                        (`IdTransacaoUnica`,
-                                        `IdSolicitante`,
-                                        `IdReferencia`,
-                                        `idRede`,
-                                        `idLocker`,
-                                        `idLockerPorta`,
-                                        `DataHoraSolicitacao`,
-                                        `idStatusReserva`,
-                                        `TipoFluxoAtual`)
-                                    VALUES
-                                        ('{idTransacaoUnica}',
-                                        '{ms18.ID_do_Solicitante}',
-                                        '{ms18.ID_de_Referencia}',
-                                        {ms18.ID_Rede_Lockers},
-                                        '{ms18.ID_da_Estacao_do_Locker}',
-                                        '{record_Porta[0]}',
-                                        '{Inicio_reserva}',
-                                        {1}, 
-                                        {0});''' # 1 - Reserva efetivada, 2 - Reserva cancelada, 3 - Reserva em andamento, 4 - Reserva em espera
-        command_sql = command_sql.replace("'None'", "Null")
-        command_sql = command_sql.replace("None", "Null")
-        conn.execute(command_sql)
-    except:
-        logger.error(sys.exc_info())
-        result = dict()
-        result['Error insert_ms18'] = sys.exc_info()
-        return result

@@ -8,21 +8,21 @@ from fastapi.exceptions import HTTPException
 from config.db import conn
 from config.log import logger
 from auth.auth import AuthHandler
-from schemas.ms12 import MS12
+from schemas.ms12 import MS12, pod
 from cryptography.fernet import Fernet
 import random
 import os
 import json
 
-ms12 = APIRouter()
+ms12_ms12 = APIRouter()
 key = Fernet.generate_key()
 f = Fernet(key)
 auth_handler = AuthHandler()
 
-@ms12.post("/msg/v01/lockers/pod", tags=["ms12"], description="Notificação de Prova de Entrega (POD)")
+@ms12_ms12.post("/msg/v01/lockers/pod", tags=["ms12"], description="Notificação de Prova de Entrega (POD)")
 def ms12(ms12: MS12, public_id=Depends(auth_handler.auth_wrapper)):
     try:
-        logger.info("Consulta da disponibilidade de Portas em Locker")
+        logger.info("Notificação de Prova de Entrega (POD)")
         logger.info(f"Usuário que fez a solicitação: {public_id}")
 
         # validando ID_do_Solicitante
@@ -66,29 +66,23 @@ def ms12(ms12: MS12, public_id=Depends(auth_handler.auth_wrapper)):
         now = datetime.now()
         dt_string = now.strftime("%Y-%m-%dT%H:%M:%S")
         idTransacaoUnica = ms12.ID_Transacao_Unica
+        pod = {}
+        pods = []
         dados_pod = ms12.Dados_POD
-        for pod in Dados_POD:
-            update_reserva_encomenda_encomendas(idTransacaoUnica, pod)
+        for pod in dados_pod:
+            command_sql = f"""UPDATE `reserva_encomenda_encomendas`
+                                                        SET     `CopiaAssinaturaPOD` = '{pod.Codigo_Conformidade_POD}',
+                                                                `DateUpdate` = now()
+                                                        WHERE `IdTransacaoUnica` = '{ms12.ID_Transacao_Unica}' and `IdEncomenda` = '{pod.ID_Encomenda}';"""
+            command_sql = command_sql.replace("'None'", "Null")
+            command_sql = command_sql.replace("None", "Null")
+            conn.execute(command_sql)
 
         return {"status_code": 200, "detail": "M012000 - Enviado com sucesso"}
+
 
     except:
         logger.error(sys.exc_info())
         result = dict()
         result['Error ms12'] = sys.exc_info()
-        return result
-
-def update_reserva_encomenda_encomendas(idTransacaoUnica, pod):
-    try:
-        command_sql = f"""UPDATE `reserva_encomenda_encomendas`
-                                            SET     `CopiaAssinaturaPOD` = '{pod.Codigo_Conformidade_POD}',
-                                                    `DateUpdate` = now()
-                                            WHERE `IdTransacaoUnica` = '{ms12.ID_Transacao_Unica}';"""
-        command_sql = command_sql.replace("'None'", "Null")
-        command_sql = command_sql.replace("None", "Null")
-        conn.execute(command_sql)
-    except:
-        logger.error(sys.exc_info())
-        result = dict()
-        result['Error insert_ms12'] = sys.exc_info()
-        return result
+        return {"status_code": 500, "detail": "MS12 - Notificação de Prova de Entrega (POD)"}

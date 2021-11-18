@@ -8,7 +8,7 @@ from fastapi.exceptions import HTTPException
 from config.db import conn
 from config.log import logger
 from auth.auth import AuthHandler
-from schemas.ms20 import MS20
+from schemas.ms20 import MS20, Encomendas
 from cryptography.fernet import Fernet
 import random
 import os
@@ -51,14 +51,15 @@ def ms20(ms20: MS20, public_id=Depends(auth_handler.auth_wrapper)):
             command_sql = f"SELECT idLocker from locker where locker.idLocker = '{ms20.ID_da_Estacao_Locker}';"
             if conn.execute(command_sql).fetchone() is None:
                 return {"status_code": 422, "detail": "M021006 - ID_da_Estacao_Locker inválido"}
-
         # validando ID_Encomenda
-        if ms20.ID_Encomenda is None:
-            return {"status_code": 422, "detail": "M021007 - ID_Encomenda obrigatório"}
-        if ms20.ID_Encomenda is not None:
-            command_sql = f"SELECT IdEncomenda from reserva_encomenda_encomendas where reserva_encomenda_encomendas.IdEncomenda = '{ms20.ID_Encomenda}';"
-            if conn.execute(command_sql).fetchone() is None:
-                return {"status_code": 422, "detail": "M021008 - ID_Encomenda inválido"}
+        #if Encomendas.ID_Encomenda is None:
+            #return {"status_code": 422, "detail": "M021007 - ID_Encomenda obrigatório"}
+        #if Encomendas.ID_Encomenda is not None:
+            #command_sql = f"SELECT IdEncomenda from reserva_encomenda_encomendas where reserva_encomenda_encomendas.IdEncomenda = '{Encomendas.ID_Encomenda}';"
+            #if conn.execute(command_sql).fetchone() is None:
+                #return {"status_code": 422, "detail": "M021008 - ID_Encomenda inválido"}
+
+
 
         # validando versao mensageria
         if ms20.Versao_Mensageria is None:
