@@ -62,10 +62,10 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
             return {"status_code": 422, "detail": "M06046 - URL para Call Back é obrigatória"}
 
         idTransacaoUnica = str(uuid.uuid1())
-        insert_ms05(ms05, idTransacaoUnica)
+#        insert_ms05(ms05, idTransacaoUnica)
         info_encomendas = ms05.Info_Encomendas
-        for encomenda in info_encomendas:
-            insert_ms05_encomendas(idTransacaoUnica, encomenda)
+#        for encomenda in info_encomendas:
+#            insert_ms05_encomendas(idTransacaoUnica, encomenda)
 
         now = datetime.now()
         dt_string = now.strftime("%Y-%m-%dT%H:%M:%S")
@@ -99,8 +99,8 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
         ms06['Complemento_Locker'] = record[6]
 
         command_sql = f"""SELECT idLockerPorta, 
-                                idLockerPortaFisica, 
-                                idOperadorLogistico
+                                 idLockerPortaFisica, 
+                                 idOperadorLogistico
                             FROM `rede1minuto`.`locker_porta`
                             where locker_porta.idLocker = '{ms05.ID_da_Estacao_do_Locker}'
                             and idLockerPortaCategoria = '{ms05.Categoria_Porta}'
@@ -234,7 +234,7 @@ def send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_res
         result['Error send_lc01_mq'] = sys.exc_info()
         return result 
 
-def insert_ms05_encomendas(idTransacaoUnica, encomenda, ms05):
+def (idTransacaoUnica, encomenda, ms05, record_Porta):
     try:
         command_sql = f"""INSERT INTO `reserva_encomenda`
                             (`IdTransacaoUnica`,
@@ -263,51 +263,41 @@ def insert_ms05_encomendas(idTransacaoUnica, encomenda, ms05):
                             ('{idTransacaoUnica}'',
                             '{encomenda.ID_Encomenda}',
                             '{encomenda.CPF_CNPJ_Shopper}',
-                            <{IdSolicitante: }>,
                             '{ms05.ID_do_Solicitante}',
                             '{ms05.ID_de_Referencia}',
                              {ms05.ID_Rede_Lockers},
                             '{ms05.ID_da_Estacao_do_Locker}',
-
-                            {idLockerPorta}>,
-                            {DataHoraSolicitacao}>,
-                            {idStatusEncomenda}>,
-                            {idServicoReserva}>,
-                            {TipoFluxoAtual}>,
-                            {idLockerPortaCategoria}>,
-                            {GeraçãoQRCODERespostaMS06}>,
+                            '{record_Porta[0]}',
+                            {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}>,
+                            {1},  
+                            {5},  
+                            {0},
+                            {ms05.Categoria_Porta},
+                            {None}>,
                             {QRCODE},
-                            {GeraçãoCodigoAberturaPortaRespostaMS06},
+                            {None},
                             {CodigoAberturaPorta},
-                            {URL_CALL_BACK},
-                            {IdTicketRotaLockers},
-                            {idStatusEntregaEncomenda},
-                            {TipoAcao},
-                            {ComentarioCancelamento})
-                            , '{encomenda.Moeda_Shopper}'
-                            , {encomenda.Valor_Encomenda_Shopper}
-                            , '{encomenda.Numero_Nota_Fiscal_Encomenda_Shopper}'
-                            , '{encomenda.Numero_Mobile_Shopper}'
-                            , '{encomenda.Endereço_de_Email_do_Shopper}'
-                            , '{encomenda.Codigo_País_Shopper}'
-                            , '{encomenda.Cidade_Shopper}'
-                            , '{encomenda.CEP_Shopper}'
-                            , '{encomenda.Endereco_Shopper}'
-                            , '{encomenda.Bairro_Shopper}'
-                            , '{encomenda.Numero_Shopper}'
-                            , '{encomenda.Complemento_Shopper}'
-                            , '{encomenda.Codigo_Rastreamento_Encomenda}'
-                            , '{encomenda.Codigo_Barras_Conteudo_Encomenda}'
-                            , '{encomenda.Descricao_Conteudo_Encomenda}'
-                            , '{encomenda.Encomenda_Assegurada}'
-                            , {encomenda.Largura_Encomenda}
-                            , {encomenda.Altura_Encomenda}
-                            , {encomenda.Profundidade_Encomenda});"""
+                            '{ms05.URL_CALL_BACK}',
+                            {1},
+                            {1},
+                            {1},
+                            {None})"""
+
+        '''
+                                    `GeraçãoQRCODERespostaMS06`,
+                                    `QRCODE`,
+                                    `GeraçãoCodigoAberturaPortaRespostaMS06`,
+                                    `CodigoAberturaPorta`,
+                                    '{ms05.URL_CALL_BACK}',
+                                    `IdTicketRotaLockers`,
+                                    `idStatusEntregaEncomenda`,
+                                    `TipoAcao`,
+                                    `ComentarioCancelamento`)
+        '''
 
 
         command_sql = command_sql.replace("'None'", "Null")
         command_sql = command_sql.replace("None", "Null")
-        conn.execute(command_sql)
     except:
         logger.error(sys.exc_info())
         result = dict()
