@@ -29,7 +29,7 @@ class Content(BaseModel):
    Versão_Software: str
    Versao_Mensageria: int
 
-clas LC01(BaseModel):
+class LC01(BaseModel):
    Codigo_de_MSG: str
    content: Optional[Content] = None
 

@@ -1,10 +1,14 @@
-2021/11/02 02:46:50 PM - uvicorn.error - INFO - Started server process [14421]
-2021/11/02 02:46:50 PM - uvicorn.error - INFO - Waiting for application startup.
-2021/11/02 02:46:50 PM - uvicorn.error - INFO - Application startup complete.
-2021/11/02 04:07:09 PM - Rede1Minuto Server - ERROR - (<class 'sqlalchemy.exc.OperationalError'>, OperationalError("(pymysql.err.OperationalError) (2013, 'Lost connection to MySQL server during query ([Errno 110] Connection timed out)')"), <traceback object at 0x7f0161896a40>)
-2021/11/02 04:07:09 PM - Rede1Minuto Server - ERROR - (<class 'sqlalchemy.exc.OperationalError'>, OperationalError("(pymysql.err.OperationalError) (2013, 'Lost connection to MySQL server during query')"), <traceback object at 0x7f0161896d00>)
-2021/11/02 04:07:09 PM - Rede1Minuto Server - ERROR - (<class 'sqlalchemy.exc.OperationalError'>, OperationalError("(pymysql.err.OperationalError) (2013, 'Lost connection to MySQL server during query')"), <traceback object at 0x7f016189e380>)
-2021/11/02 04:07:09 PM - uvicorn.error - ERROR - Exception in ASGI application
+2021/11/08 10:38:08 AM - uvicorn.error - INFO - Shutting down
+2021/11/08 10:38:08 AM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 10:38:08 AM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 10:38:08 AM - uvicorn.error - INFO - Finished server process [3090]
+2021/11/08 10:39:50 AM - uvicorn.error - INFO - Started server process [4133]
+2021/11/08 10:39:50 AM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 10:39:50 AM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 10:40:02 AM - Rede1Minuto Server - INFO - Consulta da disponibilidade de Portas em Locker
+2021/11/08 10:40:02 AM - Rede1Minuto Server - INFO - e5b1632f-9fdc-48b3-91cb-8bedb70b6926
+2021/11/08 10:40:04 AM - Rede1Minuto Server - ERROR - (<class 'sqlalchemy.exc.ProgrammingError'>, ProgrammingError('(pymysql.err.ProgrammingError) (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near \'\'2021-11-08 10:40:04\'\',\\n                                    1,  \\n            ...\' at line 19")'), <traceback object at 0x7f14adf5f400>)
+2021/11/08 10:40:04 AM - uvicorn.error - ERROR - Exception in ASGI application
 Traceback (most recent call last):
   File "/usr/local/lib/python3.9/dist-packages/uvicorn/protocols/http/h11_impl.py", line 394, in run_asgi
     result = await app(self.scope, self.receive, self.send)
@@ -39,7 +43,39 @@ Traceback (most recent call last):
   File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 141, in jsonable_encoder
     raise ValueError(errors)
 ValueError: [TypeError("'traceback' object is not iterable"), TypeError('vars() argument must have __dict__ attribute')]
-2021/11/02 04:07:10 PM - uvicorn.error - ERROR - Exception in ASGI application
+2021/11/08 10:41:35 AM - uvicorn.error - INFO - Shutting down
+2021/11/08 10:41:35 AM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 10:41:35 AM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 10:41:35 AM - uvicorn.error - INFO - Finished server process [4133]
+2021/11/08 10:41:38 AM - uvicorn.error - INFO - Started server process [4144]
+2021/11/08 10:41:38 AM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 10:41:38 AM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 10:41:46 AM - Rede1Minuto Server - INFO - Consulta da disponibilidade de Portas em Locker
+2021/11/08 10:41:46 AM - Rede1Minuto Server - INFO - e5b1632f-9fdc-48b3-91cb-8bedb70b6926
+2021/11/08 10:41:48 AM - Rede1Minuto Server - INFO - INSERT INTO `rede1minuto`.`reserva_simples`
+                                    (`IdTransacaoUnica`,
+                                    `IdSolicitante`,
+                                    `IdReferencia`,
+                                    `idRede`,
+                                    `idLocker`,
+                                    `idLockerPorta`,
+                                    `DataHoraSolicitacao`,
+                                    `idStatusReserva`,
+                                    `idServicoReserva`,
+                                    `TipoFluxoAtual`)
+                                VALUES
+                                    (9e20183e-4099-11ec-b64b-00155df485d9,
+                                    12023895000169,
+                                    1455444,
+                                    1,
+                                    5d00e429-32a8-11ec-9da0-5cc9d363c015,
+                                    46033f6a-3358-11ec-a53d-5cc9d363c015,
+                                    '2021-11-08 10:41:48'',
+                                    1,  
+                                    5,  
+                                    0);
+2021/11/08 10:41:48 AM - Rede1Minuto Server - ERROR - (<class 'sqlalchemy.exc.DataError'>, DataError('(pymysql.err.DataError) (1367, "Illegal double \'9e20183\' value found during parsing")'), <traceback object at 0x7fa8076aee40>)
+2021/11/08 10:41:48 AM - uvicorn.error - ERROR - Exception in ASGI application
 Traceback (most recent call last):
   File "/usr/local/lib/python3.9/dist-packages/uvicorn/protocols/http/h11_impl.py", line 394, in run_asgi
     result = await app(self.scope, self.receive, self.send)
@@ -74,7 +110,39 @@ Traceback (most recent call last):
   File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 141, in jsonable_encoder
     raise ValueError(errors)
 ValueError: [TypeError("'traceback' object is not iterable"), TypeError('vars() argument must have __dict__ attribute')]
-2021/11/02 04:07:10 PM - uvicorn.error - ERROR - Exception in ASGI application
+2021/11/08 10:43:19 AM - uvicorn.error - INFO - Shutting down
+2021/11/08 10:43:19 AM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 10:43:19 AM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 10:43:19 AM - uvicorn.error - INFO - Finished server process [4144]
+2021/11/08 10:43:22 AM - uvicorn.error - INFO - Started server process [4532]
+2021/11/08 10:43:22 AM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 10:43:22 AM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 10:43:39 AM - Rede1Minuto Server - INFO - Consulta da disponibilidade de Portas em Locker
+2021/11/08 10:43:39 AM - Rede1Minuto Server - INFO - e5b1632f-9fdc-48b3-91cb-8bedb70b6926
+2021/11/08 10:43:41 AM - Rede1Minuto Server - INFO - INSERT INTO `rede1minuto`.`reserva_simples`
+                                    (`IdTransacaoUnica`,
+                                    `IdSolicitante`,
+                                    `IdReferencia`,
+                                    `idRede`,
+                                    `idLocker`,
+                                    `idLockerPorta`,
+                                    `DataHoraSolicitacao`,
+                                    `idStatusReserva`,
+                                    `idServicoReserva`,
+                                    `TipoFluxoAtual`)
+                                VALUES
+                                    ('e1a54a34-4099-11ec-bf5f-00155df485d9',
+                                    '12023895000169',
+                                    '1455444',
+                                    1,
+                                    '5d00e429-32a8-11ec-9da0-5cc9d363c015',
+                                    '46270291-3358-11ec-8ba4-5cc9d363c015',
+                                    '2021-11-08 10:43:41'',
+                                    1,  
+                                    5,  
+                                    0);
+2021/11/08 10:43:41 AM - Rede1Minuto Server - ERROR - (<class 'sqlalchemy.exc.ProgrammingError'>, ProgrammingError('(pymysql.err.ProgrammingError) (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near \'\'2021-11-08 10:43:41\'\',\\n                                    1,  \\n            ...\' at line 19")'), <traceback object at 0x7f6b93ceee80>)
+2021/11/08 10:43:41 AM - uvicorn.error - ERROR - Exception in ASGI application
 Traceback (most recent call last):
   File "/usr/local/lib/python3.9/dist-packages/uvicorn/protocols/http/h11_impl.py", line 394, in run_asgi
     result = await app(self.scope, self.receive, self.send)
@@ -109,307 +177,1044 @@ Traceback (most recent call last):
   File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 141, in jsonable_encoder
     raise ValueError(errors)
 ValueError: [TypeError("'traceback' object is not iterable"), TypeError('vars() argument must have __dict__ attribute')]
-2021/11/02 04:50:47 PM - uvicorn.error - INFO - Shutting down
-2021/11/02 04:50:47 PM - uvicorn.error - INFO - Waiting for application shutdown.
-2021/11/02 04:50:47 PM - uvicorn.error - INFO - Application shutdown complete.
-2021/11/02 04:50:47 PM - uvicorn.error - INFO - Finished server process [14421]
-2021/11/02 04:50:54 PM - uvicorn.error - INFO - Started server process [14449]
-2021/11/02 04:50:54 PM - uvicorn.error - INFO - Waiting for application startup.
-2021/11/02 04:50:54 PM - uvicorn.error - INFO - Application startup complete.
-2021/11/02 04:51:53 PM - passlib.handlers.bcrypt - DEBUG - detected 'bcrypt' backend, version '3.2.0'
-2021/11/02 04:51:53 PM - passlib.handlers.bcrypt - DEBUG - 'bcrypt' backend lacks $2$ support, enabling workaround
-2021/11/02 04:51:53 PM - Rede1Minuto Server - INFO - Consulta ao Catalogo de Estações Lockers
-2021/11/02 04:51:53 PM - Rede1Minuto Server - INFO - ID_de_Referencia='1455444' ID_do_Solicitante='12023895000169' ID_Rede_Lockers='1' Data_Hora_Solicitacao=None Codigo_Pais_Locker=None Cidade_Locker=None Cep_Locker=None Bairro_Locker=None Endereco_Locker=None Numero_Locker=None Complemento_Locker=None Modelo_uso_Locker=None Categoria_Locker=None Tipo_Armazenamento=None Codigo_Dimensao_Portas_Locker=None Modelo_Operacao_Locker=None ID_da_Estacao_do_Locker=None LatLong=None Versao_Mensageria='1.0.0'
-2021/11/02 04:57:36 PM - uvicorn.error - INFO - Shutting down
-2021/11/02 04:57:36 PM - uvicorn.error - INFO - Waiting for connections to close. (CTRL+C to force quit)
-2021/11/02 04:57:40 PM - uvicorn.error - INFO - Finished server process [14449]
-2021/11/02 05:01:21 PM - uvicorn.error - INFO - Started server process [160]
-2021/11/02 05:01:21 PM - uvicorn.error - INFO - Waiting for application startup.
-2021/11/02 05:01:21 PM - uvicorn.error - INFO - Application startup complete.
-2021/11/02 05:01:30 PM - passlib.handlers.bcrypt - DEBUG - detected 'bcrypt' backend, version '3.2.0'
-2021/11/02 05:01:30 PM - passlib.handlers.bcrypt - DEBUG - 'bcrypt' backend lacks $2$ support, enabling workaround
-2021/11/02 05:01:31 PM - Rede1Minuto Server - INFO - Consulta da disponibilidade de Portas em Locker
-2021/11/02 05:01:31 PM - Rede1Minuto Server - INFO - e5b1632f-9fdc-48b3-91cb-8bedb70b6926 - Codigo_de_MSG='MS05' ID_de_Referencia='1455444' ID_do_Solicitante='12023895000169' ID_Rede_Lockers=1 Data_Hora_Solicitacao=datetime.datetime(2021, 10, 22, 19, 55, 45) ID_da_Estacao_do_Locker='5d00e429-32a8-11ec-9da0-5cc9d363c015' Tipo_de_Serviço_Reserva=1 ID_Transacao_Unica='2525' ID_PSL_Designado='1' Autenticacao_Login_Operador_Logistico=1 Categoria_Porta='SRTP' Geracao_de_QRCODE_na_Resposta_MS06='1' Geracao_de_Codigo_de_Abertura_de_Porta_na_Resposta_MS06='1' Info_Encomendas=[Encomendas(ID_Encomenda='33', Numero_Mobile_Shopper='2', Endereço_de_Email_do_Shopper='2', CPF_CNPJ_Shopper='113.469.948-46', Moeda_Shopper='2', Valor_Encomenda_Shopper='2', Numero_Nota_Fiscal_Encomenda_Shopper='2', Codigo_País_Shopper='BR', Cidade_Shopper='São Paulo', CEP_Shopper='01417-020', Bairro_Shopper='Cerqueira César', Endereco_Shopper='Alameda Tietê', Numero_Shopper='312', Complemento_Shopper='Apto 23', Codigo_Rastreamento_Encomenda='2', Codigo_Barras_Conteudo_Encomenda='2', Descricao_Conteudo_Encomenda='2', Encomenda_Assegurada=2, Largura_Encomenda=2, Altura_Encomenda=2, Profundidade_Encomenda=24), Encomendas(ID_Encomenda='32', Numero_Mobile_Shopper='2', Endereço_de_Email_do_Shopper='2', CPF_CNPJ_Shopper='113.469.948-46', Moeda_Shopper='2', Valor_Encomenda_Shopper='2', Numero_Nota_Fiscal_Encomenda_Shopper='2', Codigo_País_Shopper='BR', Cidade_Shopper='São Paulo', CEP_Shopper='01417-020', Bairro_Shopper='Cerqueira César', Endereco_Shopper='Alameda Tietê', Numero_Shopper='312', Complemento_Shopper='Apto 23', Codigo_Rastreamento_Encomenda='2555611333', Codigo_Barras_Conteudo_Encomenda='15465444566', Descricao_Conteudo_Encomenda='2', Encomenda_Assegurada=2, Largura_Encomenda=2, Altura_Encomenda=2, Profundidade_Encomenda=23)] URL_CALL_BACK='None' Versao_Mensageria='None'
-2021/11/02 05:01:32 PM - pika.adapters.select_connection - DEBUG - Using EPollPoller
-2021/11/02 05:01:32 PM - pika.adapters.base_connection - DEBUG - Created default connection workflow <pika.adapters.utils.connection_workflow.AMQPConnectionWorkflow object at 0x7f2fed61b400>
-2021/11/02 05:01:32 PM - pika.adapters.utils.connection_workflow - DEBUG - Starting AMQP Connection workflow asynchronously.
-2021/11/02 05:01:32 PM - pika.adapters.select_connection - DEBUG - call_later: added timeout <pika.adapters.select_connection._Timeout object at 0x7f2fed61b460> with deadline=255712.8005353 and callback=functools.partial(<bound method AMQPConnectionWorkflow._start_new_cycle_async of <pika.adapters.utils.connection_workflow.AMQPConnectionWorkflow object at 0x7f2fed61b400>>, first=True); now=255712.8005353; delay=0
-2021/11/02 05:01:32 PM - pika.adapters.utils.connection_workflow - DEBUG - Beginning a new AMQP connection workflow cycle; attempts remaining after this: 0
-2021/11/02 05:01:32 PM - pika.adapters.select_connection - DEBUG - call_later: added timeout <pika.adapters.select_connection._Timeout object at 0x7f2fed61b3d0> with deadline=255712.8009173 and callback=<bound method AMQPConnectionWorkflow._try_next_config_async of <pika.adapters.utils.connection_workflow.AMQPConnectionWorkflow object at 0x7f2fed61b400>>; now=255712.8009173; delay=0
-2021/11/02 05:01:32 PM - pika.adapters.utils.connection_workflow - DEBUG - _try_next_config_async: '167.71.26.87':5672
-2021/11/02 05:01:32 PM - pika.adapters.select_connection - DEBUG - process_timeouts: invoking callback=<bound method _AddressResolver._dispatch_result of <pika.adapters.utils.selector_ioloop_adapter._AddressResolver object at 0x7f2fed61b130>>
-2021/11/02 05:01:32 PM - pika.adapters.select_connection - DEBUG - add_callback_threadsafe: added callback=<bound method _AddressResolver._dispatch_result of <pika.adapters.utils.selector_ioloop_adapter._AddressResolver object at 0x7f2fed61b130>>
-2021/11/02 05:01:32 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - Invoking asynchronous getaddrinfo() completion callback; host='167.71.26.87'
-2021/11/02 05:01:32 PM - pika.adapters.utils.connection_workflow - DEBUG - getaddrinfo returned 1 records
-2021/11/02 05:01:32 PM - pika.adapters.utils.connection_workflow - DEBUG - Attempting to connect using address record (<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 6, '', ('167.71.26.87', 5672))
-2021/11/02 05:01:32 PM - pika.adapters.utils.connection_workflow - INFO - Pika version 1.2.0 connecting to ('167.71.26.87', 5672)
-2021/11/02 05:01:32 PM - pika.adapters.select_connection - DEBUG - add_callback_threadsafe: added callback=<bound method _AsyncSocketConnector._start_async of <pika.adapters.utils.io_services_utils._AsyncSocketConnector object at 0x7f2fed61b9d0>>
-2021/11/02 05:01:32 PM - pika.adapters.select_connection - DEBUG - call_later: added timeout <pika.adapters.select_connection._Timeout object at 0x7f2fed61ba90> with deadline=255718.804333 and callback=<bound method AMQPConnector._on_tcp_connection_timeout of <pika.adapters.utils.connection_workflow.AMQPConnector object at 0x7f2fed61ba60>>; now=255712.804333; delay=6.0
-2021/11/02 05:01:32 PM - pika.adapters.select_connection - DEBUG - call_later: added timeout <pika.adapters.select_connection._Timeout object at 0x7f2fed61bb20> with deadline=255727.8044299 and callback=<bound method AMQPConnector._on_overall_timeout of <pika.adapters.utils.connection_workflow.AMQPConnector object at 0x7f2fed61ba60>>; now=255712.8044299; delay=15.0
-2021/11/02 05:01:32 PM - pika.adapters.select_connection - DEBUG - process_timeouts: invoking callback=<bound method _AsyncSocketConnector._start_async of <pika.adapters.utils.io_services_utils._AsyncSocketConnector object at 0x7f2fed61b9d0>>
-2021/11/02 05:01:32 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - SelectorIOServicesAdapter.set_writer(17, <bound method _AsyncSocketConnector._on_writable of <pika.adapters.utils.io_services_utils._AsyncSocketConnector object at 0x7f2fed61b9d0>>)
-2021/11/02 05:01:32 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - set_writer(17, _) added handler Wr
-2021/11/02 05:01:32 PM - pika.adapters.utils.io_services_utils - DEBUG - Connection-establishment is in progress for <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250)>.
-2021/11/02 05:01:32 PM - pika.adapters.utils.io_services_utils - INFO - Socket connected: <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:32 PM - pika.adapters.utils.io_services_utils - DEBUG - _AsyncSocketConnector._report_completion(None); <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:32 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - SelectorIOServicesAdapter.remove_writer(17)
-2021/11/02 05:01:32 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - remove_writer(17) removed handler
-2021/11/02 05:01:32 PM - pika.adapters.select_connection - DEBUG - remove_timeout: removing timeout <pika.adapters.select_connection._Timeout object at 0x7f2fed61ba90> with deadline=255718.804333 and callback=<bound method AMQPConnector._on_tcp_connection_timeout of <pika.adapters.utils.connection_workflow.AMQPConnector object at 0x7f2fed61ba60>>
-2021/11/02 05:01:32 PM - pika.adapters.utils.connection_workflow - DEBUG - TCP connection to broker established: <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>.
-2021/11/02 05:01:32 PM - pika.adapters.utils.io_services_utils - DEBUG - _AsyncStreamConnector.start(); <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:32 PM - pika.adapters.select_connection - DEBUG - add_callback_threadsafe: added callback=<bound method _AsyncStreamConnector._start_async of <pika.adapters.utils.io_services_utils._AsyncStreamConnector object at 0x7f2fed61b9a0>>
-2021/11/02 05:01:32 PM - pika.adapters.select_connection - DEBUG - process_timeouts: invoking callback=<bound method _AsyncStreamConnector._start_async of <pika.adapters.utils.io_services_utils._AsyncStreamConnector object at 0x7f2fed61b9a0>>
-2021/11/02 05:01:32 PM - pika.adapters.utils.io_services_utils - DEBUG - _AsyncStreamConnector._start_async(); <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:32 PM - pika.adapters.utils.io_services_utils - DEBUG - _AsyncStreamConnector._linkup()
-2021/11/02 05:01:32 PM - pika.connection - DEBUG - New Connection state: CLOSED (prev=CLOSED)
-2021/11/02 05:01:32 PM - pika.callback - DEBUG - Added: {'callback': <bound method Connection._on_connection_start of <SelectConnection CLOSED transport=None params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>, 'one_shot': True, 'only': None, 'arguments': None, 'calls': 1}
-2021/11/02 05:01:32 PM - pika.callback - DEBUG - Added: {'callback': <bound method Connection._on_connection_close_from_broker of <SelectConnection CLOSED transport=None params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>, 'one_shot': True, 'only': None, 'arguments': None, 'calls': 1}
-2021/11/02 05:01:32 PM - pika.callback - DEBUG - Added: {'callback': <bound method Connection._default_on_connection_error of <SelectConnection CLOSED transport=None params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>, 'one_shot': False, 'only': None, 'arguments': None}
-2021/11/02 05:01:32 PM - pika.connection - DEBUG - New Connection state: INIT (prev=CLOSED)
-2021/11/02 05:01:32 PM - pika.connection - DEBUG - Using external connection workflow.
-2021/11/02 05:01:32 PM - pika.adapters.utils.io_services_utils - DEBUG - _AsyncTransportBase.__init__: <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:32 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - SelectorIOServicesAdapter.set_reader(17, <bound method _AsyncPlaintextTransport._on_socket_readable of <pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0>>)
-2021/11/02 05:01:32 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - set_reader(17, _) added handler Rd
-2021/11/02 05:01:32 PM - pika.adapters.utils.io_services_utils - DEBUG - _linkup(): created transport <pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0>
-2021/11/02 05:01:32 PM - pika.connection - DEBUG - New Connection state: PROTOCOL (prev=INIT)
-2021/11/02 05:01:32 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - SelectorIOServicesAdapter.set_writer(17, <bound method _AsyncPlaintextTransport._on_socket_writable of <pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0>>)
-2021/11/02 05:01:32 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - set_writer(17, _) updated handler RdWr
-2021/11/02 05:01:32 PM - pika.adapters.utils.io_services_utils - DEBUG - Turned on writability watcher: <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:32 PM - pika.adapters.utils.io_services_utils - DEBUG - _linkup(): introduced transport to protocol <pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0>; _StreamingProtocolShim: <SelectConnection PROTOCOL transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>
-2021/11/02 05:01:32 PM - pika.adapters.utils.io_services_utils - DEBUG - _AsyncStreamConnector._report_completion((<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0>, _StreamingProtocolShim: <SelectConnection PROTOCOL transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>)); <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:32 PM - pika.adapters.utils.connection_workflow - INFO - Streaming transport linked up: (<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0>, _StreamingProtocolShim: <SelectConnection PROTOCOL transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>).
-2021/11/02 05:01:32 PM - pika.callback - DEBUG - Removing callback #0: {'callback': <bound method Connection._default_on_connection_error of <SelectConnection PROTOCOL transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>, 'one_shot': False, 'only': None, 'arguments': None}
-2021/11/02 05:01:32 PM - pika.callback - DEBUG - Added: {'callback': <bound method AMQPConnector._on_amqp_handshake_done of <pika.adapters.utils.connection_workflow.AMQPConnector object at 0x7f2fed61ba60>>, 'one_shot': False, 'only': None, 'arguments': None}
-2021/11/02 05:01:32 PM - pika.callback - DEBUG - Added: {'callback': <bound method AMQPConnector._on_amqp_handshake_done of <pika.adapters.utils.connection_workflow.AMQPConnector object at 0x7f2fed61ba60>>, 'one_shot': False, 'only': None, 'arguments': None}
-2021/11/02 05:01:32 PM - pika.adapters.utils.io_services_utils - DEBUG - _AsyncStreamConnector._cleanup(False)
-2021/11/02 05:01:32 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - SelectorIOServicesAdapter.remove_writer(17)
-2021/11/02 05:01:32 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - remove_writer(17) updated handler Rd
-2021/11/02 05:01:32 PM - pika.adapters.utils.io_services_utils - DEBUG - Turned off writability watcher: <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Processing 0:Connection.Start
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Processing use of oneshot callback
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - 0 registered uses left
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Removing callback #0: {'callback': <bound method Connection._on_connection_start of <SelectConnection PROTOCOL transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>, 'one_shot': True, 'only': None, 'arguments': None, 'calls': 0}
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Calling <bound method Connection._on_connection_start of <SelectConnection PROTOCOL transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>> for "0:Connection.Start"
-2021/11/02 05:01:33 PM - pika.connection - DEBUG - New Connection state: START (prev=PROTOCOL)
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Added: {'callback': <bound method Connection._on_connection_tune of <SelectConnection START transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>, 'one_shot': True, 'only': None, 'arguments': None, 'calls': 1}
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - SelectorIOServicesAdapter.set_writer(17, <bound method _AsyncPlaintextTransport._on_socket_writable of <pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0>>)
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - set_writer(17, _) updated handler RdWr
-2021/11/02 05:01:33 PM - pika.adapters.utils.io_services_utils - DEBUG - Turned on writability watcher: <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:33 PM - pika.adapters.utils.io_services_utils - DEBUG - Recv would block on <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - SelectorIOServicesAdapter.remove_writer(17)
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - remove_writer(17) updated handler Rd
-2021/11/02 05:01:33 PM - pika.adapters.utils.io_services_utils - DEBUG - Turned off writability watcher: <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Processing 0:Connection.Tune
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Processing use of oneshot callback
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - 0 registered uses left
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Removing callback #0: {'callback': <bound method Connection._on_connection_tune of <SelectConnection START transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>, 'one_shot': True, 'only': None, 'arguments': None, 'calls': 0}
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Calling <bound method Connection._on_connection_tune of <SelectConnection START transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>> for "0:Connection.Tune"
-2021/11/02 05:01:33 PM - pika.connection - DEBUG - New Connection state: TUNE (prev=START)
-2021/11/02 05:01:33 PM - pika.connection - DEBUG - Creating a HeartbeatChecker: 60
-2021/11/02 05:01:33 PM - pika.heartbeat - DEBUG - timeout: 60.000000 send_interval: 30.000000 check_interval: 65.000000
-2021/11/02 05:01:33 PM - pika.adapters.select_connection - DEBUG - call_later: added timeout <pika.adapters.select_connection._Timeout object at 0x7f2fed61bc70> with deadline=255743.2005215 and callback=<bound method HeartbeatChecker._send_heartbeat of <pika.heartbeat.HeartbeatChecker object at 0x7f2fed61bbe0>>; now=255713.2005215; delay=30.0
-2021/11/02 05:01:33 PM - pika.adapters.select_connection - DEBUG - call_later: added timeout <pika.adapters.select_connection._Timeout object at 0x7f2fed61bca0> with deadline=255778.2007267 and callback=<bound method HeartbeatChecker._check_heartbeat of <pika.heartbeat.HeartbeatChecker object at 0x7f2fed61bbe0>>; now=255713.2007267; delay=65
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - SelectorIOServicesAdapter.set_writer(17, <bound method _AsyncPlaintextTransport._on_socket_writable of <pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0>>)
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - set_writer(17, _) updated handler RdWr
-2021/11/02 05:01:33 PM - pika.adapters.utils.io_services_utils - DEBUG - Turned on writability watcher: <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Added: {'callback': <bound method Connection._on_connection_open_ok of <SelectConnection TUNE transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>, 'one_shot': True, 'only': None, 'arguments': None, 'calls': 1}
-2021/11/02 05:01:33 PM - pika.adapters.utils.io_services_utils - DEBUG - Recv would block on <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - SelectorIOServicesAdapter.remove_writer(17)
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - remove_writer(17) updated handler Rd
-2021/11/02 05:01:33 PM - pika.adapters.utils.io_services_utils - DEBUG - Turned off writability watcher: <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Processing 0:Connection.OpenOk
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Processing use of oneshot callback
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - 0 registered uses left
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Removing callback #0: {'callback': <bound method Connection._on_connection_open_ok of <SelectConnection TUNE transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>, 'one_shot': True, 'only': None, 'arguments': None, 'calls': 0}
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Calling <bound method Connection._on_connection_open_ok of <SelectConnection TUNE transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>> for "0:Connection.OpenOk"
-2021/11/02 05:01:33 PM - pika.connection - DEBUG - New Connection state: OPEN (prev=TUNE)
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Processing 0:_on_connection_open_ok
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Calling <bound method AMQPConnector._on_amqp_handshake_done of <pika.adapters.utils.connection_workflow.AMQPConnector object at 0x7f2fed61ba60>> for "0:_on_connection_open_ok"
-2021/11/02 05:01:33 PM - pika.adapters.utils.connection_workflow - DEBUG - AMQPConnector: AMQP handshake attempt completed; state=3; error=None; '167.71.26.87'/(<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 6, '', ('167.71.26.87', 5672))
-2021/11/02 05:01:33 PM - pika.adapters.utils.connection_workflow - DEBUG - AMQPConnector: AMQP connection established for '167.71.26.87'/(<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 6, '', ('167.71.26.87', 5672)): <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>
-2021/11/02 05:01:33 PM - pika.adapters.utils.connection_workflow - INFO - AMQPConnector - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>
-2021/11/02 05:01:33 PM - pika.adapters.select_connection - DEBUG - remove_timeout: removing timeout <pika.adapters.select_connection._Timeout object at 0x7f2fed61bb20> with deadline=255727.8044299 and callback=<bound method AMQPConnector._on_overall_timeout of <pika.adapters.utils.connection_workflow.AMQPConnector object at 0x7f2fed61ba60>>
-2021/11/02 05:01:33 PM - pika.adapters.utils.connection_workflow - DEBUG - Connection attempt completed with <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>
-2021/11/02 05:01:33 PM - pika.adapters.utils.connection_workflow - INFO - AMQPConnectionWorkflow - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>
-2021/11/02 05:01:33 PM - pika.adapters.utils.io_services_utils - DEBUG - Recv would block on <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:33 PM - pika.adapters.blocking_connection - INFO - Connection workflow succeeded: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Added: {'callback': <bound method _CallbackResult.set_value_once of <pika.adapters.blocking_connection._CallbackResult object at 0x7f2fed65a940>>, 'one_shot': False, 'only': None, 'arguments': None}
-2021/11/02 05:01:33 PM - pika.connection - DEBUG - Creating channel 1
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Added: {'callback': <bound method Connection._on_channel_cleanup of <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>, 'one_shot': True, 'only': <Channel number=1 CLOSED conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>, 'arguments': None, 'calls': 1}
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Added: {'callback': <bound method Channel._on_getempty of <Channel number=1 OPENING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>>, 'one_shot': False, 'only': None, 'arguments': None}
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Added: {'callback': <bound method Channel._on_cancel of <Channel number=1 OPENING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>>, 'one_shot': False, 'only': None, 'arguments': None}
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Added: {'callback': <bound method Channel._on_flow of <Channel number=1 OPENING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>>, 'one_shot': False, 'only': None, 'arguments': None}
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Added: {'callback': <bound method Channel._on_close_from_broker of <Channel number=1 OPENING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>>, 'one_shot': True, 'only': None, 'arguments': None, 'calls': 1}
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - SelectorIOServicesAdapter.set_writer(17, <bound method _AsyncPlaintextTransport._on_socket_writable of <pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0>>)
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - set_writer(17, _) updated handler RdWr
-2021/11/02 05:01:33 PM - pika.adapters.utils.io_services_utils - DEBUG - Turned on writability watcher: <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:33 PM - pika.channel - DEBUG - Entering blocking state on frame <Channel.Open(['out_of_band='])>; acceptable_replies=[<class 'pika.spec.Channel.OpenOk'>]
-2021/11/02 05:01:33 PM - pika.channel - DEBUG - Adding on_synchronous_complete callback
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Added: {'callback': <bound method Channel._on_synchronous_complete of <Channel number=1 OPENING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>>, 'one_shot': True, 'only': None, 'arguments': None, 'calls': 1}
-2021/11/02 05:01:33 PM - pika.channel - DEBUG - Adding passed-in RPC response callback
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Added: {'callback': <bound method Channel._on_openok of <Channel number=1 OPENING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>>, 'one_shot': True, 'only': None, 'arguments': None, 'calls': 1}
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Added: {'callback': <bound method BlockingChannel._on_consumer_cancelled_by_broker of <BlockingChannel impl=<Channel number=1 OPENING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>>>, 'one_shot': False, 'only': None, 'arguments': None}
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Added: {'callback': <bound method _CallbackResult.signal_once of <pika.adapters.blocking_connection._CallbackResult object at 0x7f2fecb9e440>>, 'one_shot': False, 'only': None, 'arguments': None}
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Added: {'callback': <bound method BlockingChannel._on_channel_closed of <BlockingChannel impl=<Channel number=1 OPENING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>>>, 'one_shot': False, 'only': <Channel number=1 OPENING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>, 'arguments': None}
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Added: {'callback': <bound method _CallbackResult.set_value_once of <pika.adapters.blocking_connection._CallbackResult object at 0x7f2fecbc12c0>>, 'one_shot': False, 'only': None, 'arguments': None}
-2021/11/02 05:01:33 PM - pika.adapters.blocking_connection - INFO - Created channel=1
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - SelectorIOServicesAdapter.remove_writer(17)
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - remove_writer(17) updated handler Rd
-2021/11/02 05:01:33 PM - pika.adapters.utils.io_services_utils - DEBUG - Turned off writability watcher: <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Processing 1:Channel.OpenOk
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Processing use of oneshot callback
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - 0 registered uses left
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Removing callback #0: {'callback': <bound method Channel._on_synchronous_complete of <Channel number=1 OPENING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>>, 'one_shot': True, 'only': None, 'arguments': None, 'calls': 0}
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Processing use of oneshot callback
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - 0 registered uses left
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Removing callback #0: {'callback': <bound method Channel._on_openok of <Channel number=1 OPENING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>>, 'one_shot': True, 'only': None, 'arguments': None, 'calls': 0}
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Calling <bound method Channel._on_synchronous_complete of <Channel number=1 OPENING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>> for "1:Channel.OpenOk"
-2021/11/02 05:01:33 PM - pika.channel - DEBUG - 0 blocked frames
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Calling <bound method Channel._on_openok of <Channel number=1 OPENING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>> for "1:Channel.OpenOk"
-2021/11/02 05:01:33 PM - pika.adapters.utils.io_services_utils - DEBUG - Recv would block on <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - SelectorIOServicesAdapter.set_writer(17, <bound method _AsyncPlaintextTransport._on_socket_writable of <pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0>>)
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - set_writer(17, _) updated handler RdWr
-2021/11/02 05:01:33 PM - pika.adapters.utils.io_services_utils - DEBUG - Turned on writability watcher: <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:33 PM - pika.channel - DEBUG - Entering blocking state on frame <Queue.Declare(['arguments={}', 'auto_delete=False', 'durable=True', 'exclusive=False', 'nowait=False', 'passive=False', 'queue=5d00e429-32a8-11ec-9da0-5cc9d363c015_locker_output', 'ticket=0'])>; acceptable_replies=[(<class 'pika.spec.Queue.DeclareOk'>, {'queue': '5d00e429-32a8-11ec-9da0-5cc9d363c015_locker_output'})]
-2021/11/02 05:01:33 PM - pika.channel - DEBUG - Adding on_synchronous_complete callback
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Added: {'callback': <bound method Channel._on_synchronous_complete of <Channel number=1 OPEN conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>>, 'one_shot': True, 'only': None, 'arguments': {'queue': '5d00e429-32a8-11ec-9da0-5cc9d363c015_locker_output'}, 'calls': 1}
-2021/11/02 05:01:33 PM - pika.channel - DEBUG - Adding passed-in RPC response callback
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Added: {'callback': <bound method _CallbackResult.set_value_once of <pika.adapters.blocking_connection._CallbackResult object at 0x7f2fecb9e300>>, 'one_shot': True, 'only': None, 'arguments': {'queue': '5d00e429-32a8-11ec-9da0-5cc9d363c015_locker_output'}, 'calls': 1}
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - SelectorIOServicesAdapter.remove_writer(17)
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - remove_writer(17) updated handler Rd
-2021/11/02 05:01:33 PM - pika.adapters.utils.io_services_utils - DEBUG - Turned off writability watcher: <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Processing 1:Queue.DeclareOk
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Processing use of oneshot callback
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - 0 registered uses left
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Comparing {'queue': '5d00e429-32a8-11ec-9da0-5cc9d363c015_locker_output'} to {'queue': '5d00e429-32a8-11ec-9da0-5cc9d363c015_locker_output'}
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Removing callback #0: {'callback': <bound method Channel._on_synchronous_complete of <Channel number=1 OPEN conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>>, 'one_shot': True, 'only': None, 'arguments': {'queue': '5d00e429-32a8-11ec-9da0-5cc9d363c015_locker_output'}, 'calls': 0}
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Processing use of oneshot callback
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - 0 registered uses left
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Comparing {'queue': '5d00e429-32a8-11ec-9da0-5cc9d363c015_locker_output'} to {'queue': '5d00e429-32a8-11ec-9da0-5cc9d363c015_locker_output'}
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Removing callback #0: {'callback': <bound method _CallbackResult.set_value_once of <pika.adapters.blocking_connection._CallbackResult object at 0x7f2fecb9e300>>, 'one_shot': True, 'only': None, 'arguments': {'queue': '5d00e429-32a8-11ec-9da0-5cc9d363c015_locker_output'}, 'calls': 0}
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Calling <bound method Channel._on_synchronous_complete of <Channel number=1 OPEN conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>> for "1:Queue.DeclareOk"
-2021/11/02 05:01:33 PM - pika.channel - DEBUG - 0 blocked frames
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Calling <bound method _CallbackResult.set_value_once of <pika.adapters.blocking_connection._CallbackResult object at 0x7f2fecb9e300>> for "1:Queue.DeclareOk"
-2021/11/02 05:01:33 PM - pika.adapters.utils.io_services_utils - DEBUG - Recv would block on <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - SelectorIOServicesAdapter.set_writer(17, <bound method _AsyncPlaintextTransport._on_socket_writable of <pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0>>)
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - set_writer(17, _) updated handler RdWr
-2021/11/02 05:01:33 PM - pika.adapters.utils.io_services_utils - DEBUG - Turned on writability watcher: <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - SelectorIOServicesAdapter.remove_writer(17)
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - remove_writer(17) updated handler Rd
-2021/11/02 05:01:33 PM - pika.adapters.utils.io_services_utils - DEBUG - Turned off writability watcher: <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:33 PM - pika.adapters.blocking_connection - INFO - Closing connection (200): Normal shutdown
-2021/11/02 05:01:33 PM - pika.adapters.blocking_connection - DEBUG - Channel.close(200, Normal shutdown)
-2021/11/02 05:01:33 PM - pika.channel - INFO - Closing channel (200): 'Normal shutdown' on <Channel number=1 OPEN conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - SelectorIOServicesAdapter.set_writer(17, <bound method _AsyncPlaintextTransport._on_socket_writable of <pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0>>)
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - set_writer(17, _) updated handler RdWr
-2021/11/02 05:01:33 PM - pika.adapters.utils.io_services_utils - DEBUG - Turned on writability watcher: <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:33 PM - pika.channel - DEBUG - Entering blocking state on frame <Channel.Close(['class_id=0', 'method_id=0', 'reply_code=200', 'reply_text=Normal shutdown'])>; acceptable_replies=[<class 'pika.spec.Channel.CloseOk'>]
-2021/11/02 05:01:33 PM - pika.channel - DEBUG - Adding on_synchronous_complete callback
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Added: {'callback': <bound method Channel._on_synchronous_complete of <Channel number=1 CLOSING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>>, 'one_shot': True, 'only': None, 'arguments': None, 'calls': 1}
-2021/11/02 05:01:33 PM - pika.channel - DEBUG - Adding passed-in RPC response callback
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Added: {'callback': <bound method Channel._on_closeok of <Channel number=1 CLOSING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>>, 'one_shot': True, 'only': None, 'arguments': None, 'calls': 1}
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - SelectorIOServicesAdapter.remove_writer(17)
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - remove_writer(17) updated handler Rd
-2021/11/02 05:01:33 PM - pika.adapters.utils.io_services_utils - DEBUG - Turned off writability watcher: <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Processing 1:Channel.CloseOk
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Processing use of oneshot callback
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - 0 registered uses left
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Removing callback #0: {'callback': <bound method Channel._on_synchronous_complete of <Channel number=1 CLOSING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>>, 'one_shot': True, 'only': None, 'arguments': None, 'calls': 0}
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Processing use of oneshot callback
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - 0 registered uses left
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Removing callback #0: {'callback': <bound method Channel._on_closeok of <Channel number=1 CLOSING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>>, 'one_shot': True, 'only': None, 'arguments': None, 'calls': 0}
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Calling <bound method Channel._on_synchronous_complete of <Channel number=1 CLOSING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>> for "1:Channel.CloseOk"
-2021/11/02 05:01:33 PM - pika.channel - DEBUG - 0 blocked frames
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Calling <bound method Channel._on_closeok of <Channel number=1 CLOSING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>> for "1:Channel.CloseOk"
-2021/11/02 05:01:33 PM - pika.channel - INFO - Received <Channel.CloseOk> on <Channel number=1 CLOSING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Processing 1:_on_channel_close
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Calling <bound method BlockingChannel._on_channel_closed of <BlockingChannel impl=<Channel number=1 CLOSED conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>>> for "1:_on_channel_close"
-2021/11/02 05:01:33 PM - pika.adapters.blocking_connection - DEBUG - _on_channel_closed: ChannelClosedByClient: (200) 'Normal shutdown'; <BlockingChannel impl=<Channel number=1 CLOSED conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>>
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Processing 1:_on_channel_cleanup
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Processing use of oneshot callback
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - 0 registered uses left
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Removing callback #0: {'callback': <bound method Connection._on_channel_cleanup of <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>, 'one_shot': True, 'only': <Channel number=1 CLOSED conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>, 'arguments': None, 'calls': 0}
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Calling <bound method Connection._on_channel_cleanup of <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>> for "1:_on_channel_cleanup"
-2021/11/02 05:01:33 PM - pika.connection - DEBUG - Removed channel 1
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Clearing out '1' from the stack
-2021/11/02 05:01:33 PM - pika.adapters.utils.io_services_utils - DEBUG - Recv would block on <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:33 PM - pika.connection - DEBUG - New Connection state: CLOSING (prev=OPEN)
-2021/11/02 05:01:33 PM - pika.connection - INFO - Closing connection (200): 'Normal shutdown'
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Added: {'callback': <bound method Connection._on_connection_close_ok of <SelectConnection CLOSING transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>, 'one_shot': True, 'only': None, 'arguments': None, 'calls': 1}
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - SelectorIOServicesAdapter.set_writer(17, <bound method _AsyncPlaintextTransport._on_socket_writable of <pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0>>)
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - set_writer(17, _) updated handler RdWr
-2021/11/02 05:01:33 PM - pika.adapters.utils.io_services_utils - DEBUG - Turned on writability watcher: <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - SelectorIOServicesAdapter.remove_writer(17)
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - remove_writer(17) updated handler Rd
-2021/11/02 05:01:33 PM - pika.adapters.utils.io_services_utils - DEBUG - Turned off writability watcher: <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Processing 0:Connection.CloseOk
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Processing use of oneshot callback
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - 0 registered uses left
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Removing callback #0: {'callback': <bound method Connection._on_connection_close_ok of <SelectConnection CLOSING transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>, 'one_shot': True, 'only': None, 'arguments': None, 'calls': 0}
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Calling <bound method Connection._on_connection_close_ok of <SelectConnection CLOSING transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>> for "0:Connection.CloseOk"
-2021/11/02 05:01:33 PM - pika.connection - DEBUG - _on_connection_close_ok: frame=<METHOD(['channel_number=0', 'frame_type=1', 'method=<Connection.CloseOk>'])>
-2021/11/02 05:01:33 PM - pika.heartbeat - DEBUG - Removing timer for next heartbeat send interval
-2021/11/02 05:01:33 PM - pika.adapters.select_connection - DEBUG - remove_timeout: removing timeout <pika.adapters.select_connection._Timeout object at 0x7f2fed61bc70> with deadline=255743.2005215 and callback=<bound method HeartbeatChecker._send_heartbeat of <pika.heartbeat.HeartbeatChecker object at 0x7f2fed61bbe0>>
-2021/11/02 05:01:33 PM - pika.heartbeat - DEBUG - Removing timer for next heartbeat check interval
-2021/11/02 05:01:33 PM - pika.adapters.select_connection - DEBUG - remove_timeout: removing timeout <pika.adapters.select_connection._Timeout object at 0x7f2fed61bca0> with deadline=255778.2007267 and callback=<bound method HeartbeatChecker._check_heartbeat of <pika.heartbeat.HeartbeatChecker object at 0x7f2fed61bbe0>>
-2021/11/02 05:01:33 PM - pika.adapters.utils.io_services_utils - INFO - Aborting transport connection: state=1; <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:33 PM - pika.adapters.utils.io_services_utils - INFO - _AsyncTransportBase._initate_abort(): Initiating abrupt asynchronous transport shutdown: state=1; error=None; <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:33 PM - pika.adapters.utils.io_services_utils - INFO - Deactivating transport: state=1; <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - SelectorIOServicesAdapter.remove_reader(17)
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - remove_reader(17) removed handler
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - SelectorIOServicesAdapter.remove_writer(17)
-2021/11/02 05:01:33 PM - pika.adapters.utils.selector_ioloop_adapter - DEBUG - remove_writer(17) neither was set.
-2021/11/02 05:01:33 PM - pika.adapters.select_connection - DEBUG - add_callback_threadsafe: added callback=functools.partial(<bound method _AsyncTransportBase._connection_lost_notify_async of <pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0>>, None)
-2021/11/02 05:01:33 PM - pika.adapters.utils.io_services_utils - DEBUG - Leaving Plaintext consumer due to inactive state: state=3; <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:33 PM - pika.adapters.select_connection - DEBUG - process_timeouts: invoking callback=functools.partial(<bound method _AsyncTransportBase._connection_lost_notify_async of <pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f2fed61b8e0>>, None)
-2021/11/02 05:01:33 PM - pika.adapters.utils.io_services_utils - DEBUG - Concluding transport shutdown: state=3; error=None
-2021/11/02 05:01:33 PM - pika.adapters.base_connection - DEBUG - connection_lost: None
-2021/11/02 05:01:33 PM - pika.connection - INFO - AMQP stack terminated, failed to connect, or aborted: opened=True, error-arg=None; pending-error=ConnectionClosedByClient: (200) 'Normal shutdown'
-2021/11/02 05:01:33 PM - pika.connection - DEBUG - New Connection state: CLOSED (prev=CLOSING)
-2021/11/02 05:01:33 PM - pika.connection - INFO - Stack terminated due to ConnectionClosedByClient: (200) 'Normal shutdown'
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Processing 0:_on_connection_closed
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Calling <bound method _CallbackResult.set_value_once of <pika.adapters.blocking_connection._CallbackResult object at 0x7f2fed65a940>> for "0:_on_connection_closed"
-2021/11/02 05:01:33 PM - pika.connection - DEBUG - New Connection state: CLOSED (prev=CLOSED)
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Added: {'callback': <bound method Connection._on_connection_start of <SelectConnection CLOSED transport=None params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>, 'one_shot': True, 'only': None, 'arguments': None, 'calls': 1}
-2021/11/02 05:01:33 PM - pika.callback - DEBUG - Incremented callback reference counter: {'callback': <bound method Connection._on_connection_close_from_broker of <SelectConnection CLOSED transport=None params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>, 'one_shot': True, 'only': None, 'arguments': None, 'calls': 2}
-2021/11/02 05:01:33 PM - pika.adapters.utils.io_services_utils - INFO - Closing transport socket and unlinking: state=3; <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.168.201', 42250), raddr=('167.71.26.87', 5672)>
-2021/11/02 05:01:33 PM - pika.adapters.blocking_connection - INFO - User-initiated close: result=BlockingConnection__OnClosedArgs(connection=<SelectConnection CLOSED transport=None params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>, error=ConnectionClosedByClient: (200) 'Normal shutdown')
-2021/11/02 05:01:51 PM - Rede1Minuto Server - INFO - Consulta ao Catalogo de Estações Lockers
-2021/11/02 05:01:51 PM - Rede1Minuto Server - INFO - ID_de_Referencia='1455444' ID_do_Solicitante='12023895000169' ID_Rede_Lockers='1' Data_Hora_Solicitacao=None Codigo_Pais_Locker=None Cidade_Locker=None Cep_Locker=None Bairro_Locker=None Endereco_Locker=None Numero_Locker=None Complemento_Locker=None Modelo_uso_Locker=None Categoria_Locker=None Tipo_Armazenamento=None Codigo_Dimensao_Portas_Locker=None Modelo_Operacao_Locker=None ID_da_Estacao_do_Locker=None LatLong=None Versao_Mensageria='1.0.0'
-2021/11/02 05:02:08 PM - Rede1Minuto Server - INFO - Consulta ao Catalogo de Estações Lockers
-2021/11/02 05:02:08 PM - Rede1Minuto Server - INFO - e5b1632f-9fdc-48b3-91cb-8bedb70b6926 - Codigo_de_MSG='MS01' ID_de_Referencia='1455444' ID_do_Solicitante='12023895000169' ID_Rede_Lockers=2 Codigo_Resposta_MS04=None Data_Hora_Solicitacao=None Codigo_Pais_Locker=None Cidade_Locker=None Cep_Locker=None Bairro_Locker=None Endereco_Locker=None Numero_Locker=None Complemento_Locker=None Modelo_Uso_Locker=None Categoria_Locker=None Tipo_Armazenamento=1 Codigo_Dimensao_Portas_Locker=1 Modelo_Operacao_Locker=1 ID_da_Estacao_do_Locker=None LatLong=None Versao_Mensageria='1.0.0'
-2021/11/02 05:03:49 PM - uvicorn.error - INFO - Shutting down
-2021/11/02 05:03:49 PM - uvicorn.error - INFO - Waiting for application shutdown.
-2021/11/02 05:03:49 PM - uvicorn.error - INFO - Application shutdown complete.
-2021/11/02 05:03:49 PM - uvicorn.error - INFO - Finished server process [160]
-2021/11/02 05:03:52 PM - uvicorn.error - INFO - Started server process [609]
-2021/11/02 05:03:52 PM - uvicorn.error - INFO - Waiting for application startup.
-2021/11/02 05:03:52 PM - uvicorn.error - INFO - Application startup complete.
-2021/11/02 05:05:18 PM - uvicorn.error - INFO - Shutting down
-2021/11/02 05:05:18 PM - uvicorn.error - INFO - Waiting for application shutdown.
-2021/11/02 05:05:18 PM - uvicorn.error - INFO - Application shutdown complete.
-2021/11/02 05:05:18 PM - uvicorn.error - INFO - Finished server process [609]
-2021/11/02 05:05:20 PM - uvicorn.error - INFO - Started server process [615]
-2021/11/02 05:05:20 PM - uvicorn.error - INFO - Waiting for application startup.
-2021/11/02 05:05:20 PM - uvicorn.error - INFO - Application startup complete.
-2021/11/02 07:34:47 PM - uvicorn.error - INFO - Shutting down
-2021/11/02 07:34:50 PM - uvicorn.error - INFO - Waiting for application shutdown.
-2021/11/02 07:34:50 PM - uvicorn.error - INFO - Application shutdown complete.
-2021/11/02 07:34:50 PM - uvicorn.error - INFO - Finished server process [615]
-2021/11/03 06:20:31 PM - uvicorn.error - INFO - Started server process [10286]
-2021/11/03 06:20:31 PM - uvicorn.error - INFO - Waiting for application startup.
-2021/11/03 06:20:31 PM - uvicorn.error - INFO - Application startup complete.
-2021/11/03 06:28:02 PM - uvicorn.error - INFO - Shutting down
-2021/11/03 06:28:02 PM - uvicorn.error - INFO - Waiting for application shutdown.
-2021/11/03 06:28:02 PM - uvicorn.error - INFO - Application shutdown complete.
-2021/11/03 06:28:02 PM - uvicorn.error - INFO - Finished server process [10286]
-2021/11/04 10:39:19 PM - uvicorn.error - INFO - Started server process [21433]
-2021/11/04 10:39:19 PM - uvicorn.error - INFO - Waiting for application startup.
-2021/11/04 10:39:19 PM - uvicorn.error - INFO - Application startup complete.
-2021/11/06 01:30:48 PM - uvicorn.error - INFO - Shutting down
-2021/11/06 01:30:49 PM - uvicorn.error - INFO - Waiting for application shutdown.
-2021/11/06 01:30:50 PM - uvicorn.error - INFO - Application shutdown complete.
-2021/11/06 01:30:50 PM - uvicorn.error - INFO - Finished server process [21433]
-2021/11/06 01:31:05 PM - uvicorn.error - INFO - Started server process [22455]
-2021/11/06 01:31:05 PM - uvicorn.error - INFO - Waiting for application startup.
-2021/11/06 01:31:05 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 10:44:13 AM - uvicorn.error - INFO - Shutting down
+2021/11/08 10:44:13 AM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 10:44:13 AM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 10:44:13 AM - uvicorn.error - INFO - Finished server process [4532]
+2021/11/08 10:44:15 AM - uvicorn.error - INFO - Started server process [4542]
+2021/11/08 10:44:15 AM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 10:44:15 AM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 10:44:21 AM - Rede1Minuto Server - INFO - Consulta da disponibilidade de Portas em Locker
+2021/11/08 10:44:21 AM - Rede1Minuto Server - INFO - e5b1632f-9fdc-48b3-91cb-8bedb70b6926
+2021/11/08 10:44:23 AM - Rede1Minuto Server - INFO - INSERT INTO `rede1minuto`.`reserva_simples`
+                                    (`IdTransacaoUnica`,
+                                    `IdSolicitante`,
+                                    `IdReferencia`,
+                                    `idRede`,
+                                    `idLocker`,
+                                    `idLockerPorta`,
+                                    `DataHoraSolicitacao`,
+                                    `idStatusReserva`,
+                                    `idServicoReserva`,
+                                    `TipoFluxoAtual`)
+                                VALUES
+                                    ('fa878094-4099-11ec-a223-00155df485d9',
+                                    '12023895000169',
+                                    '1455444',
+                                    1,
+                                    '5d00e429-32a8-11ec-9da0-5cc9d363c015',
+                                    '464ad489-3358-11ec-9c71-5cc9d363c015',
+                                    '2021-11-08 10:44:23',
+                                    1,  
+                                    5,  
+                                    0);
+2021/11/08 10:44:23 AM - pika.adapters.utils.connection_workflow - INFO - Pika version 1.2.0 connecting to ('167.71.26.87', 5672)
+2021/11/08 10:44:23 AM - pika.adapters.utils.io_services_utils - INFO - Socket connected: <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.166.210', 51108), raddr=('167.71.26.87', 5672)>
+2021/11/08 10:44:23 AM - pika.adapters.utils.connection_workflow - INFO - Streaming transport linked up: (<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f005bc41eb0>, _StreamingProtocolShim: <SelectConnection PROTOCOL transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f005bc41eb0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>).
+2021/11/08 10:44:24 AM - pika.adapters.utils.connection_workflow - INFO - AMQPConnector - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f005bc41eb0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>
+2021/11/08 10:44:24 AM - pika.adapters.utils.connection_workflow - INFO - AMQPConnectionWorkflow - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f005bc41eb0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>
+2021/11/08 10:44:24 AM - pika.adapters.blocking_connection - INFO - Connection workflow succeeded: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f005bc41eb0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>
+2021/11/08 10:44:24 AM - pika.adapters.blocking_connection - INFO - Created channel=1
+2021/11/08 10:44:24 AM - pika.adapters.blocking_connection - INFO - Closing connection (200): Normal shutdown
+2021/11/08 10:44:24 AM - pika.channel - INFO - Closing channel (200): 'Normal shutdown' on <Channel number=1 OPEN conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f005bc41eb0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>
+2021/11/08 10:44:24 AM - pika.channel - INFO - Received <Channel.CloseOk> on <Channel number=1 CLOSING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f005bc41eb0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>
+2021/11/08 10:44:24 AM - pika.connection - INFO - Closing connection (200): 'Normal shutdown'
+2021/11/08 10:44:24 AM - pika.adapters.utils.io_services_utils - INFO - Aborting transport connection: state=1; <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.166.210', 51108), raddr=('167.71.26.87', 5672)>
+2021/11/08 10:44:24 AM - pika.adapters.utils.io_services_utils - INFO - _AsyncTransportBase._initate_abort(): Initiating abrupt asynchronous transport shutdown: state=1; error=None; <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.166.210', 51108), raddr=('167.71.26.87', 5672)>
+2021/11/08 10:44:24 AM - pika.adapters.utils.io_services_utils - INFO - Deactivating transport: state=1; <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.166.210', 51108), raddr=('167.71.26.87', 5672)>
+2021/11/08 10:44:24 AM - pika.connection - INFO - AMQP stack terminated, failed to connect, or aborted: opened=True, error-arg=None; pending-error=ConnectionClosedByClient: (200) 'Normal shutdown'
+2021/11/08 10:44:24 AM - pika.connection - INFO - Stack terminated due to ConnectionClosedByClient: (200) 'Normal shutdown'
+2021/11/08 10:44:24 AM - pika.adapters.utils.io_services_utils - INFO - Closing transport socket and unlinking: state=3; <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.166.210', 51108), raddr=('167.71.26.87', 5672)>
+2021/11/08 10:44:24 AM - pika.adapters.blocking_connection - INFO - User-initiated close: result=BlockingConnection__OnClosedArgs(connection=<SelectConnection CLOSED transport=None params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>, error=ConnectionClosedByClient: (200) 'Normal shutdown')
+2021/11/08 10:51:57 AM - uvicorn.error - INFO - Shutting down
+2021/11/08 10:51:57 AM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 10:51:57 AM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 10:51:57 AM - uvicorn.error - INFO - Finished server process [4542]
+2021/11/08 10:52:00 AM - uvicorn.error - INFO - Started server process [5689]
+2021/11/08 10:52:00 AM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 10:52:00 AM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 10:52:12 AM - Rede1Minuto Server - INFO - Consulta da disponibilidade de Portas em Locker
+2021/11/08 10:52:12 AM - Rede1Minuto Server - INFO - e5b1632f-9fdc-48b3-91cb-8bedb70b6926
+2021/11/08 10:52:13 AM - Rede1Minuto Server - ERROR - (<class 'AttributeError'>, AttributeError("'Connection' object has no attribute 'commit'"), <traceback object at 0x7f853d514500>)
+2021/11/08 10:52:13 AM - Rede1Minuto Server - ERROR - (<class 'AttributeError'>, AttributeError("'Connection' object has no attribute 'commit'"), <traceback object at 0x7f853d393900>)
+2021/11/08 10:52:13 AM - Rede1Minuto Server - ERROR - (<class 'AttributeError'>, AttributeError("'Connection' object has no attribute 'commit'"), <traceback object at 0x7f853d32e980>)
+2021/11/08 10:52:14 AM - Rede1Minuto Server - ERROR - (<class 'AttributeError'>, AttributeError("'Connection' object has no attribute 'commit'"), <traceback object at 0x7f853d32ecc0>)
+2021/11/08 10:52:14 AM - pika.adapters.utils.connection_workflow - INFO - Pika version 1.2.0 connecting to ('167.71.26.87', 5672)
+2021/11/08 10:52:14 AM - pika.adapters.utils.io_services_utils - INFO - Socket connected: <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.166.210', 51118), raddr=('167.71.26.87', 5672)>
+2021/11/08 10:52:14 AM - pika.adapters.utils.connection_workflow - INFO - Streaming transport linked up: (<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f853d33feb0>, _StreamingProtocolShim: <SelectConnection PROTOCOL transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f853d33feb0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>).
+2021/11/08 10:52:15 AM - pika.adapters.utils.connection_workflow - INFO - AMQPConnector - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f853d33feb0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>
+2021/11/08 10:52:15 AM - pika.adapters.utils.connection_workflow - INFO - AMQPConnectionWorkflow - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f853d33feb0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>
+2021/11/08 10:52:15 AM - pika.adapters.blocking_connection - INFO - Connection workflow succeeded: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f853d33feb0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>
+2021/11/08 10:52:15 AM - pika.adapters.blocking_connection - INFO - Created channel=1
+2021/11/08 10:52:15 AM - pika.adapters.blocking_connection - INFO - Closing connection (200): Normal shutdown
+2021/11/08 10:52:15 AM - pika.channel - INFO - Closing channel (200): 'Normal shutdown' on <Channel number=1 OPEN conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f853d33feb0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>
+2021/11/08 10:52:15 AM - pika.channel - INFO - Received <Channel.CloseOk> on <Channel number=1 CLOSING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f853d33feb0> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>
+2021/11/08 10:52:15 AM - pika.connection - INFO - Closing connection (200): 'Normal shutdown'
+2021/11/08 10:52:15 AM - pika.adapters.utils.io_services_utils - INFO - Aborting transport connection: state=1; <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.166.210', 51118), raddr=('167.71.26.87', 5672)>
+2021/11/08 10:52:15 AM - pika.adapters.utils.io_services_utils - INFO - _AsyncTransportBase._initate_abort(): Initiating abrupt asynchronous transport shutdown: state=1; error=None; <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.166.210', 51118), raddr=('167.71.26.87', 5672)>
+2021/11/08 10:52:15 AM - pika.adapters.utils.io_services_utils - INFO - Deactivating transport: state=1; <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.166.210', 51118), raddr=('167.71.26.87', 5672)>
+2021/11/08 10:52:15 AM - pika.connection - INFO - AMQP stack terminated, failed to connect, or aborted: opened=True, error-arg=None; pending-error=ConnectionClosedByClient: (200) 'Normal shutdown'
+2021/11/08 10:52:15 AM - pika.connection - INFO - Stack terminated due to ConnectionClosedByClient: (200) 'Normal shutdown'
+2021/11/08 10:52:15 AM - pika.adapters.utils.io_services_utils - INFO - Closing transport socket and unlinking: state=3; <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.166.210', 51118), raddr=('167.71.26.87', 5672)>
+2021/11/08 10:52:15 AM - pika.adapters.blocking_connection - INFO - User-initiated close: result=BlockingConnection__OnClosedArgs(connection=<SelectConnection CLOSED transport=None params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>, error=ConnectionClosedByClient: (200) 'Normal shutdown')
+2021/11/08 11:20:28 AM - uvicorn.error - INFO - Shutting down
+2021/11/08 11:20:29 AM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 11:20:29 AM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 11:20:29 AM - uvicorn.error - INFO - Finished server process [5689]
+2021/11/08 11:20:31 AM - uvicorn.error - INFO - Started server process [6075]
+2021/11/08 11:20:31 AM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 11:20:31 AM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 11:36:27 AM - uvicorn.error - INFO - Shutting down
+2021/11/08 11:36:27 AM - uvicorn.error - INFO - Waiting for connections to close. (CTRL+C to force quit)
+2021/11/08 11:36:27 AM - uvicorn.error - INFO - Finished server process [6075]
+2021/11/08 11:43:16 AM - uvicorn.error - INFO - Started server process [67]
+2021/11/08 11:43:16 AM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 11:43:16 AM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 11:44:12 AM - Rede1Minuto Server - INFO - Consulta da disponibilidade de Portas em Locker
+2021/11/08 11:44:12 AM - Rede1Minuto Server - INFO - e5b1632f-9fdc-48b3-91cb-8bedb70b6926
+2021/11/08 11:44:14 AM - pika.adapters.utils.connection_workflow - INFO - Pika version 1.2.0 connecting to ('167.71.26.87', 5672)
+2021/11/08 11:44:15 AM - pika.adapters.utils.io_services_utils - INFO - Socket connected: <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.170.42', 38198), raddr=('167.71.26.87', 5672)>
+2021/11/08 11:44:15 AM - pika.adapters.utils.connection_workflow - INFO - Streaming transport linked up: (<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f500fc1ee20>, _StreamingProtocolShim: <SelectConnection PROTOCOL transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f500fc1ee20> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>).
+2021/11/08 11:44:15 AM - pika.adapters.utils.connection_workflow - INFO - AMQPConnector - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f500fc1ee20> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>
+2021/11/08 11:44:15 AM - pika.adapters.utils.connection_workflow - INFO - AMQPConnectionWorkflow - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f500fc1ee20> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>
+2021/11/08 11:44:15 AM - pika.adapters.blocking_connection - INFO - Connection workflow succeeded: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f500fc1ee20> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>
+2021/11/08 11:44:15 AM - pika.adapters.blocking_connection - INFO - Created channel=1
+2021/11/08 11:44:15 AM - pika.adapters.blocking_connection - INFO - Closing connection (200): Normal shutdown
+2021/11/08 11:44:15 AM - pika.channel - INFO - Closing channel (200): 'Normal shutdown' on <Channel number=1 OPEN conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f500fc1ee20> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>
+2021/11/08 11:44:15 AM - pika.channel - INFO - Received <Channel.CloseOk> on <Channel number=1 CLOSING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f500fc1ee20> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>
+2021/11/08 11:44:15 AM - pika.connection - INFO - Closing connection (200): 'Normal shutdown'
+2021/11/08 11:44:15 AM - pika.adapters.utils.io_services_utils - INFO - Aborting transport connection: state=1; <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.170.42', 38198), raddr=('167.71.26.87', 5672)>
+2021/11/08 11:44:15 AM - pika.adapters.utils.io_services_utils - INFO - _AsyncTransportBase._initate_abort(): Initiating abrupt asynchronous transport shutdown: state=1; error=None; <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.170.42', 38198), raddr=('167.71.26.87', 5672)>
+2021/11/08 11:44:15 AM - pika.adapters.utils.io_services_utils - INFO - Deactivating transport: state=1; <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.170.42', 38198), raddr=('167.71.26.87', 5672)>
+2021/11/08 11:44:15 AM - pika.connection - INFO - AMQP stack terminated, failed to connect, or aborted: opened=True, error-arg=None; pending-error=ConnectionClosedByClient: (200) 'Normal shutdown'
+2021/11/08 11:44:15 AM - pika.connection - INFO - Stack terminated due to ConnectionClosedByClient: (200) 'Normal shutdown'
+2021/11/08 11:44:15 AM - pika.adapters.utils.io_services_utils - INFO - Closing transport socket and unlinking: state=3; <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.170.42', 38198), raddr=('167.71.26.87', 5672)>
+2021/11/08 11:44:15 AM - pika.adapters.blocking_connection - INFO - User-initiated close: result=BlockingConnection__OnClosedArgs(connection=<SelectConnection CLOSED transport=None params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>, error=ConnectionClosedByClient: (200) 'Normal shutdown')
+2021/11/08 11:44:59 AM - uvicorn.error - INFO - Shutting down
+2021/11/08 11:44:59 AM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 11:44:59 AM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 11:44:59 AM - uvicorn.error - INFO - Finished server process [67]
+2021/11/08 11:45:02 AM - uvicorn.error - INFO - Started server process [667]
+2021/11/08 11:45:02 AM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 11:45:02 AM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 11:45:39 AM - uvicorn.error - INFO - Shutting down
+2021/11/08 11:45:39 AM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 11:45:39 AM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 11:45:39 AM - uvicorn.error - INFO - Finished server process [667]
+2021/11/08 11:45:42 AM - uvicorn.error - INFO - Started server process [1269]
+2021/11/08 11:45:42 AM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 11:45:42 AM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 02:40:17 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 02:40:17 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 02:40:17 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 02:40:17 PM - uvicorn.error - INFO - Finished server process [1269]
+2021/11/08 02:40:24 PM - uvicorn.error - INFO - Started server process [14832]
+2021/11/08 02:40:24 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 02:40:24 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 02:58:45 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 02:58:46 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 02:58:46 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 02:58:46 PM - uvicorn.error - INFO - Finished server process [14832]
+2021/11/08 03:03:47 PM - uvicorn.error - INFO - Started server process [16206]
+2021/11/08 03:03:47 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 03:03:47 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 03:06:56 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 03:06:57 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 03:06:57 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 03:06:57 PM - uvicorn.error - INFO - Finished server process [16206]
+2021/11/08 03:06:59 PM - uvicorn.error - INFO - Started server process [16581]
+2021/11/08 03:06:59 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 03:06:59 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 03:07:58 PM - Rede1Minuto Server - INFO - Consulta da disponibilidade de Portas em Locker
+2021/11/08 03:07:58 PM - Rede1Minuto Server - INFO - e5b1632f-9fdc-48b3-91cb-8bedb70b6926
+2021/11/08 03:08:00 PM - pika.adapters.utils.connection_workflow - INFO - Pika version 1.2.0 connecting to ('167.71.26.87', 5672)
+2021/11/08 03:08:00 PM - pika.adapters.utils.io_services_utils - INFO - Socket connected: <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.170.42', 38232), raddr=('167.71.26.87', 5672)>
+2021/11/08 03:08:00 PM - pika.adapters.utils.connection_workflow - INFO - Streaming transport linked up: (<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f8a406d3f40>, _StreamingProtocolShim: <SelectConnection PROTOCOL transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f8a406d3f40> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>).
+2021/11/08 03:08:01 PM - pika.adapters.utils.connection_workflow - INFO - AMQPConnector - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f8a406d3f40> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>
+2021/11/08 03:08:01 PM - pika.adapters.utils.connection_workflow - INFO - AMQPConnectionWorkflow - reporting success: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f8a406d3f40> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>
+2021/11/08 03:08:01 PM - pika.adapters.blocking_connection - INFO - Connection workflow succeeded: <SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f8a406d3f40> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>
+2021/11/08 03:08:01 PM - pika.adapters.blocking_connection - INFO - Created channel=1
+2021/11/08 03:08:01 PM - pika.adapters.blocking_connection - INFO - Closing connection (200): Normal shutdown
+2021/11/08 03:08:01 PM - pika.channel - INFO - Closing channel (200): 'Normal shutdown' on <Channel number=1 OPEN conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f8a406d3f40> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>
+2021/11/08 03:08:01 PM - pika.channel - INFO - Received <Channel.CloseOk> on <Channel number=1 CLOSING conn=<SelectConnection OPEN transport=<pika.adapters.utils.io_services_utils._AsyncPlaintextTransport object at 0x7f8a406d3f40> params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>>
+2021/11/08 03:08:01 PM - pika.connection - INFO - Closing connection (200): 'Normal shutdown'
+2021/11/08 03:08:01 PM - pika.adapters.utils.io_services_utils - INFO - Aborting transport connection: state=1; <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.170.42', 38232), raddr=('167.71.26.87', 5672)>
+2021/11/08 03:08:01 PM - pika.adapters.utils.io_services_utils - INFO - _AsyncTransportBase._initate_abort(): Initiating abrupt asynchronous transport shutdown: state=1; error=None; <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.170.42', 38232), raddr=('167.71.26.87', 5672)>
+2021/11/08 03:08:01 PM - pika.adapters.utils.io_services_utils - INFO - Deactivating transport: state=1; <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.170.42', 38232), raddr=('167.71.26.87', 5672)>
+2021/11/08 03:08:01 PM - pika.connection - INFO - AMQP stack terminated, failed to connect, or aborted: opened=True, error-arg=None; pending-error=ConnectionClosedByClient: (200) 'Normal shutdown'
+2021/11/08 03:08:01 PM - pika.connection - INFO - Stack terminated due to ConnectionClosedByClient: (200) 'Normal shutdown'
+2021/11/08 03:08:01 PM - pika.adapters.utils.io_services_utils - INFO - Closing transport socket and unlinking: state=3; <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.29.170.42', 38232), raddr=('167.71.26.87', 5672)>
+2021/11/08 03:08:01 PM - pika.adapters.blocking_connection - INFO - User-initiated close: result=BlockingConnection__OnClosedArgs(connection=<SelectConnection CLOSED transport=None params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>, error=ConnectionClosedByClient: (200) 'Normal shutdown')
+2021/11/08 03:08:01 PM - Rede1Minuto Server - INFO - (None, None, None)
+2021/11/08 05:12:50 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 05:12:51 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 05:12:51 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 05:12:51 PM - uvicorn.error - INFO - Finished server process [16581]
+2021/11/08 05:13:00 PM - uvicorn.error - INFO - Started server process [22116]
+2021/11/08 05:13:00 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 05:13:00 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 05:17:21 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 05:17:21 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 05:17:21 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 05:17:21 PM - uvicorn.error - INFO - Finished server process [22116]
+2021/11/08 05:17:24 PM - uvicorn.error - INFO - Started server process [23169]
+2021/11/08 05:17:24 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 05:17:24 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 05:17:25 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 05:17:25 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 05:17:25 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 05:17:25 PM - uvicorn.error - INFO - Finished server process [23169]
+2021/11/08 05:17:27 PM - uvicorn.error - INFO - Started server process [23177]
+2021/11/08 05:17:27 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 05:17:27 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 05:25:38 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 05:25:38 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 05:25:38 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 05:25:38 PM - uvicorn.error - INFO - Finished server process [23177]
+2021/11/08 05:25:41 PM - uvicorn.error - INFO - Started server process [24581]
+2021/11/08 05:25:41 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 05:25:41 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 05:48:59 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 05:49:00 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 05:49:00 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 05:49:00 PM - uvicorn.error - INFO - Finished server process [24581]
+2021/11/08 05:49:03 PM - uvicorn.error - INFO - Started server process [30575]
+2021/11/08 05:49:03 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 05:49:03 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 06:12:24 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 06:12:25 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 06:12:25 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 06:12:25 PM - uvicorn.error - INFO - Finished server process [30575]
+2021/11/08 06:15:02 PM - uvicorn.error - INFO - Started server process [4571]
+2021/11/08 06:15:02 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 06:15:02 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 06:17:02 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 06:17:02 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 06:17:02 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 06:17:02 PM - uvicorn.error - INFO - Finished server process [4571]
+2021/11/08 06:17:05 PM - uvicorn.error - INFO - Started server process [4887]
+2021/11/08 06:17:05 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 06:17:05 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 06:17:07 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 06:17:07 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 06:17:07 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 06:17:07 PM - uvicorn.error - INFO - Finished server process [4887]
+2021/11/08 06:17:10 PM - uvicorn.error - INFO - Started server process [4945]
+2021/11/08 06:17:10 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 06:17:10 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 06:20:07 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 06:20:07 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 06:20:07 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 06:20:07 PM - uvicorn.error - INFO - Finished server process [4945]
+2021/11/08 06:20:09 PM - uvicorn.error - INFO - Started server process [5421]
+2021/11/08 06:20:09 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 06:20:09 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 06:21:20 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 06:21:20 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 06:21:20 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 06:21:20 PM - uvicorn.error - INFO - Finished server process [5421]
+2021/11/08 06:21:22 PM - uvicorn.error - INFO - Started server process [6824]
+2021/11/08 06:21:22 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 06:21:22 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 06:35:28 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 06:35:28 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 06:35:28 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 06:35:28 PM - uvicorn.error - INFO - Finished server process [6824]
+2021/11/08 06:35:31 PM - uvicorn.error - INFO - Started server process [10417]
+2021/11/08 06:35:31 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 06:35:31 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 06:44:17 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 06:44:17 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 06:44:17 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 06:44:17 PM - uvicorn.error - INFO - Finished server process [10417]
+2021/11/08 06:44:21 PM - uvicorn.error - INFO - Started server process [12029]
+2021/11/08 06:44:21 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 06:44:21 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 06:45:27 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 06:45:27 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 06:45:27 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 06:45:27 PM - uvicorn.error - INFO - Finished server process [12029]
+2021/11/08 06:45:29 PM - uvicorn.error - INFO - Started server process [12394]
+2021/11/08 06:45:29 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 06:45:29 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 09:39:00 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 09:39:02 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 09:39:02 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 09:39:02 PM - uvicorn.error - INFO - Finished server process [12394]
+2021/11/08 09:39:27 PM - uvicorn.error - INFO - Started server process [14293]
+2021/11/08 09:39:27 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 09:39:27 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 09:44:36 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 09:44:36 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 09:44:36 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 09:44:36 PM - uvicorn.error - INFO - Finished server process [14293]
+2021/11/08 09:44:39 PM - uvicorn.error - INFO - Started server process [14829]
+2021/11/08 09:44:39 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 09:44:39 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 09:47:36 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 09:47:36 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 09:47:36 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 09:47:36 PM - uvicorn.error - INFO - Finished server process [14829]
+2021/11/08 09:47:39 PM - uvicorn.error - INFO - Started server process [15329]
+2021/11/08 09:47:39 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 09:47:39 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 09:48:56 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 09:48:56 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 09:48:56 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 09:48:56 PM - uvicorn.error - INFO - Finished server process [15329]
+2021/11/08 09:48:59 PM - uvicorn.error - INFO - Started server process [17408]
+2021/11/08 09:48:59 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 09:48:59 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 10:16:22 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 10:16:23 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 10:16:23 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 10:16:23 PM - uvicorn.error - INFO - Finished server process [17408]
+2021/11/08 10:16:27 PM - uvicorn.error - INFO - Started server process [19903]
+2021/11/08 10:16:27 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 10:16:27 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 10:16:44 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 10:16:44 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 10:16:44 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 10:16:44 PM - uvicorn.error - INFO - Finished server process [19903]
+2021/11/08 10:16:46 PM - uvicorn.error - INFO - Started server process [19909]
+2021/11/08 10:16:46 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 10:16:46 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 10:27:41 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 10:27:41 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 10:27:41 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 10:27:41 PM - uvicorn.error - INFO - Finished server process [19909]
+2021/11/08 10:27:43 PM - uvicorn.error - INFO - Started server process [22287]
+2021/11/08 10:27:43 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 10:27:43 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 10:27:44 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 10:27:44 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 10:27:44 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 10:27:44 PM - uvicorn.error - INFO - Finished server process [22287]
+2021/11/08 10:27:46 PM - uvicorn.error - INFO - Started server process [22291]
+2021/11/08 10:27:46 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 10:27:46 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 10:34:46 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 10:34:46 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 10:34:46 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 10:34:46 PM - uvicorn.error - INFO - Finished server process [22291]
+2021/11/08 10:34:49 PM - uvicorn.error - INFO - Started server process [23446]
+2021/11/08 10:34:49 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 10:34:49 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 10:34:53 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 10:34:54 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 10:34:54 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 10:34:54 PM - uvicorn.error - INFO - Finished server process [23446]
+2021/11/08 10:34:56 PM - uvicorn.error - INFO - Started server process [23450]
+2021/11/08 10:34:56 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 10:34:56 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 10:40:43 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 10:40:43 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 10:40:44 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 10:40:44 PM - uvicorn.error - INFO - Finished server process [23450]
+2021/11/08 10:40:46 PM - uvicorn.error - INFO - Started server process [25274]
+2021/11/08 10:40:46 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 10:40:46 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 10:48:16 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 10:48:16 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 10:48:16 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 10:48:16 PM - uvicorn.error - INFO - Finished server process [25274]
+2021/11/08 10:48:20 PM - uvicorn.error - INFO - Started server process [27477]
+2021/11/08 10:48:20 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 10:48:20 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 10:49:24 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 10:49:24 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 10:49:24 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 10:49:24 PM - uvicorn.error - INFO - Finished server process [27477]
+2021/11/08 10:49:26 PM - uvicorn.error - INFO - Started server process [27731]
+2021/11/08 10:49:26 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 10:49:26 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 10:49:26 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 10:49:27 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 10:49:27 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 10:49:27 PM - uvicorn.error - INFO - Finished server process [27731]
+2021/11/08 10:49:29 PM - uvicorn.error - INFO - Started server process [27735]
+2021/11/08 10:49:29 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 10:49:29 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 10:59:26 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 10:59:26 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 10:59:26 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 10:59:26 PM - uvicorn.error - INFO - Finished server process [27735]
+2021/11/08 10:59:29 PM - uvicorn.error - INFO - Started server process [30538]
+2021/11/08 10:59:29 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 10:59:29 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 11:17:18 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 11:17:18 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 11:17:18 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 11:17:18 PM - uvicorn.error - INFO - Finished server process [30538]
+2021/11/08 11:17:21 PM - uvicorn.error - INFO - Started server process [31695]
+2021/11/08 11:17:21 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 11:17:21 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 11:17:22 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 11:17:22 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 11:17:22 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 11:17:22 PM - uvicorn.error - INFO - Finished server process [31695]
+2021/11/08 11:17:24 PM - uvicorn.error - INFO - Started server process [31699]
+2021/11/08 11:17:24 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 11:17:24 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/08 11:25:27 PM - uvicorn.error - INFO - Shutting down
+2021/11/08 11:25:27 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/08 11:25:27 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/08 11:25:27 PM - uvicorn.error - INFO - Finished server process [31699]
+2021/11/08 11:25:30 PM - uvicorn.error - INFO - Started server process [731]
+2021/11/08 11:25:30 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/08 11:25:30 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/09 12:45:34 PM - uvicorn.error - INFO - Shutting down
+2021/11/09 12:45:35 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/09 12:45:36 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/09 12:45:36 PM - uvicorn.error - INFO - Finished server process [731]
+2021/11/10 05:00:55 PM - uvicorn.error - INFO - Started server process [1519]
+2021/11/10 05:00:55 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/10 05:00:55 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/10 05:01:07 PM - uvicorn.error - INFO - Shutting down
+2021/11/10 05:01:07 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/10 05:01:07 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/10 05:01:07 PM - uvicorn.error - INFO - Finished server process [1519]
+2021/11/10 05:01:09 PM - uvicorn.error - INFO - Started server process [1524]
+2021/11/10 05:01:09 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/10 05:01:09 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/10 05:14:41 PM - uvicorn.error - INFO - Shutting down
+2021/11/10 05:14:41 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/10 05:14:41 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/10 05:14:41 PM - uvicorn.error - INFO - Finished server process [1524]
+2021/11/10 05:14:43 PM - uvicorn.error - INFO - Started server process [3476]
+2021/11/10 05:14:43 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/10 05:14:43 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/10 05:34:23 PM - uvicorn.error - INFO - Shutting down
+2021/11/10 05:34:24 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/10 05:34:24 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/10 05:34:24 PM - uvicorn.error - INFO - Finished server process [3476]
+2021/11/10 05:34:26 PM - uvicorn.error - INFO - Started server process [5300]
+2021/11/10 05:34:26 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/10 05:34:26 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/10 05:34:50 PM - uvicorn.error - INFO - Shutting down
+2021/11/10 05:34:51 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/10 05:34:51 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/10 05:34:51 PM - uvicorn.error - INFO - Finished server process [5300]
+2021/11/10 05:34:53 PM - uvicorn.error - INFO - Started server process [5661]
+2021/11/10 05:34:53 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/10 05:34:53 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/10 05:37:07 PM - Rede1Minuto Server - ERROR - (<class 'TypeError'>, TypeError("unsupported operand type(s) for +: 'NoneType' and 'str'"), <traceback object at 0x7f12ce538d80>)
+2021/11/10 05:37:07 PM - uvicorn.error - ERROR - Exception in ASGI application
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.9/dist-packages/uvicorn/protocols/http/h11_impl.py", line 394, in run_asgi
+    result = await app(self.scope, self.receive, self.send)
+  File "/usr/local/lib/python3.9/dist-packages/uvicorn/middleware/proxy_headers.py", line 45, in __call__
+    return await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/applications.py", line 199, in __call__
+    await super().__call__(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/applications.py", line 111, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/middleware/errors.py", line 181, in __call__
+    raise exc from None
+  File "/usr/local/lib/python3.9/dist-packages/starlette/middleware/errors.py", line 159, in __call__
+    await self.app(scope, receive, _send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/exceptions.py", line 82, in __call__
+    raise exc from None
+  File "/usr/local/lib/python3.9/dist-packages/starlette/exceptions.py", line 71, in __call__
+    await self.app(scope, receive, sender)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/routing.py", line 566, in __call__
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/routing.py", line 227, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/routing.py", line 41, in app
+    response = await func(request)
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/routing.py", line 201, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/routing.py", line 150, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/concurrency.py", line 34, in run_in_threadpool
+    return await loop.run_in_executor(None, func, *args)
+  File "/usr/lib/python3.9/concurrent/futures/thread.py", line 52, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/home/boaro/projects/r1mmensageria/./app.py", line 118, in register
+    result["command sql"] = command_sql
+UnboundLocalError: local variable 'command_sql' referenced before assignment
+2021/11/10 05:38:16 PM - uvicorn.error - INFO - Shutting down
+2021/11/10 05:38:16 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/10 05:38:16 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/10 05:38:16 PM - uvicorn.error - INFO - Finished server process [5661]
+2021/11/10 05:38:19 PM - uvicorn.error - INFO - Started server process [6047]
+2021/11/10 05:38:19 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/10 05:38:19 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/10 05:38:26 PM - uvicorn.error - INFO - Shutting down
+2021/11/10 05:38:27 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/10 05:38:27 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/10 05:38:27 PM - uvicorn.error - INFO - Finished server process [6047]
+2021/11/10 05:38:29 PM - uvicorn.error - INFO - Started server process [6051]
+2021/11/10 05:38:29 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/10 05:38:29 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/10 05:39:08 PM - Rede1Minuto Server - ERROR - (<class 'TypeError'>, TypeError("unsupported operand type(s) for +: 'NoneType' and 'str'"), <traceback object at 0x7f5af7227f80>)
+2021/11/10 05:39:08 PM - uvicorn.error - ERROR - Exception in ASGI application
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.9/dist-packages/uvicorn/protocols/http/h11_impl.py", line 394, in run_asgi
+    result = await app(self.scope, self.receive, self.send)
+  File "/usr/local/lib/python3.9/dist-packages/uvicorn/middleware/proxy_headers.py", line 45, in __call__
+    return await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/applications.py", line 199, in __call__
+    await super().__call__(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/applications.py", line 111, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/middleware/errors.py", line 181, in __call__
+    raise exc from None
+  File "/usr/local/lib/python3.9/dist-packages/starlette/middleware/errors.py", line 159, in __call__
+    await self.app(scope, receive, _send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/exceptions.py", line 82, in __call__
+    raise exc from None
+  File "/usr/local/lib/python3.9/dist-packages/starlette/exceptions.py", line 71, in __call__
+    await self.app(scope, receive, sender)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/routing.py", line 566, in __call__
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/routing.py", line 227, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/routing.py", line 41, in app
+    response = await func(request)
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/routing.py", line 201, in app
+    raw_response = await run_endpoint_function(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/routing.py", line 150, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/concurrency.py", line 34, in run_in_threadpool
+    return await loop.run_in_executor(None, func, *args)
+  File "/usr/lib/python3.9/concurrent/futures/thread.py", line 52, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/home/boaro/projects/r1mmensageria/./app.py", line 118, in register
+    if command_sql is not None:
+UnboundLocalError: local variable 'command_sql' referenced before assignment
+2021/11/10 05:40:17 PM - uvicorn.error - INFO - Shutting down
+2021/11/10 05:40:17 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/10 05:40:17 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/10 05:40:17 PM - uvicorn.error - INFO - Finished server process [6051]
+2021/11/10 05:40:20 PM - uvicorn.error - INFO - Started server process [6084]
+2021/11/10 05:40:20 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/10 05:40:20 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/10 05:40:33 PM - Rede1Minuto Server - ERROR - (<class 'TypeError'>, TypeError("unsupported operand type(s) for +: 'NoneType' and 'str'"), <traceback object at 0x7f3c759edc00>)
+2021/11/10 05:40:33 PM - uvicorn.error - ERROR - Exception in ASGI application
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.9/dist-packages/uvicorn/protocols/http/h11_impl.py", line 394, in run_asgi
+    result = await app(self.scope, self.receive, self.send)
+  File "/usr/local/lib/python3.9/dist-packages/uvicorn/middleware/proxy_headers.py", line 45, in __call__
+    return await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/applications.py", line 199, in __call__
+    await super().__call__(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/applications.py", line 111, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/middleware/errors.py", line 181, in __call__
+    raise exc from None
+  File "/usr/local/lib/python3.9/dist-packages/starlette/middleware/errors.py", line 159, in __call__
+    await self.app(scope, receive, _send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/exceptions.py", line 82, in __call__
+    raise exc from None
+  File "/usr/local/lib/python3.9/dist-packages/starlette/exceptions.py", line 71, in __call__
+    await self.app(scope, receive, sender)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/routing.py", line 566, in __call__
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/routing.py", line 227, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/routing.py", line 41, in app
+    response = await func(request)
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/routing.py", line 209, in app
+    response_data = await serialize_response(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/routing.py", line 137, in serialize_response
+    return jsonable_encoder(response_content)
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 90, in jsonable_encoder
+    encoded_value = jsonable_encoder(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 104, in jsonable_encoder
+    jsonable_encoder(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 142, in jsonable_encoder
+    return jsonable_encoder(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 142, in jsonable_encoder
+    return jsonable_encoder(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 90, in jsonable_encoder
+    encoded_value = jsonable_encoder(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 141, in jsonable_encoder
+    raise ValueError(errors)
+ValueError: [TypeError("'wrapper_descriptor' object is not iterable"), TypeError('vars() argument must have __dict__ attribute')]
+2021/11/10 05:43:14 PM - uvicorn.error - INFO - Shutting down
+2021/11/10 05:43:14 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/10 05:43:14 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/10 05:43:14 PM - uvicorn.error - INFO - Finished server process [6084]
+2021/11/10 05:43:16 PM - uvicorn.error - INFO - Started server process [6511]
+2021/11/10 05:43:16 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/10 05:43:16 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/10 05:44:23 PM - Rede1Minuto Server - ERROR - (<class 'TypeError'>, TypeError("unsupported operand type(s) for +: 'NoneType' and 'str'"), <traceback object at 0x7f3dc4fce1c0>)
+2021/11/10 05:44:23 PM - uvicorn.error - ERROR - Exception in ASGI application
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.9/dist-packages/uvicorn/protocols/http/h11_impl.py", line 394, in run_asgi
+    result = await app(self.scope, self.receive, self.send)
+  File "/usr/local/lib/python3.9/dist-packages/uvicorn/middleware/proxy_headers.py", line 45, in __call__
+    return await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/applications.py", line 199, in __call__
+    await super().__call__(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/applications.py", line 111, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/middleware/errors.py", line 181, in __call__
+    raise exc from None
+  File "/usr/local/lib/python3.9/dist-packages/starlette/middleware/errors.py", line 159, in __call__
+    await self.app(scope, receive, _send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/exceptions.py", line 82, in __call__
+    raise exc from None
+  File "/usr/local/lib/python3.9/dist-packages/starlette/exceptions.py", line 71, in __call__
+    await self.app(scope, receive, sender)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/routing.py", line 566, in __call__
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/routing.py", line 227, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/routing.py", line 41, in app
+    response = await func(request)
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/routing.py", line 209, in app
+    response_data = await serialize_response(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/routing.py", line 137, in serialize_response
+    return jsonable_encoder(response_content)
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 90, in jsonable_encoder
+    encoded_value = jsonable_encoder(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 104, in jsonable_encoder
+    jsonable_encoder(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 142, in jsonable_encoder
+    return jsonable_encoder(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 142, in jsonable_encoder
+    return jsonable_encoder(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 90, in jsonable_encoder
+    encoded_value = jsonable_encoder(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 141, in jsonable_encoder
+    raise ValueError(errors)
+ValueError: [TypeError("'wrapper_descriptor' object is not iterable"), TypeError('vars() argument must have __dict__ attribute')]
+2021/11/10 05:44:41 PM - uvicorn.error - INFO - Shutting down
+2021/11/10 05:44:41 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/10 05:44:41 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/10 05:44:41 PM - uvicorn.error - INFO - Finished server process [6511]
+2021/11/10 05:44:50 PM - uvicorn.error - INFO - Started server process [6517]
+2021/11/10 05:44:50 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/10 05:44:50 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/10 05:44:58 PM - Rede1Minuto Server - ERROR - (<class 'TypeError'>, TypeError("unsupported operand type(s) for +: 'NoneType' and 'str'"), <traceback object at 0x7ffa0f602dc0>)
+2021/11/10 05:44:58 PM - uvicorn.error - ERROR - Exception in ASGI application
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.9/dist-packages/uvicorn/protocols/http/h11_impl.py", line 394, in run_asgi
+    result = await app(self.scope, self.receive, self.send)
+  File "/usr/local/lib/python3.9/dist-packages/uvicorn/middleware/proxy_headers.py", line 45, in __call__
+    return await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/applications.py", line 199, in __call__
+    await super().__call__(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/applications.py", line 111, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/middleware/errors.py", line 181, in __call__
+    raise exc from None
+  File "/usr/local/lib/python3.9/dist-packages/starlette/middleware/errors.py", line 159, in __call__
+    await self.app(scope, receive, _send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/exceptions.py", line 82, in __call__
+    raise exc from None
+  File "/usr/local/lib/python3.9/dist-packages/starlette/exceptions.py", line 71, in __call__
+    await self.app(scope, receive, sender)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/routing.py", line 566, in __call__
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/routing.py", line 227, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/routing.py", line 41, in app
+    response = await func(request)
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/routing.py", line 209, in app
+    response_data = await serialize_response(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/routing.py", line 137, in serialize_response
+    return jsonable_encoder(response_content)
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 90, in jsonable_encoder
+    encoded_value = jsonable_encoder(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 104, in jsonable_encoder
+    jsonable_encoder(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 142, in jsonable_encoder
+    return jsonable_encoder(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 142, in jsonable_encoder
+    return jsonable_encoder(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 90, in jsonable_encoder
+    encoded_value = jsonable_encoder(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 141, in jsonable_encoder
+    raise ValueError(errors)
+ValueError: [TypeError("'wrapper_descriptor' object is not iterable"), TypeError('vars() argument must have __dict__ attribute')]
+2021/11/10 05:46:57 PM - uvicorn.error - INFO - Shutting down
+2021/11/10 05:46:57 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/10 05:46:57 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/10 05:46:57 PM - uvicorn.error - INFO - Finished server process [6517]
+2021/11/10 05:47:01 PM - uvicorn.error - INFO - Started server process [6898]
+2021/11/10 05:47:01 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/10 05:47:01 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/10 05:47:15 PM - Rede1Minuto Server - ERROR - (<class 'TypeError'>, TypeError("unsupported operand type(s) for +: 'NoneType' and 'str'"), <traceback object at 0x7f3f79156e00>)
+2021/11/10 05:47:15 PM - uvicorn.error - ERROR - Exception in ASGI application
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.9/dist-packages/uvicorn/protocols/http/h11_impl.py", line 394, in run_asgi
+    result = await app(self.scope, self.receive, self.send)
+  File "/usr/local/lib/python3.9/dist-packages/uvicorn/middleware/proxy_headers.py", line 45, in __call__
+    return await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/applications.py", line 199, in __call__
+    await super().__call__(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/applications.py", line 111, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/middleware/errors.py", line 181, in __call__
+    raise exc from None
+  File "/usr/local/lib/python3.9/dist-packages/starlette/middleware/errors.py", line 159, in __call__
+    await self.app(scope, receive, _send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/exceptions.py", line 82, in __call__
+    raise exc from None
+  File "/usr/local/lib/python3.9/dist-packages/starlette/exceptions.py", line 71, in __call__
+    await self.app(scope, receive, sender)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/routing.py", line 566, in __call__
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/routing.py", line 227, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/routing.py", line 41, in app
+    response = await func(request)
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/routing.py", line 209, in app
+    response_data = await serialize_response(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/routing.py", line 137, in serialize_response
+    return jsonable_encoder(response_content)
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 90, in jsonable_encoder
+    encoded_value = jsonable_encoder(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 104, in jsonable_encoder
+    jsonable_encoder(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 142, in jsonable_encoder
+    return jsonable_encoder(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 142, in jsonable_encoder
+    return jsonable_encoder(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 90, in jsonable_encoder
+    encoded_value = jsonable_encoder(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 141, in jsonable_encoder
+    raise ValueError(errors)
+ValueError: [TypeError("'wrapper_descriptor' object is not iterable"), TypeError('vars() argument must have __dict__ attribute')]
+2021/11/10 05:50:14 PM - uvicorn.error - INFO - Shutting down
+2021/11/10 05:50:14 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/10 05:50:14 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/10 05:50:14 PM - uvicorn.error - INFO - Finished server process [6898]
+2021/11/10 05:50:16 PM - uvicorn.error - INFO - Started server process [7272]
+2021/11/10 05:50:16 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/10 05:50:16 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/10 05:50:25 PM - Rede1Minuto Server - ERROR - (<class 'TypeError'>, TypeError("unsupported operand type(s) for +: 'NoneType' and 'str'"), <traceback object at 0x7f38df121b80>)
+2021/11/10 05:50:25 PM - uvicorn.error - ERROR - Exception in ASGI application
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.9/dist-packages/uvicorn/protocols/http/h11_impl.py", line 394, in run_asgi
+    result = await app(self.scope, self.receive, self.send)
+  File "/usr/local/lib/python3.9/dist-packages/uvicorn/middleware/proxy_headers.py", line 45, in __call__
+    return await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/applications.py", line 199, in __call__
+    await super().__call__(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/applications.py", line 111, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/middleware/errors.py", line 181, in __call__
+    raise exc from None
+  File "/usr/local/lib/python3.9/dist-packages/starlette/middleware/errors.py", line 159, in __call__
+    await self.app(scope, receive, _send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/exceptions.py", line 82, in __call__
+    raise exc from None
+  File "/usr/local/lib/python3.9/dist-packages/starlette/exceptions.py", line 71, in __call__
+    await self.app(scope, receive, sender)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/routing.py", line 566, in __call__
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/routing.py", line 227, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/routing.py", line 41, in app
+    response = await func(request)
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/routing.py", line 209, in app
+    response_data = await serialize_response(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/routing.py", line 137, in serialize_response
+    return jsonable_encoder(response_content)
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 90, in jsonable_encoder
+    encoded_value = jsonable_encoder(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 104, in jsonable_encoder
+    jsonable_encoder(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 142, in jsonable_encoder
+    return jsonable_encoder(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 142, in jsonable_encoder
+    return jsonable_encoder(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 90, in jsonable_encoder
+    encoded_value = jsonable_encoder(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 141, in jsonable_encoder
+    raise ValueError(errors)
+ValueError: [TypeError("'wrapper_descriptor' object is not iterable"), TypeError('vars() argument must have __dict__ attribute')]
+2021/11/10 05:56:40 PM - uvicorn.error - INFO - Shutting down
+2021/11/10 05:56:41 PM - uvicorn.error - INFO - Waiting for connections to close. (CTRL+C to force quit)
+2021/11/10 05:57:19 PM - uvicorn.error - INFO - Waiting for background tasks to complete. (CTRL+C to force quit)
+2021/11/10 06:00:45 PM - uvicorn.error - INFO - Finished server process [7272]
+2021/11/10 06:01:41 PM - uvicorn.error - INFO - Started server process [8098]
+2021/11/10 06:01:41 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/10 06:01:41 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/10 06:04:27 PM - uvicorn.error - INFO - Shutting down
+2021/11/10 06:04:27 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/10 06:04:27 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/10 06:04:27 PM - uvicorn.error - INFO - Finished server process [8098]
+2021/11/10 06:04:29 PM - uvicorn.error - INFO - Started server process [8475]
+2021/11/10 06:04:29 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/10 06:04:29 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/10 06:07:24 PM - uvicorn.error - INFO - Shutting down
+2021/11/10 06:07:24 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/10 06:07:24 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/10 06:07:24 PM - uvicorn.error - INFO - Finished server process [8475]
+2021/11/10 06:07:26 PM - uvicorn.error - INFO - Started server process [8855]
+2021/11/10 06:07:26 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/10 06:07:26 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/10 06:13:02 PM - uvicorn.error - INFO - Shutting down
+2021/11/10 06:13:02 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/10 06:13:02 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/10 06:13:02 PM - uvicorn.error - INFO - Finished server process [8855]
+2021/11/10 06:13:08 PM - uvicorn.error - INFO - Started server process [8860]
+2021/11/10 06:13:08 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/10 06:13:08 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/10 06:16:31 PM - uvicorn.error - INFO - Shutting down
+2021/11/10 06:16:31 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/10 06:16:31 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/10 06:16:31 PM - uvicorn.error - INFO - Finished server process [8860]
+2021/11/10 06:16:34 PM - uvicorn.error - INFO - Started server process [9236]
+2021/11/10 06:16:34 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/10 06:16:34 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/10 06:16:41 PM - uvicorn.error - INFO - Shutting down
+2021/11/10 06:16:41 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/10 06:16:41 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/10 06:16:41 PM - uvicorn.error - INFO - Finished server process [9236]
+2021/11/10 06:16:44 PM - uvicorn.error - INFO - Started server process [9241]
+2021/11/10 06:16:44 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/10 06:16:44 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/10 06:16:55 PM - uvicorn.error - INFO - Shutting down
+2021/11/10 06:16:55 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/10 06:16:55 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/10 06:16:55 PM - uvicorn.error - INFO - Finished server process [9241]
+2021/11/10 06:17:05 PM - uvicorn.error - INFO - Started server process [9246]
+2021/11/10 06:17:05 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/10 06:17:05 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/10 06:17:10 PM - uvicorn.error - INFO - Shutting down
+2021/11/10 06:17:10 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/10 06:17:10 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/10 06:17:10 PM - uvicorn.error - INFO - Finished server process [9246]
+2021/11/10 06:17:13 PM - uvicorn.error - INFO - Started server process [9252]
+2021/11/10 06:17:13 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/10 06:17:13 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/10 06:19:09 PM - uvicorn.error - INFO - Shutting down
+2021/11/10 06:19:09 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/10 06:19:09 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/10 06:19:09 PM - uvicorn.error - INFO - Finished server process [9252]
+2021/11/10 06:19:14 PM - uvicorn.error - INFO - Started server process [9257]
+2021/11/10 06:19:14 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/10 06:19:14 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/10 06:26:52 PM - uvicorn.error - INFO - Shutting down
+2021/11/10 06:26:52 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/10 06:26:52 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/10 06:26:52 PM - uvicorn.error - INFO - Finished server process [9257]
+2021/11/11 09:24:50 AM - uvicorn.error - INFO - Started server process [13378]
+2021/11/11 09:24:50 AM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/11 09:24:50 AM - uvicorn.error - INFO - Application startup complete.
+2021/11/11 09:25:04 AM - uvicorn.error - INFO - Shutting down
+2021/11/11 09:25:04 AM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/11 09:25:04 AM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/11 09:25:04 AM - uvicorn.error - INFO - Finished server process [13378]
+2021/11/11 09:25:06 AM - uvicorn.error - INFO - Started server process [13384]
+2021/11/11 09:25:06 AM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/11 09:25:06 AM - uvicorn.error - INFO - Application startup complete.
+2021/11/11 10:28:56 AM - uvicorn.error - INFO - Shutting down
+2021/11/11 10:28:56 AM - uvicorn.error - INFO - Finished server process [13384]
+2021/11/11 10:32:06 AM - uvicorn.error - INFO - Started server process [15141]
+2021/11/11 10:32:06 AM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/11 10:32:06 AM - uvicorn.error - INFO - Application startup complete.
+2021/11/11 10:33:03 AM - Rede1Minuto Server - INFO - Consulta ao Catalogo de Estações Lockers
+2021/11/11 10:33:03 AM - Rede1Minuto Server - INFO - Usuário que fez a solicitação: e5b1632f-9fdc-48b3-91cb-8bedb70b6926
+2021/11/11 11:47:38 AM - uvicorn.error - INFO - Shutting down
+2021/11/11 11:47:38 AM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/11 11:47:38 AM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/11 11:47:38 AM - uvicorn.error - INFO - Finished server process [15141]
+2021/11/11 12:51:31 PM - uvicorn.error - INFO - Started server process [22693]
+2021/11/11 12:51:31 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/11 12:51:31 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/11 12:51:38 PM - uvicorn.error - INFO - Shutting down
+2021/11/11 12:51:38 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/11 12:51:38 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/11 12:51:38 PM - uvicorn.error - INFO - Finished server process [22693]
+2021/11/11 12:51:42 PM - uvicorn.error - INFO - Started server process [22696]
+2021/11/11 12:51:42 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/11 12:51:42 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/11 12:51:59 PM - uvicorn.error - INFO - Shutting down
+2021/11/11 12:51:59 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/11 12:51:59 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/11 12:51:59 PM - uvicorn.error - INFO - Finished server process [22696]
+2021/11/11 12:52:01 PM - uvicorn.error - INFO - Started server process [23071]
+2021/11/11 12:52:01 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/11 12:52:01 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/11 12:52:02 PM - uvicorn.error - INFO - Shutting down
+2021/11/11 12:52:02 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/11 12:52:02 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/11 12:52:02 PM - uvicorn.error - INFO - Finished server process [23071]
+2021/11/11 12:52:05 PM - uvicorn.error - INFO - Started server process [23075]
+2021/11/11 12:52:05 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/11 12:52:05 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/11 12:54:24 PM - Rede1Minuto Server - INFO - Consulta ao Catalogo de Estações Lockers
+2021/11/11 12:54:24 PM - Rede1Minuto Server - INFO - Usuário que fez a solicitação: e5b1632f-9fdc-48b3-91cb-8bedb70b6926
+2021/11/11 12:56:02 PM - Rede1Minuto Server - INFO - Consulta ao Catalogo de Estações Lockers
+2021/11/11 12:56:02 PM - Rede1Minuto Server - INFO - Usuário que fez a solicitação: e5b1632f-9fdc-48b3-91cb-8bedb70b6926
+2021/11/11 12:58:27 PM - Rede1Minuto Server - INFO - Consulta ao Catalogo de Estações Lockers
+2021/11/11 12:58:27 PM - Rede1Minuto Server - INFO - Usuário que fez a solicitação: e5b1632f-9fdc-48b3-91cb-8bedb70b6926
+2021/11/11 01:00:56 PM - uvicorn.error - INFO - Shutting down
+2021/11/11 01:00:56 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/11 01:00:56 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/11 01:00:56 PM - uvicorn.error - INFO - Finished server process [23075]
+2021/11/11 01:00:59 PM - uvicorn.error - INFO - Started server process [23509]
+2021/11/11 01:00:59 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/11 01:00:59 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/11 01:01:08 PM - uvicorn.error - INFO - Shutting down
+2021/11/11 01:01:08 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/11 01:01:08 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/11 01:01:08 PM - uvicorn.error - INFO - Finished server process [23509]
+2021/11/11 01:01:11 PM - uvicorn.error - INFO - Started server process [23514]
+2021/11/11 01:01:11 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/11 01:01:11 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/11 01:01:20 PM - uvicorn.error - INFO - Shutting down
+2021/11/11 01:01:20 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/11 01:01:20 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/11 01:01:20 PM - uvicorn.error - INFO - Finished server process [23514]
+2021/11/11 01:01:24 PM - uvicorn.error - INFO - Started server process [23517]
+2021/11/11 01:01:24 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/11 01:01:24 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/11 01:01:37 PM - Rede1Minuto Server - INFO - Consulta ao Catalogo de Estações Lockers
+2021/11/11 01:01:37 PM - Rede1Minuto Server - INFO - Usuário que fez a solicitação: e5b1632f-9fdc-48b3-91cb-8bedb70b6926
+2021/11/11 01:56:37 PM - uvicorn.error - INFO - Shutting down
+2021/11/11 01:56:37 PM - uvicorn.error - INFO - Waiting for connections to close. (CTRL+C to force quit)
+2021/11/11 01:59:00 PM - uvicorn.error - INFO - Finished server process [23517]
+2021/11/11 01:59:48 PM - uvicorn.error - INFO - Started server process [28416]
+2021/11/11 01:59:48 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/11 01:59:48 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/11 02:03:11 PM - Rede1Minuto Server - INFO - Consulta ao Catalogo de Estações Lockers
+2021/11/11 02:03:11 PM - Rede1Minuto Server - INFO - Usuário que fez a solicitação: e5b1632f-9fdc-48b3-91cb-8bedb70b6926
+2021/11/11 02:03:11 PM - Rede1Minuto Server - ERROR - (<class 'sqlalchemy.exc.OperationalError'>, OperationalError('(pymysql.err.OperationalError) (1054, "Unknown column \'idLockerCategoria\' in \'field list\'")'), <traceback object at 0x7f9e21624580>)
+2021/11/11 02:03:11 PM - uvicorn.error - ERROR - Exception in ASGI application
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.9/dist-packages/uvicorn/protocols/http/h11_impl.py", line 394, in run_asgi
+    result = await app(self.scope, self.receive, self.send)
+  File "/usr/local/lib/python3.9/dist-packages/uvicorn/middleware/proxy_headers.py", line 45, in __call__
+    return await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/applications.py", line 199, in __call__
+    await super().__call__(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/applications.py", line 111, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/middleware/errors.py", line 181, in __call__
+    raise exc from None
+  File "/usr/local/lib/python3.9/dist-packages/starlette/middleware/errors.py", line 159, in __call__
+    await self.app(scope, receive, _send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/exceptions.py", line 82, in __call__
+    raise exc from None
+  File "/usr/local/lib/python3.9/dist-packages/starlette/exceptions.py", line 71, in __call__
+    await self.app(scope, receive, sender)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/routing.py", line 566, in __call__
+    await route.handle(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/routing.py", line 227, in handle
+    await self.app(scope, receive, send)
+  File "/usr/local/lib/python3.9/dist-packages/starlette/routing.py", line 41, in app
+    response = await func(request)
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/routing.py", line 209, in app
+    response_data = await serialize_response(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/routing.py", line 137, in serialize_response
+    return jsonable_encoder(response_content)
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 90, in jsonable_encoder
+    encoded_value = jsonable_encoder(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 104, in jsonable_encoder
+    jsonable_encoder(
+  File "/usr/local/lib/python3.9/dist-packages/fastapi/encoders.py", line 141, in jsonable_encoder
+    raise ValueError(errors)
+ValueError: [TypeError("'traceback' object is not iterable"), TypeError('vars() argument must have __dict__ attribute')]
+2021/11/11 02:07:42 PM - uvicorn.error - INFO - Shutting down
+2021/11/11 02:07:42 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/11 02:07:42 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/11 02:07:42 PM - uvicorn.error - INFO - Finished server process [28416]
+2021/11/11 02:07:44 PM - uvicorn.error - INFO - Started server process [29429]
+2021/11/11 02:07:44 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/11 02:07:44 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/11 02:08:04 PM - uvicorn.error - INFO - Shutting down
+2021/11/11 02:08:04 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/11 02:08:04 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/11 02:08:04 PM - uvicorn.error - INFO - Finished server process [29429]
+2021/11/11 02:08:07 PM - uvicorn.error - INFO - Started server process [29434]
+2021/11/11 02:08:07 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/11 02:08:07 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/11 02:08:10 PM - Rede1Minuto Server - INFO - Consulta ao Catalogo de Estações Lockers
+2021/11/11 02:08:10 PM - Rede1Minuto Server - INFO - Usuário que fez a solicitação: e5b1632f-9fdc-48b3-91cb-8bedb70b6926
+2021/11/11 03:49:32 PM - uvicorn.error - INFO - Shutting down
+2021/11/11 03:49:32 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/11 03:49:32 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/11 03:49:32 PM - uvicorn.error - INFO - Finished server process [29434]
+2021/11/11 03:49:44 PM - uvicorn.error - INFO - Started server process [1943]
+2021/11/11 03:49:44 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/11 03:49:44 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/11 03:50:09 PM - uvicorn.error - INFO - Shutting down
+2021/11/11 03:50:09 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/11 03:50:09 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/11 03:50:09 PM - uvicorn.error - INFO - Finished server process [1943]
+2021/11/11 04:02:00 PM - uvicorn.error - INFO - Started server process [4870]
+2021/11/11 04:02:00 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/11 04:02:00 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/11 04:11:08 PM - uvicorn.error - INFO - Shutting down
+2021/11/11 04:11:08 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/11 04:11:08 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/11 04:11:08 PM - uvicorn.error - INFO - Finished server process [4870]
+2021/11/11 04:11:11 PM - uvicorn.error - INFO - Started server process [7090]
+2021/11/11 04:11:11 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/11 04:11:11 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/11 04:14:01 PM - uvicorn.error - INFO - Shutting down
+2021/11/11 04:14:01 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/11 04:14:01 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/11 04:14:01 PM - uvicorn.error - INFO - Finished server process [7090]
+2021/11/11 04:17:19 PM - uvicorn.error - INFO - Started server process [8888]
+2021/11/11 04:17:19 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/11 04:17:19 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/11 04:17:21 PM - uvicorn.error - INFO - Shutting down
+2021/11/11 04:17:21 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/11 04:17:21 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/11 04:17:21 PM - uvicorn.error - INFO - Finished server process [8888]
+2021/11/11 04:17:23 PM - uvicorn.error - INFO - Started server process [8892]
+2021/11/11 04:17:23 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/11 04:17:23 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/11 04:29:27 PM - uvicorn.error - INFO - Shutting down
+2021/11/11 04:29:27 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/11 04:29:27 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/11 04:29:27 PM - uvicorn.error - INFO - Finished server process [8892]
+2021/11/11 04:29:29 PM - uvicorn.error - INFO - Started server process [9518]
+2021/11/11 04:29:29 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/11 04:29:29 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/12 09:04:41 AM - uvicorn.error - INFO - Shutting down
+2021/11/12 09:04:42 AM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/12 09:04:42 AM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/12 09:04:42 AM - uvicorn.error - INFO - Finished server process [9518]
+2021/11/12 09:04:56 AM - uvicorn.error - INFO - Started server process [13913]
+2021/11/12 09:04:56 AM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/12 09:04:56 AM - uvicorn.error - INFO - Application startup complete.
+2021/11/12 12:43:07 PM - uvicorn.error - INFO - Started server process [919]
+2021/11/12 12:43:07 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/12 12:43:07 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/12 12:43:59 PM - Rede1Minuto Server - INFO - Consulta ao Catalogo de Estações Lockers
+2021/11/12 12:43:59 PM - Rede1Minuto Server - INFO - Usuário que fez a solicitação: e5b1632f-9fdc-48b3-91cb-8bedb70b6926
+2021/11/12 12:45:17 PM - uvicorn.error - INFO - Shutting down
+2021/11/12 12:45:17 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/12 12:45:17 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/12 12:45:17 PM - uvicorn.error - INFO - Finished server process [919]
+2021/11/12 12:45:19 PM - uvicorn.error - INFO - Started server process [4101]
+2021/11/12 12:45:19 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/12 12:45:19 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/12 12:46:22 PM - Rede1Minuto Server - INFO - Consulta ao Catalogo de Estações Lockers
+2021/11/12 12:46:22 PM - Rede1Minuto Server - INFO - Usuário que fez a solicitação: e5b1632f-9fdc-48b3-91cb-8bedb70b6926
+2021/11/12 01:04:37 PM - uvicorn.error - INFO - Shutting down
+2021/11/12 01:04:37 PM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/12 01:04:37 PM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/12 01:04:37 PM - uvicorn.error - INFO - Finished server process [4101]
+2021/11/12 01:04:39 PM - uvicorn.error - INFO - Started server process [6389]
+2021/11/12 01:04:39 PM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/12 01:04:39 PM - uvicorn.error - INFO - Application startup complete.
+2021/11/13 10:50:05 AM - uvicorn.error - INFO - Shutting down
+2021/11/13 10:50:05 AM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/13 10:50:05 AM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/13 10:50:05 AM - uvicorn.error - INFO - Finished server process [6389]
+2021/11/13 10:50:08 AM - uvicorn.error - INFO - Started server process [9098]
+2021/11/13 10:50:08 AM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/13 10:50:08 AM - uvicorn.error - INFO - Application startup complete.
+2021/11/13 10:56:06 AM - uvicorn.error - INFO - Shutting down
+2021/11/13 10:56:06 AM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/13 10:56:06 AM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/13 10:56:06 AM - uvicorn.error - INFO - Finished server process [9098]
+2021/11/13 10:56:08 AM - uvicorn.error - INFO - Started server process [12275]
+2021/11/13 10:56:08 AM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/13 10:56:08 AM - uvicorn.error - INFO - Application startup complete.
+2021/11/14 09:21:42 AM - uvicorn.error - INFO - Shutting down
+2021/11/14 09:21:43 AM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/14 09:21:43 AM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/14 09:21:43 AM - uvicorn.error - INFO - Finished server process [12275]
