@@ -117,6 +117,9 @@ def register(auth_details: AuthDetails):
 @app.post('/login')
 def login(auth_details: AuthDetails):
     try:
+        command_sql = None
+        if auth_details.username is None or auth_details.password is None:
+            return {"status_code":400, "detail":"Username ou Password não informado"}
         command_sql = f'''SELECT    `AuthDetails`.`public_id`,
                                     `AuthDetails`.`idRede`,
                                     `AuthDetails`.`idMarketPlace`,
@@ -125,6 +128,12 @@ def login(auth_details: AuthDetails):
                             FROM    `AuthDetails`
                             where   `AuthDetails`.`email` = "{auth_details.email}";'''
         row = conn.execute(command_sql).fetchone()
+        if row is None:
+            return {"status_code":203, "detail":"Usuário não cadastrado"}
+        if row[1] is None:
+            return {"status_code":203, "detail":"Rede não cadastrada - Usuário invalido"}
+        if row[2] is None:
+            return {"status_code":203, "detail":"Marketplace não cadastrado - Usuário invalido"}
         ID_do_Solicitante = row[3] + str(row[1]).zfill(3) + str(row[2]).zfill(3)
         if (row is None) or (not auth_handler.verify_password(auth_details.password, row['password'])):
             return {'status_code':401, detail:'Invalid username and/or password'}

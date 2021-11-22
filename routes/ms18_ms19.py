@@ -181,8 +181,6 @@ def ms18(ms18: MS18, public_id=Depends(auth_handler.auth_wrapper)):
 
 ###### Enviar para fila ############
 
-<<<<<<< HEAD
-
 def insert_ms18(ms18, idTransacaoUnica, record_Porta, Inicio_reserva):
     try:
         command_sql = f'''INSERT INTO `rede1minuto`.`reserva_locacao`
@@ -287,5 +285,3 @@ def send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_res
         result = dict()
         result['Error send_lc01_mq'] = sys.exc_info()
         return result 
-=======
->>>>>>> 4aa1e9dd7849da47fcd8f3f2d8712f44b6ef6032

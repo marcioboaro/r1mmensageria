@@ -4,7 +4,7 @@ from pydantic import BaseModel, ValidationError, validator
 from datetime import datetime,time
 
 class Encomendas(BaseModel):
-    ID_Encomenda : str
+    ID_Encomenda : int
     Numero_Mobile_Shopper : str
     Endereço_de_Email_do_Shopper : str
     CPF_CNPJ_Shopper : str
@@ -28,18 +28,18 @@ class Encomendas(BaseModel):
 
 class MS05(BaseModel):
     Codigo_de_MSG : str
-    ID_de_Referencia: str
+    ID_de_Referencia: Optional[str] = None
     ID_do_Solicitante: str
     ID_Rede_Lockers: int
     Data_Hora_Solicitacao: datetime
     ID_da_Estacao_do_Locker: str
-    Tipo_de_Serviço_Reserva: int
+    Tipo_de_Serviço_Reserva: str
     ID_Transacao_Unica: str
-    ID_PSL_Designado: str
+    ID_PSL_Designado: int
     Autenticacao_Login_Operador_Logistico: int
     Categoria_Porta: str
-    Geracao_de_QRCODE_na_Resposta_MS06: str
-    Geracao_de_Codigo_de_Abertura_de_Porta_na_Resposta_MS06: str
+    Geracao_de_QRCODE_na_Resposta_MS06: int
+    Geracao_de_Codigo_de_Abertura_de_Porta_na_Resposta_MS06: int
     Info_Encomendas: list[Encomendas]
     URL_CALL_BACK: str
     Versao_Mensageria: str
