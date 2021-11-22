@@ -234,7 +234,7 @@ def send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_res
         result['Error send_lc01_mq'] = sys.exc_info()
         return result 
 
-def (idTransacaoUnica, encomenda, ms05, record_Porta):
+def insert_ms05_encomendas(idTransacaoUnica, encomenda, ms05, record_Porta):
     try:
         command_sql = f"""INSERT INTO `reserva_encomenda`
                             (`IdTransacaoUnica`,
