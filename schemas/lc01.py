@@ -11,7 +11,7 @@ class Content(BaseModel):
    idShopper: str
    idRede: int
    idTransacao: str
-   ServicoTipoAberPorta: int
+   Tipo_de_Servico_Reserva: int
    idLocker: str
    idLockerPorta: str
    idOpLog: str
