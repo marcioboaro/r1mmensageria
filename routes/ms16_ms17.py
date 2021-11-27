@@ -73,6 +73,16 @@ def ms16(ms16: MS16, public_id=Depends(auth_handler.auth_wrapper)):
         if ms16.Versao_Mensageria is None:
             ms16.Versao_Mensageria = "1.0.0"
 
+        Inicio_reserva = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        date_after = datetime.now() + timedelta(days=3)  # 3 é o valor Default
+        Final_reserva = date_after.strftime('%Y-%m-%d %H:%M:%S')
+
+        if ms16.DataHora_Inicio_Reserva is None:
+            ms16.DataHora_Inicio_Reserva = Inicio_reserva
+
+        if ms16.DataHora_Final_Reserva is None:
+            ms16.DataHora_Final_Reserva = Final_reserva
+
         now = datetime.now()
         dt_string = now.strftime("%Y-%m-%dT%H:%M:%S")
 
@@ -86,11 +96,16 @@ def ms16(ms16: MS16, public_id=Depends(auth_handler.auth_wrapper)):
         ms17['ID_da_Estacao_do_Locker'] = ms16.ID_da_Estacao_do_Locker
         ms17['ID_da_Porta_do_Locker'] = ms16.ID_da_Porta_do_Locker
         ms17['ID_Transacao_Unica'] = ms16.ID_Transacao_Unica
-        idTransacaoUnica = ms16.ID_Transacao_Unica
-        update_ms16(ms16, idTransacaoUnica)
-        ms17['DataHora_Inicio_Reserva'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        ms17['DataHora_Final_Reserva'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        ms17['DataHora_Inicio_Reserva'] = ms16.DataHora_Inicio_Reserva
+        ms17['DataHora_Final_Reserva'] = ms16.DataHora_Final_Reserva
         ms17['Versao_Mensageria'] = ms16.Versao_Mensageria
+
+        update_porta(ms16)
+        update_reserva(ms16)
+        update_tracking_reserva(ms16)
+        update_tracking_porta(ms16)
+        send_lc22_mq(ms16)
+
         return ms17
     except:
         logger.error(sys.exc_info())
@@ -98,23 +113,131 @@ def ms16(ms16: MS16, public_id=Depends(auth_handler.auth_wrapper)):
         result['Error ms16'] = sys.exc_info()
         return {"status_code": 500, "detail": "MS16 - Prorrogação de reserva"}
 
-#def send_lc01_mq(ms07, idTransacaoUnica, record_Porta, Inicio_reserva, Final_reserva):
-    #try:  # Envia LC01 para fila do RabbitMQ o aplicativo do locker a pega lá
+
+def update_porta(ms16):
+    try:
+        command_sql = f"SELECT idLockerPorta from reserva_encomenda where reserva_encomenda.IdTransacaoUnica = '{ms16.ID_Transacao_Unica}'";
+        record_Porta = conn.execute(command_sql).fetchone()
+
+        command_sql = f"""UPDATE `rede1minuto`.`locker_porta`
+                                        SET `idLockerPortaStatus` = 2,
+                                    where locker_porta.idLockerPorta = '{record_Porta[0]}';"""
+        command_sql = command_sql.replace("'None'", "Null")
+        command_sql = command_sql.replace("None", "Null")
+        conn.execute(command_sql)
+        logger.warning(command_sql)
+    except:
+        logger.error(sys.exc_info())
+        result = dict()
+        result['Error update_porta'] = sys.exc_info()
+        return result
 
 
-def update_ms16(ms16, IdTransacaoUnica):
+def update_reserva(ms16):
     try:
         command_sql = f"""UPDATE `reserva_encomenda`
-                                            SET     `IdSolicitante` = '{ms16.ID_do_Solicitante}',
-                                                    `IdReferencia` = '{ms16.ID_de_Referencia}',
-                                                    `idStatusEncomenda` = 3,
+                                            SET     `idStatusEncomenda` = 3,
+                                                    `DataHoraInicioReserva` = '{ms16.DataHora_Inicio_Reserva}'
+                                                    `DataHoraFinalReserva` = '{ms16.DataHora_Final_Reserva}',
                                                     `DateUpdate` = now()
                                             WHERE `IdTransacaoUnica` = '{ms16.ID_Transacao_Unica}';"""
         command_sql = command_sql.replace("'None'", "Null")
         command_sql = command_sql.replace("None", "Null")
         conn.execute(command_sql)
+        logger.warning(command_sql)
     except:
         logger.error(sys.exc_info())
         result = dict()
-        result['Error insert_ms16'] = sys.exc_info()
+        result['Error update_reserva'] = sys.exc_info()
+        return result
+
+def update_tracking_reserva(ms16):
+    try:
+        command_sql = f"""UPDATE `tracking_encomenda`
+                                            SET     `idStatusEncomendaAnterior` = 2,
+                                                    `idStatusEncomendaAtual` = 3,
+                                                    `DateUpdate` = now()
+                                            WHERE `IdTransacaoUnica` = '{ms16.ID_Transacao_Unica}';"""
+        command_sql = command_sql.replace("'None'", "Null")
+        command_sql = command_sql.replace("None", "Null")
+        conn.execute(command_sql)
+        logger.warning(command_sql)
+    except:
+        logger.error(sys.exc_info())
+        result = dict()
+        result['Error update_tracking'] = sys.exc_info()
+        return result
+
+
+def update_tracking_porta(ms16):
+    try:
+        command_sql = f"""UPDATE `tracking_portas`
+                                            SET     `idStatusPortaAnterior` = 2,
+                                                    `idStatusPortaAtual` = 4,
+                                                    `DateUpdate` = now()
+                                            WHERE `IdTransacaoUnica` = '{ms16.ID_Transacao_Unica}';"""
+        command_sql = command_sql.replace("'None'", "Null")
+        command_sql = command_sql.replace("None", "Null")
+        conn.execute(command_sql)
+        logger.warning(command_sql)
+    except:
+        logger.error(sys.exc_info())
+        result = dict()
+        result['Error update_tracking_porta'] = sys.exc_info()
+        return result
+
+
+def send_lc22_mq(ms16):
+    try:  # Envia LC01 para fila do RabbitMQ o aplicativo do locker a pega lá
+
+        command_sql = f"SELECT idLockerPorta, idLockerPortaFisica, idLocker from reserva_encomenda where reserva_encomenda.IdTransacaoUnica = '{ms16.ID_Transacao_Unica}'";
+        record_Porta = conn.execute(command_sql).fetchone()
+
+        lc07 = {}
+        lc07["CD_MSG"] = "LC07"
+
+        content = {}
+        content["ID_Referencia"] = ms07.ID_de_Referencia
+        content["ID_Solicitante"] = ms07.ID_do_Solicitante
+        content["ID_Rede"] = ms07.ID_Rede_Lockers
+        content["ID_Transacao"] = ms07.ID_Transacao_Unica
+        content["idLocker"] = record_Porta[3]
+        content["AcaoExecutarPorta"] = 4
+        content["idLockerPorta"] = record_Porta[0]
+        content["idLockerPortaFisica"] = record_Porta[1]
+        content["Versão_Software"] = "0.1"
+        content["Versao_Mensageria"] = "1.0.0"
+
+        lc07["Content"] = content
+
+        MQ_Name = 'Rede1Min_MQ'
+        URL = 'amqp://rede1min:Minuto@167.71.26.87' # URL do RabbitMQ
+        queue_name = record_Porta[3] + '_locker_output' # Nome da fila do RabbitMQ
+
+        url = os.environ.get(MQ_Name, URL)
+        params = pika.URLParameters(url)
+        params.socket_timeout = 6
+
+        connection = pika.BlockingConnection(params)
+        channel = connection.channel()
+
+        channel.queue_declare(queue=queue_name, durable=True)
+
+        message = json.dumps(lc01) # Converte o dicionario em string
+
+        channel.basic_publish(
+                    exchange='',
+                    routing_key=queue_name,
+                    body=message,
+                    properties=pika.BasicProperties(
+                        delivery_mode=2,  # make message persistent
+                    ))
+
+        connection.close()
+        logger.info(sys.exc_info())
+
+    except:
+        logger.error(sys.exc_info())
+        result = dict()
+        result['Error send_lc22_mq'] = sys.exc_info()
         return result

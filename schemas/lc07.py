@@ -2,18 +2,30 @@ from typing import Optional
 from pydantic import BaseModel
 from datetime import datetime
 
+class Portas(BaseModel):
+   idLockerPorta: str
+
+class Encomendas(BaseModel):
+   idEncomenda: Optional[str]
+   CodigoRastreamentoEncomenda: Optional[str]
+   CodigoBarrasConteudoEncomenda: Optional[str]
+
 class Content(BaseModel):
-   idShopper: str
    idRede: int
-   idTransacao: str
-   CD_Resposta: str
    idLocker: str
-   idLockerPortaOriginal: str
-   idLockerPortaNova: str
-   QRCODE: str
-   CD_PortaAbertura: str
+   AcaoExecutarPorta: int
+   idLockerPorta: str
    DT: datetime
-   Numero_Mobile_Operador: str
+   idRotaLocker: Optional[str]
+   idTicketRotaLocker: Optional[str]
+   TipoParada: Optional[str]
+   StatusEntregaParadaLocker: Optional[str]
+   Portas: list[Portas]
+   encomendas: list[Encomendas]
+   QRCODE: Optional[str]
+   CD_PortaAbertura: Optional[str]
+   TipoAcao: Optional[int]
+   idTransacao: str
    Versão_Software: str
    Versao_Mensageria: str
 

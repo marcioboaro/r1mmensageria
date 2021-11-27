@@ -79,8 +79,17 @@ def ms18(ms18: MS18, public_id=Depends(auth_handler.auth_wrapper)):
         if ms18.Versao_Mensageria is None:
             ms18.Versao_Mensageria = "1.0.0"
 
+        # validando DataHora_Inicio_Locacao
+        if ms18.DataHora_Inicio_Locacao is None:
+            return {"status_code": 422, "detail": "M019007 - DataHora_Inicio_Locacao obrigatório"}
+
+        # validando DataHora_Final_Locacao
+        if ms18.DataHora_Final_Locacao is None:
+            return {"status_code": 422, "detail": "M019007 - DataHora_Final_Locacao obrigatório"}
+
         now = datetime.now()
         dt_string = now.strftime("%Y-%m-%dT%H:%M:%S")
+        idTransacaoUnica = str(uuid.uuid1())
 
         ms19 = {}
         ms19['Codigo_de_MSG'] = "MS19"
@@ -100,7 +109,6 @@ def ms18(ms18: MS18, public_id=Depends(auth_handler.auth_wrapper)):
             ms19['Codigo_Resposta_MS19'] = 'M019009 - Não existe porta disponível para esta categoria'
         else:
             ms19['ID_da_Porta_do_Locker'] = record_Porta[0]
-            idLockerPorta = record_Porta[0]
             ms19['Codigo_Resposta_MS19'] = 'M019000 - Sucesso'
 
 
@@ -136,42 +144,19 @@ def ms18(ms18: MS18, public_id=Depends(auth_handler.auth_wrapper)):
             ms19['Categoria_Locker'] = record[8]
             ms19['Modelo_Operacao_Locker'] = record[9]
             ms19['Categoria_Porta'] = ms18.Categoria_Porta
-
-            idTransacaoUnica = str(uuid.uuid1())
-
             ms19['ID_Transacao_Unica'] = idTransacaoUnica
             ms19['ID_Geracao_QRCODE'] = idTransacaoUnica
 
             Codigo_Abertura_Porta = random.randint(100000000000, 1000000000000)
             ms19['Codigo_Abertura_Porta'] = Codigo_Abertura_Porta
 
-            Inicio_reserva = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            date_after = datetime.now() + timedelta(days=3)  # 3 é o valor Default
-            Final_reserva = date_after.strftime('%Y-%m-%d %H:%M:%S')
+            ms19['DataHora_Inicio_Locacao'] = ms18.DataHora_Inicio_Locacao
+            ms19['DataHora_Final_Locacao'] = ms18.DataHora_Final_Locacao
 
-            ms19['DataHora_Inicio_Locacao'] = Inicio_reserva
-            ms19['DataHora_Final_Locacao'] = Final_reserva
-            command_sql = f'''INSERT INTO `rede1minuto`.`reserva_locacao`
-                                                    (`IdTransacaoUnica`,
-                                                    `IdSolicitante`,
-                                                    `IdReferencia`,
-                                                    `idRede`,
-                                                    `idLocker`,
-                                                    `idLockerPorta`,
-                                                    `DataHoraSolicitacao`,
-                                                    `idStatusReserva`,
-                                                    `TipoFluxoAtual`)
-                                                VALUES
-                                                    ('{idTransacaoUnica}',
-                                                    '{ms18.ID_do_Solicitante}',
-                                                    '{ms18.ID_de_Referencia}',
-                                                    {ms18.ID_Rede_Lockers},
-                                                    '{ms18.ID_da_Estacao_do_Locker}',
-                                                    '{idLockerPorta}',
-                                                    '{Inicio_reserva}',
-                                                    {1}, 
-                                                    {0});'''  # 1 - Reserva efetivada, 2 - Reserva cancelada, 3 - Reserva em andamento, 4 - Reserva em espera
-            conn.execute(command_sql)
+        insert_locacao(ms18, idTransacaoUnica, record_Porta)
+        insert_tracking(ms18, idTransacaoUnica)
+        send_lc24_mq(ms18, idTransacaoUnica, record_Porta)
+
         return ms19
     except:
         logger.error(sys.exc_info())
@@ -181,82 +166,132 @@ def ms18(ms18: MS18, public_id=Depends(auth_handler.auth_wrapper)):
 
 ###### Enviar para fila ############
 
-def insert_ms18(ms18, idTransacaoUnica, record_Porta, Inicio_reserva):
+def insert_locacao(ms18, idTransacaoUnica, record_Porta):
     try:
         command_sql = f'''INSERT INTO `rede1minuto`.`reserva_locacao`
-                                        (`IdTransacaoUnica`,
-                                        `IdSolicitante`,
-                                        `IdReferencia`,
-                                        `idRede`,
-                                        `idLocker`,
-                                        `idLockerPorta`,
-                                        `DataHoraSolicitacao`,
-                                        `idStatusReserva`,
-                                        `TipoFluxoAtual`)
-                                    VALUES
-                                        ('{idTransacaoUnica}',
-                                        '{ms18.ID_do_Solicitante}',
-                                        '{ms18.ID_de_Referencia}',
-                                        {ms18.ID_Rede_Lockers},
-                                        '{ms18.ID_da_Estacao_do_Locker}',
-                                        '{record_Porta[0]}',
-                                        '{Inicio_reserva}',
-                                        {1}, 
-                                        {0});''' # 1 - Reserva efetivada, 2 - Reserva cancelada, 3 - Reserva em andamento, 4 - Reserva em espera
-        command_sql = command_sql.replace("'None'", "Null")
-        command_sql = command_sql.replace("None", "Null")
+                                                            (`IdTransacaoUnica`,
+                                                            `IdSolicitante`,
+                                                            `IdReferencia`,
+                                                            `idRede`,
+                                                            `idLocker`,
+                                                            `idLockerPorta`,
+                                                            `DataHoraSolicitacao`,
+                                                            `idStatusReserva`,
+                                                            `TipoFluxoAtual`)
+                                                        VALUES
+                                                            ('{idTransacaoUnica}',
+                                                            '{ms18.ID_do_Solicitante}',
+                                                            '{ms18.ID_de_Referencia}',
+                                                            {ms18.ID_Rede_Lockers},
+                                                            '{ms18.ID_da_Estacao_do_Locker}',
+                                                            '{record_Porta[0]}',
+                                                            NOW(),
+                                                            {1}, 
+                                                            {0});'''  # 1 - Reserva efetivada, 2 - Reserva cancelada, 3 - Reserva em andamento, 4 - Reserva em espera
         conn.execute(command_sql)
     except:
         logger.error(sys.exc_info())
         result = dict()
-        result['Error insert_ms18'] = sys.exc_info()
+        result['Error insert_locacao'] = sys.exc_info()
         return result
 
-def send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_reserva):
+def insert_tracking_reserva(ms18, idTransacaoUnica):
+    try:
+        idTicketOcorrencia = str(uuid.uuid1())
+        command_sql = f'''INSERT INTO `rede1minuto`.`tracking_locacao`
+                                        (`idTicketOcorrencia`,
+                                        `IdTransacaoUnica`,
+                                        `idRede`,
+                                        `idOcorrencia`,
+                                        `DataHoraOcorrencia`,
+                                        `idStatusLocacaoAnterior`,
+                                        `idStatusLocacaoAtual`,
+                                        `TipoFluxoAnterior`,
+                                        `TipoFluxoAtual`,)
+                                    VALUES
+                                        ('{idTicketOcorrencia}',
+                                        '{idTransacaoUnica}',
+                                        {ms05.ID_Rede_Lockers},
+                                        null,
+                                        NOW(),
+                                        {0},
+                                        {1},
+                                        {0},
+                                        {0});'''  # 1 - Reserva efetivada, 2 - Reserva cancelada, 3 - Reserva em andamento, 4 - Reserva em espera
+        command_sql = command_sql.replace("'None'", "Null")
+        command_sql = command_sql.replace("None", "Null")
+        conn.execute(command_sql)
+        logger.warning(command_sql)
+    except:
+        logger.error(sys.exc_info())
+        result = dict()
+        result['Error insert_tracking'] = sys.exc_info()
+        return result
+
+
+def insert_tracking_porta(ms05, idTransacaoUnica,record_Porta):
+    try:
+        idTicketOcorrencia = str(uuid.uuid1())
+        command_sql = f'''INSERT INTO `rede1minuto`.`tracking_portas`
+                                        (`idTicketOcorrencia`,
+                                        `idRede`,
+                                        `idLocker`,
+                                        `idLockerPorta`,
+                                        `idOcorrencia`,
+                                        `DataHoraOcorrencia`,
+                                        `idStatusPortaAnterior`,
+                                        `idStatusPortaAtual`,
+                                        `TipoFluxoAnterior`,
+                                        `TipoFluxoAtual`,
+                                        `idServicoReserva`)
+                                    VALUES
+                                        ('{idTicketOcorrencia}',
+                                        '{idTransacaoUnica}',
+                                        {ms05.ID_Rede_Lockers},
+                                        '{ms05.ID_da_Estacao_do_Locker}',
+                                        '{record_Porta[0]}',
+                                        null,
+                                        NOW(),
+                                        {0},
+                                        {2},
+                                        {0},
+                                        {0},  
+                                        {ms05.Tipo_de_Servico_Reserva});'''  # 1 - Reserva efetivada, 2 - Reserva cancelada, 3 - Reserva em andamento, 4 - Reserva em espera
+        command_sql = command_sql.replace("'None'", "Null")
+        command_sql = command_sql.replace("None", "Null")
+        conn.execute(command_sql)
+        logger.warning(command_sql)
+    except:
+        logger.error(sys.exc_info())
+        result = dict()
+        result['Error insert_tracking_porta'] = sys.exc_info()
+        return result
+
+
+def send_lc24_mq(ms18, idTransacaoUnica, record_Porta):
     try:  # Envia LC01 para fila do RabbitMQ o aplicativo do locker a pega lá
-        lc01 = {}
-        lc01["CD_MSG"] = "LC01"
+
+        lc24 = {}
+        lc24["CD_MSG"] = "LC24"
 
         content = {}
-        content["ID_Referencia"] = ms05.ID_de_Referencia
-        content["ID_Solicitante"] = ms05.ID_do_Solicitante
-        content["ID_Rede"] = ms05.ID_Rede_Lockers
+        content["ID_Referencia"] = ms18.ID_de_Referencia
+        content["ID_Solicitante"] = ms18.ID_do_Solicitante
+        content["ID_Rede"] = ms18.ID_Rede_Lockers
         content["ID_Transacao"] = idTransacaoUnica
-        content["ServicoTipoAberPorta"] = None
-        content["idLocker"] = ms05.ID_da_Estacao_do_Locker
+        content["idLocker"] = ms18.ID_da_Estacao_do_Locker
         content["idLockerPorta"] = record_Porta[0]
         content["idLockerPortaFisica"] = record_Porta[1]
-        content["ID_OpLog"] = record_Porta[2]
-        content["OpLogAutenticacao"] = 0
-        content["QRCODE"] = idTransacaoUnica
-        content["CD_PortaAbertura"] = 1
-
-        encomenda = {}
-        encomendas = []
-        info_encomendas = ms05.Info_Encomendas  
-        for encomenda in info_encomendas:
-            enc_temp = {}
-            enc_temp["ID_Encomenda"] = encomenda.ID_Encomenda
-            enc_temp["EncomendaRastreio"] = "Não imprementado"
-            enc_temp["EncomendaBarras"] = "Não imprementado"
-            encomendas.append(enc_temp)
-        content["Encomendas"] = encomendas
-
-        content["ID_LockerPortaAbertura"] = 3
-        content["MascAvisoAbastecimento"] = "Frase com @ numero de Protocolo"
-        content["MascAvisoRetirada"] = "Frase com @ numero de Protocolo"
-        content["ExibTelaLockerprotocolo"] = 0
-        content["EnvProtocoloOpCelular"] = 0
-        content["DT_InicioReservaLocacao"] = Inicio_reserva
-        content["DT_finalReservaLocacao"] = Final_reserva
+        content["DT_InicioReservaLocacao"] = ms18.DataHora_Inicio_Locacao
+        content["DT_finalReservaLocacao"] = ms18.DataHora_Final_Locacao
         content["Versão_Software"] = "0.1"
         content["Versao_Mensageria"] = "1.0.0"
 
-        lc01["Content"] = content
+        lc22["Content"] = content
 
         MQ_Name = 'Rede1Min_MQ'
         URL = 'amqp://rede1min:Minuto@167.71.26.87' # URL do RabbitMQ
-        queue_name = ms05.ID_da_Estacao_do_Locker + '_locker_output' # Nome da fila do RabbitMQ
+        queue_name = ms18.ID_da_Estacao_do_Locker + '_locker_output' # Nome da fila do RabbitMQ
 
         url = os.environ.get(MQ_Name, URL)
         params = pika.URLParameters(url)
@@ -283,5 +318,5 @@ def send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_res
     except:
         logger.error(sys.exc_info())
         result = dict()
-        result['Error send_lc01_mq'] = sys.exc_info()
-        return result 
+        result['Error send_lc24_mq'] = sys.exc_info()
+        return result

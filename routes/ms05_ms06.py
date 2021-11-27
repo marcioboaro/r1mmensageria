@@ -199,7 +199,8 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
 
             insert_reserva_encomenda_encomendas(idTransacaoUnica, ms05, etiqueta)
             insert_reserva_encomenda(ms05, idTransacaoUnica, Inicio_reserva, Final_reserva, record_Porta)
-            insert_tracking(ms05, idTransacaoUnica)
+            insert_tracking_reserva(ms05, idTransacaoUnica)
+            insert_tracking_porta(ms05, idTransacaoUnica, record_Porta)
             insert_shopper(ms05)
             send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_reserva)
 
@@ -400,7 +401,7 @@ def insert_reserva_encomenda(ms05, idTransacaoUnica, Inicio_reserva, Final_reser
         return result
 
 
-def insert_tracking(ms05, idTransacaoUnica):
+def insert_tracking_reserva(ms05, idTransacaoUnica):
     try:
         encomendas = ms05.Info_Encomendas
         for encomenda in encomendas:
@@ -436,6 +437,46 @@ def insert_tracking(ms05, idTransacaoUnica):
         result = dict()
         result['Error insert_tracking'] = sys.exc_info()
         return result
+
+
+def insert_tracking_porta(ms05, idTransacaoUnica,record_Porta):
+    try:
+        idTicketOcorrencia = str(uuid.uuid1())
+        command_sql = f'''INSERT INTO `rede1minuto`.`tracking_portas`
+                                        (`idTicketOcorrencia`,
+                                        `idRede`,
+                                        `idLocker`,
+                                        `idLockerPorta`,
+                                        `idOcorrencia`,
+                                        `DataHoraOcorrencia`,
+                                        `idStatusPortaAnterior`,
+                                        `idStatusPortaAtual`,
+                                        `TipoFluxoAnterior`,
+                                        `TipoFluxoAtual`,
+                                        `idServicoReserva`)
+                                    VALUES
+                                        ('{idTicketOcorrencia}',
+                                        '{idTransacaoUnica}',
+                                        {ms05.ID_Rede_Lockers},
+                                        '{ms05.ID_da_Estacao_do_Locker}',
+                                        '{record_Porta[0]}',
+                                        null,
+                                        NOW(),
+                                        {0},
+                                        {2},
+                                        {0},
+                                        {0},  
+                                        {ms05.Tipo_de_Servico_Reserva});'''  # 1 - Reserva efetivada, 2 - Reserva cancelada, 3 - Reserva em andamento, 4 - Reserva em espera
+        command_sql = command_sql.replace("'None'", "Null")
+        command_sql = command_sql.replace("None", "Null")
+        conn.execute(command_sql)
+        logger.warning(command_sql)
+    except:
+        logger.error(sys.exc_info())
+        result = dict()
+        result['Error insert_tracking_porta'] = sys.exc_info()
+        return result
+
 
 
 def insert_shopper(ms05):
