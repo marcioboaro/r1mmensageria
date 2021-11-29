@@ -42,8 +42,6 @@ def ms09(ms09: MS09, public_id=Depends(auth_handler.auth_wrapper)):
                 return {"status_code": 422, "detail": "M010015 - ID_Rede_Lockers inválido"}
 
         # validando ID_Encomenda
-        if ms09.ID_Encomenda is None:
-            return {"status_code": 422, "detail": "M010010 - ID_Encomenda obrigatório"}
         if ms09.ID_Encomenda is not None:
             command_sql = f"SELECT IdEncomenda from reserva_encomenda_encomendas where reserva_encomenda_encomendas.IdEncomenda = '{ms09.ID_Encomenda}';"
             if conn.execute(command_sql).fetchone() is None:

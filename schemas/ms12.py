@@ -13,9 +13,9 @@ class MS12(BaseModel):
     ID_do_Solicitante: str
     ID_Rede_Lockers: int
     ID_Transacao_Unica: str
-    ID_da_Estacao_do_Locker: str
-    ID_do_Operador_do_Locker: str
-    ID_da_Porta_do_Locker: str
+    ID_da_Estacao_do_Locker: Optional[str] = None
+    ID_do_Operador_do_Locker: Optional[str] = None
+    ID_da_Porta_do_Locker: Optional[str] = None
     Data_Hora_POD: datetime
     Dados_POD: list[pod]
-    Versao_Mensageria: str
+    Versao_Mensageria: Optional[str] = None

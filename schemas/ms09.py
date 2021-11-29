@@ -10,7 +10,7 @@ class MS09(BaseModel):
     Data_Hora_Solicitacao: datetime
     Tipo_de_servico_abertura_porta: int
     ID_Transacao_Unica: str
-    ID_Encomenda: str
+    ID_Encomenda: Optional[str]
     Geracao_de_QRCODE_na_Resposta_MS06: str
     Geracao_de_Codigo_de_Abertura_de_Porta_na_Resposta_MS06:str
     Versao_Mensageria: Optional[str]

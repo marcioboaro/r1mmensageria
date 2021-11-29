@@ -51,14 +51,22 @@ def ms20(ms20: MS20, public_id=Depends(auth_handler.auth_wrapper)):
             command_sql = f"SELECT idLocker from locker where locker.idLocker = '{ms20.ID_da_Estacao_Locker}';"
             if conn.execute(command_sql).fetchone() is None:
                 return {"status_code": 422, "detail": "M021006 - ID_da_Estacao_Locker inválido"}
-        # validando ID_Encomenda
-        #if Encomendas.ID_Encomenda is None:
-            #return {"status_code": 422, "detail": "M021007 - ID_Encomenda obrigatório"}
-        #if Encomendas.ID_Encomenda is not None:
-            #command_sql = f"SELECT IdEncomenda from reserva_encomenda_encomendas where reserva_encomenda_encomendas.IdEncomenda = '{Encomendas.ID_Encomenda}';"
-            #if conn.execute(command_sql).fetchone() is None:
-                #return {"status_code": 422, "detail": "M021008 - ID_Encomenda inválido"}
 
+        # validando ID_Encomenda
+        for encomenda in ms20.Info_Encomendas:
+            if encomenda.ID_Encomenda is None:
+                return {"status_code": 422, "detail": "M021007 - ID_Encomenda obrigatório"}
+            if encomenda.ID_Encomenda is not None:
+                command_sql = f"SELECT IdEncomenda from reserva_encomenda_encomendas where reserva_encomenda_encomendas.IdEncomenda = '{encomenda.ID_Encomenda}';"
+                if conn.execute(command_sql).fetchone() is None:
+                    return {"status_code": 422, "detail": "M021008 - ID_Encomenda inválido"}
+
+        if ms20.ID_Transacao_Unica is None:
+            return {"status_code": 422, "detail": "M021005 - ID_Transacao_Unica obrigatório"}
+        if ms20.ID_Transacao_Unica is not None:
+            command_sql = f"SELECT IdEncomenda from reserva_encomenda_encomendas where reserva_encomenda_encomendas.IdTransacaoUnica = '{ms20.ID_Transacao_Unica}';"
+            if conn.execute(command_sql).fetchone() is None:
+                return {"status_code": 422, "detail": "M021006 - Não há encomendas para essa reserva"}
 
 
         # validando versao mensageria

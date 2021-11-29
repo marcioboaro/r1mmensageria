@@ -12,8 +12,8 @@ class MS16(BaseModel):
     ID_da_Estacao_do_Locker:str
     ID_da_Porta_do_Locker: str
     ID_Transacao_Unica: str
-    DataHora_Inicio_Reserva: datetime
-    DataHora_Final_Reserva: datetime
+    DataHora_Inicio_Reserva: Optional[datetime]
+    DataHora_Final_Reserva: Optional[datetime]
     Versao_Mensageria: Optional[str]
 
 

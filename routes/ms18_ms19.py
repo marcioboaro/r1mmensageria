@@ -153,9 +153,10 @@ def ms18(ms18: MS18, public_id=Depends(auth_handler.auth_wrapper)):
             ms19['DataHora_Inicio_Locacao'] = ms18.DataHora_Inicio_Locacao
             ms19['DataHora_Final_Locacao'] = ms18.DataHora_Final_Locacao
 
-        insert_locacao(ms18, idTransacaoUnica, record_Porta)
-        insert_tracking(ms18, idTransacaoUnica)
-        send_lc24_mq(ms18, idTransacaoUnica, record_Porta)
+        insert_locacao(ms18,idTransacaoUnica)
+        insert_tracking_porta(ms18)
+        insert_tracking_locacao(ms18, idTransacaoUnica)
+        #send_lc01_mq(ms18, idTransacaoUnica, record_Porta)
 
         return ms19
     except:
@@ -166,8 +167,13 @@ def ms18(ms18: MS18, public_id=Depends(auth_handler.auth_wrapper)):
 
 ###### Enviar para fila ############
 
-def insert_locacao(ms18, idTransacaoUnica, record_Porta):
+def insert_locacao(ms18, idTransacaoUnica):
     try:
+        command_sql = f"""SELECT idLockerPorta
+                                    FROM `rede1minuto`.`locker_porta`
+                                    where locker_porta.idLocker = '{ms18.ID_da_Estacao_do_Locker}'
+                                    and idLockerPortaCategoria = '{ms18.Categoria_Porta}';"""
+        record_Porta = conn.execute(command_sql).fetchone()
         command_sql = f'''INSERT INTO `rede1minuto`.`reserva_locacao`
                                                             (`IdTransacaoUnica`,
                                                             `IdSolicitante`,
@@ -188,14 +194,17 @@ def insert_locacao(ms18, idTransacaoUnica, record_Porta):
                                                             NOW(),
                                                             {1}, 
                                                             {0});'''  # 1 - Reserva efetivada, 2 - Reserva cancelada, 3 - Reserva em andamento, 4 - Reserva em espera
+        command_sql = command_sql.replace("'None'", "Null")
+        command_sql = command_sql.replace("None", "Null")
         conn.execute(command_sql)
+        logger.warning(command_sql)
     except:
         logger.error(sys.exc_info())
         result = dict()
         result['Error insert_locacao'] = sys.exc_info()
         return result
 
-def insert_tracking_reserva(ms18, idTransacaoUnica):
+def insert_tracking_locacao(ms18, idTransacaoUnica):
     try:
         idTicketOcorrencia = str(uuid.uuid1())
         command_sql = f'''INSERT INTO `rede1minuto`.`tracking_locacao`
@@ -207,11 +216,11 @@ def insert_tracking_reserva(ms18, idTransacaoUnica):
                                         `idStatusLocacaoAnterior`,
                                         `idStatusLocacaoAtual`,
                                         `TipoFluxoAnterior`,
-                                        `TipoFluxoAtual`,)
+                                        `TipoFluxoAtual`)
                                     VALUES
                                         ('{idTicketOcorrencia}',
                                         '{idTransacaoUnica}',
-                                        {ms05.ID_Rede_Lockers},
+                                        {ms18.ID_Rede_Lockers},
                                         null,
                                         NOW(),
                                         {0},
@@ -229,8 +238,13 @@ def insert_tracking_reserva(ms18, idTransacaoUnica):
         return result
 
 
-def insert_tracking_porta(ms05, idTransacaoUnica,record_Porta):
+def insert_tracking_porta(ms18):
     try:
+        command_sql = f"""SELECT idLockerPorta
+                                                    FROM `rede1minuto`.`locker_porta`
+                                                    where locker_porta.idLocker = '{ms18.ID_da_Estacao_do_Locker}'
+                                                    and idLockerPortaCategoria = '{ms18.Categoria_Porta}';"""
+        record_Porta = conn.execute(command_sql).fetchone()
         idTicketOcorrencia = str(uuid.uuid1())
         command_sql = f'''INSERT INTO `rede1minuto`.`tracking_portas`
                                         (`idTicketOcorrencia`,
@@ -242,21 +256,18 @@ def insert_tracking_porta(ms05, idTransacaoUnica,record_Porta):
                                         `idStatusPortaAnterior`,
                                         `idStatusPortaAtual`,
                                         `TipoFluxoAnterior`,
-                                        `TipoFluxoAtual`,
-                                        `idServicoReserva`)
+                                        `TipoFluxoAtual`)
                                     VALUES
                                         ('{idTicketOcorrencia}',
-                                        '{idTransacaoUnica}',
-                                        {ms05.ID_Rede_Lockers},
-                                        '{ms05.ID_da_Estacao_do_Locker}',
+                                        {ms18.ID_Rede_Lockers},
+                                        '{ms18.ID_da_Estacao_do_Locker}',
                                         '{record_Porta[0]}',
                                         null,
                                         NOW(),
                                         {0},
                                         {2},
                                         {0},
-                                        {0},  
-                                        {ms05.Tipo_de_Servico_Reserva});'''  # 1 - Reserva efetivada, 2 - Reserva cancelada, 3 - Reserva em andamento, 4 - Reserva em espera
+                                        {0});'''  # 1 - Reserva efetivada, 2 - Reserva cancelada, 3 - Reserva em andamento, 4 - Reserva em espera
         command_sql = command_sql.replace("'None'", "Null")
         command_sql = command_sql.replace("None", "Null")
         conn.execute(command_sql)
@@ -268,11 +279,14 @@ def insert_tracking_porta(ms05, idTransacaoUnica,record_Porta):
         return result
 
 
-def send_lc24_mq(ms18, idTransacaoUnica, record_Porta):
+
+
+
+def send_lc01_mq(ms18, idTransacaoUnica, record_Porta):
     try:  # Envia LC01 para fila do RabbitMQ o aplicativo do locker a pega lá
 
-        lc24 = {}
-        lc24["CD_MSG"] = "LC24"
+        lc01 = {}
+        lc01["CD_MSG"] = "LC01"
 
         content = {}
         content["ID_Referencia"] = ms18.ID_de_Referencia
@@ -287,7 +301,7 @@ def send_lc24_mq(ms18, idTransacaoUnica, record_Porta):
         content["Versão_Software"] = "0.1"
         content["Versao_Mensageria"] = "1.0.0"
 
-        lc22["Content"] = content
+        lc01["Content"] = content
 
         MQ_Name = 'Rede1Min_MQ'
         URL = 'amqp://rede1min:Minuto@167.71.26.87' # URL do RabbitMQ
@@ -318,5 +332,5 @@ def send_lc24_mq(ms18, idTransacaoUnica, record_Porta):
     except:
         logger.error(sys.exc_info())
         result = dict()
-        result['Error send_lc24_mq'] = sys.exc_info()
+        result['Error send_lc01_mq'] = sys.exc_info()
         return result

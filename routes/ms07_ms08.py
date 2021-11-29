@@ -74,7 +74,7 @@ def ms07(ms07: MS07, public_id=Depends(auth_handler.auth_wrapper)):
         update_porta(ms07)
         update_tracking_reserva(ms07)
         update_tracking_porta(ms07)
-        send_lc20_mq(ms07)
+        send_lc07_mq(ms07)
 
         return ms08
 
@@ -108,7 +108,7 @@ def update_reserva(ms07):
         command_sql = f"""UPDATE `reserva_encomenda`
                                             SET     `IdSolicitante` = '{ms07.ID_do_Solicitante}',
                                                     `IdReferencia` = '{ms07.ID_de_Referencia}',
-                                                    `idStatusEncomenda` = 2,
+                                                    `idStatusReserva` = 2,
                                                     `ComentarioCancelamento` = '{ms07.Comentario_Cancelamento_Reserva}',
                                                     `DateUpdate` = now()
                                             WHERE `IdTransacaoUnica` = '{ms07.ID_Transacao_Unica}';"""
@@ -124,11 +124,13 @@ def update_reserva(ms07):
 
 def update_tracking_reserva(ms07):
     try:
+        command_sql = f"SELECT idStatusReservaAtual from tracking_encomenda where tracking_encomenda.IdTransacaoUnica = '{ms07.ID_Transacao_Unica}'";
+        record_status = conn.execute(command_sql).fetchone()
         command_sql = f"""UPDATE `tracking_encomenda`
-                                            SET     `idStatusEncomendaAnterior` = 1,
-                                                    `idStatusEncomendaAtual` = 2,
-                                                    `DateUpdate` = now()
-                                            WHERE `IdTransacaoUnica` = '{ms07.ID_Transacao_Unica}';"""
+                        SET     `idStatusReservaAnterior` = '{record_status[0]}',
+                                `idStatusReservaAtual` = 2,
+                                `DateUpdate` = now()
+                        WHERE `IdTransacaoUnica` = '{ms07.ID_Transacao_Unica}';"""
         command_sql = command_sql.replace("'None'", "Null")
         command_sql = command_sql.replace("None", "Null")
         conn.execute(command_sql)
@@ -141,11 +143,15 @@ def update_tracking_reserva(ms07):
 
 def update_tracking_porta(ms07):
     try:
+        command_sql = f"SELECT idLockerPorta from reserva_encomenda where reserva_encomenda.IdTransacaoUnica = '{ms07.ID_Transacao_Unica}'";
+        record_Porta = conn.execute(command_sql).fetchone()
+        command_sql = f"SELECT idStatusPortaAtual from tracking_portas where tracking_portas.idLockerPorta = '{record_Porta[0]}'";
+        record_status = conn.execute(command_sql).fetchone()
         command_sql = f"""UPDATE `tracking_portas`
-                                            SET     `idStatusPortaAnterior` = 2,
+                                            SET     `idStatusPortaAnterior` = '{record_status[0]}',
                                                     `idStatusPortaAtual` = 1,
                                                     `DateUpdate` = now()
-                                            WHERE `IdTransacaoUnica` = '{ms07.ID_Transacao_Unica}';"""
+                                            WHERE `idLockerPorta` = '{record_Porta[0]}';"""
         command_sql = command_sql.replace("'None'", "Null")
         command_sql = command_sql.replace("None", "Null")
         conn.execute(command_sql)
@@ -156,7 +162,7 @@ def update_tracking_porta(ms07):
         result['Error update_tracking'] = sys.exc_info()
         return result
 
-def send_lc20_mq(ms07):
+def send_lc07_mq(ms07):
     try:  # Envia LC01 para fila do RabbitMQ o aplicativo do locker a pega lá
 
         command_sql = f"SELECT idLockerPorta, idLockerPortaFisica, idLocker from reserva_encomenda where reserva_encomenda.IdTransacaoUnica = '{ms07.ID_Transacao_Unica}'";
@@ -208,5 +214,5 @@ def send_lc20_mq(ms07):
     except:
         logger.error(sys.exc_info())
         result = dict()
-        result['Error send_lc20_mq'] = sys.exc_info()
+        result['Error send_lc07_mq'] = sys.exc_info()
         return result 

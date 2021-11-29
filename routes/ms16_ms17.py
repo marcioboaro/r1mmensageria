@@ -49,7 +49,7 @@ def ms16(ms16: MS16, public_id=Depends(auth_handler.auth_wrapper)):
         if ms16.ID_Transacao_Unica is None:
             return {"status_code": 422, "detail": "M017005 - ID_Transacao_Unica obrigatório"}
         if ms16.ID_Transacao_Unica is not None:
-            command_sql = f"SELECT IdTransacaoUnica from reserva_encomenda where reserva_encomenda.IdTransacaoUnica = '{ms16.ID_Transacao_Unica}';"
+            command_sql = f"SELECT IdTransacaoUnica from reserva_encomenda WHERE reserva_encomenda.idStatusReserva in (1,3) and reserva_encomenda.IdTransacaoUnica = '{ms16.ID_Transacao_Unica}';"
             if conn.execute(command_sql).fetchone() is None:
                 return {"status_code": 422, "detail": "M017006 - Reserva não Existe"}
 
@@ -60,6 +60,10 @@ def ms16(ms16: MS16, public_id=Depends(auth_handler.auth_wrapper)):
             command_sql = f"SELECT idLocker from locker where locker.idLocker = '{ms16.ID_da_Estacao_do_Locker}';"
             if conn.execute(command_sql).fetchone() is None:
                 return {"status_code": 422, "detail": "M017008 - ID_da_Estacao_do_ Locker inválido"}
+            if conn.execute(command_sql).fetchone() is not None:
+                command_sql = f"SELECT IdTransacaoUnica from reserva_encomenda where reserva_encomenda.idLocker = '{ms16.ID_da_Estacao_do_Locker}' and reserva_encomenda.IdTransacaoUnica = '{ms16.ID_Transacao_Unica}';"
+                if conn.execute(command_sql).fetchone() is None:
+                    return {"status_code": 422, "detail": "M017008 - Informe um ID_da_Estacao_do_ Locker correspondente a reserva informada "}
 
         # validando porta
         if ms16.ID_da_Porta_do_Locker is None:
@@ -68,6 +72,10 @@ def ms16(ms16: MS16, public_id=Depends(auth_handler.auth_wrapper)):
             command_sql = f"SELECT idLockerPorta from locker_porta where locker_porta.idLockerPorta = '{ms16.ID_da_Porta_do_Locker}';"
             if conn.execute(command_sql).fetchone() is None:
                 return {"status_code": 422, "detail": "M017010 - ID_da_Porta_do_Locker inválido"}
+            if conn.execute(command_sql).fetchone() is not None:
+                command_sql = f"SELECT IdTransacaoUnica from reserva_encomenda where reserva_encomenda.idLockerPorta = '{ms16.ID_da_Porta_do_Locker}' and reserva_encomenda.IdTransacaoUnica = '{ms16.ID_Transacao_Unica}';"
+                if conn.execute(command_sql).fetchone() is None:
+                    return {"status_code": 422, "detail": "M017008 - Informe um ID_da_Porta_do_Locker correspondente a reserva informada "}
 
         # validando versao mensageria
         if ms16.Versao_Mensageria is None:
@@ -104,7 +112,7 @@ def ms16(ms16: MS16, public_id=Depends(auth_handler.auth_wrapper)):
         update_reserva(ms16)
         update_tracking_reserva(ms16)
         update_tracking_porta(ms16)
-        send_lc22_mq(ms16)
+        send_lc07_mq(ms16)
 
         return ms17
     except:
@@ -116,12 +124,10 @@ def ms16(ms16: MS16, public_id=Depends(auth_handler.auth_wrapper)):
 
 def update_porta(ms16):
     try:
-        command_sql = f"SELECT idLockerPorta from reserva_encomenda where reserva_encomenda.IdTransacaoUnica = '{ms16.ID_Transacao_Unica}'";
-        record_Porta = conn.execute(command_sql).fetchone()
 
         command_sql = f"""UPDATE `rede1minuto`.`locker_porta`
-                                        SET `idLockerPortaStatus` = 2,
-                                    where locker_porta.idLockerPorta = '{record_Porta[0]}';"""
+                                        SET `idLockerPortaStatus` = 4
+                                    where locker_porta.idLockerPorta = '{ms16.ID_da_Porta_do_Locker}';"""
         command_sql = command_sql.replace("'None'", "Null")
         command_sql = command_sql.replace("None", "Null")
         conn.execute(command_sql)
@@ -136,8 +142,8 @@ def update_porta(ms16):
 def update_reserva(ms16):
     try:
         command_sql = f"""UPDATE `reserva_encomenda`
-                                            SET     `idStatusEncomenda` = 3,
-                                                    `DataHoraInicioReserva` = '{ms16.DataHora_Inicio_Reserva}'
+                                            SET     `idStatusReserva` = 3,
+                                                    `DataHoraInicioReserva` = '{ms16.DataHora_Inicio_Reserva}',
                                                     `DataHoraFinalReserva` = '{ms16.DataHora_Final_Reserva}',
                                                     `DateUpdate` = now()
                                             WHERE `IdTransacaoUnica` = '{ms16.ID_Transacao_Unica}';"""
@@ -153,9 +159,11 @@ def update_reserva(ms16):
 
 def update_tracking_reserva(ms16):
     try:
+        command_sql = f"SELECT idStatusReservaAtual from tracking_encomenda where tracking_encomenda.IdTransacaoUnica = '{ms16.ID_Transacao_Unica}'";
+        record_status = conn.execute(command_sql).fetchone()
         command_sql = f"""UPDATE `tracking_encomenda`
-                                            SET     `idStatusEncomendaAnterior` = 2,
-                                                    `idStatusEncomendaAtual` = 3,
+                                            SET     `idStatusReservaAnterior` = '{record_status[0]}',
+                                                    `idStatusReservaAtual` = 3,
                                                     `DateUpdate` = now()
                                             WHERE `IdTransacaoUnica` = '{ms16.ID_Transacao_Unica}';"""
         command_sql = command_sql.replace("'None'", "Null")
@@ -171,11 +179,13 @@ def update_tracking_reserva(ms16):
 
 def update_tracking_porta(ms16):
     try:
+        command_sql = f"SELECT idStatusPortaAtual from tracking_portas where tracking_portas.idLockerPorta = '{ms16.ID_da_Porta_do_Locker}'";
+        record_Porta = conn.execute(command_sql).fetchone()
         command_sql = f"""UPDATE `tracking_portas`
-                                            SET     `idStatusPortaAnterior` = 2,
+                                            SET     `idStatusPortaAnterior` = '{record_Porta[0]}',
                                                     `idStatusPortaAtual` = 4,
                                                     `DateUpdate` = now()
-                                            WHERE `IdTransacaoUnica` = '{ms16.ID_Transacao_Unica}';"""
+                                            WHERE `idLockerPorta` = '{ms16.ID_da_Porta_do_Locker}';"""
         command_sql = command_sql.replace("'None'", "Null")
         command_sql = command_sql.replace("None", "Null")
         conn.execute(command_sql)
@@ -187,7 +197,7 @@ def update_tracking_porta(ms16):
         return result
 
 
-def send_lc22_mq(ms16):
+def send_lc07_mq(ms16):
     try:  # Envia LC01 para fila do RabbitMQ o aplicativo do locker a pega lá
 
         command_sql = f"SELECT idLockerPorta, idLockerPortaFisica, idLocker from reserva_encomenda where reserva_encomenda.IdTransacaoUnica = '{ms16.ID_Transacao_Unica}'";
@@ -239,5 +249,5 @@ def send_lc22_mq(ms16):
     except:
         logger.error(sys.exc_info())
         result = dict()
-        result['Error send_lc22_mq'] = sys.exc_info()
+        result['Error send_lc07_mq'] = sys.exc_info()
         return result

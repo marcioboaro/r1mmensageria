@@ -75,6 +75,9 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
 
         for encomenda in ms05.Info_Encomendas:
 
+            if encomenda.ID_Encomenda is None:
+                return {"status_code": 422, "detail": "M06046 - ID_Encomenda é obrigatória"}
+
             # validando Numero_Mobile_Shopper
             if encomenda.Numero_Mobile_Shopper is None:
                 return {"status_code": 422, "detail": "M06046 - Numero_Mobile_Shopper é obrigatória"}
@@ -89,8 +92,6 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
                 return {"status_code": 203, "detail": "Por favor entre com um endereço de e-mail valido."}
 
             # validando CEP_Shopper
-            if len(encomenda.CEP_Shopper) != 8:  # 20 caracteres
-                return {"status_code": 422, "detail": "M06006 - CEP_Shopper deve conter 8 caracteres"}
             if encomenda.CEP_Shopper is not None:
                 command_sql = f"SELECT cep from cepbr_endereco where cepbr_endereco.cep = '{encomenda.CEP_Shopper}';"
                 if conn.execute(command_sql).fetchone() is None:
@@ -108,6 +109,7 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
 
         idTransacaoUnica = ms05.ID_Transacao_Unica
         etiqueta = "rede1minuto"
+        Codigo_Abertura_Porta = random.randint(100000000000, 1000000000000)
         #        insert_ms05(ms05, idTransacaoUnica)
         info_encomendas = ms05.Info_Encomendas
         #        for encomenda in info_encomendas:
@@ -181,8 +183,6 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
             ms06['DataHora_Inicio_Reserva'] = Inicio_reserva
             ms06['DataHora_Final_Reserva'] = Final_reserva
 
-            Codigo_Abertura_Porta = random.randint(100000000000, 1000000000000)
-
             encomenda = {}
             encomendas = []
             info_encomendas = ms05.Info_Encomendas
@@ -198,7 +198,7 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
 
 
             insert_reserva_encomenda_encomendas(idTransacaoUnica, ms05, etiqueta)
-            insert_reserva_encomenda(ms05, idTransacaoUnica, Inicio_reserva, Final_reserva, record_Porta)
+            insert_reserva_encomenda(ms05, idTransacaoUnica, Inicio_reserva, Final_reserva, record_Porta,Codigo_Abertura_Porta)
             insert_tracking_reserva(ms05, idTransacaoUnica)
             insert_tracking_porta(ms05, idTransacaoUnica, record_Porta)
             insert_shopper(ms05)
@@ -351,7 +351,7 @@ def insert_reserva_encomenda_encomendas(idTransacaoUnica, ms05, etiqueta):
         return result
 
 
-def insert_reserva_encomenda(ms05, idTransacaoUnica, Inicio_reserva, Final_reserva,record_Porta):
+def insert_reserva_encomenda(ms05, idTransacaoUnica, Inicio_reserva, Final_reserva,record_Porta,Codigo_Abertura_Porta):
     try:
         command_sql = f"""INSERT INTO reserva_encomenda
                         ( IdTransacaoUnica
@@ -366,14 +366,16 @@ def insert_reserva_encomenda(ms05, idTransacaoUnica, Inicio_reserva, Final_reser
                         ,idLockerPorta
                         ,idLockerPortaCategoria
                         ,GeraçãoQRCODERespostaMS06
+                        ,QRCODE
                         ,GeraçãoCodigoAberturaPortaRespostaMS06
+                        ,CodigoAberturaPorta
                         ,URL_CALL_BACK
                         ,DataHoraInicioReserva
                         ,DataHoraFinalReserva
+                        ,idStatusReserva
                         )
                     VALUES
-                        (
-                        '{idTransacaoUnica}' 
+                        ('{idTransacaoUnica}' 
                         , '{ms05.ID_de_Referencia}'
                         , '{ms05.ID_do_Solicitante}'
                         , {ms05.ID_Rede_Lockers}
@@ -385,10 +387,13 @@ def insert_reserva_encomenda(ms05, idTransacaoUnica, Inicio_reserva, Final_reser
                         , '{record_Porta[0]}'
                         , '{ms05.Categoria_Porta}'
                         , '{ms05.Geracao_de_QRCODE_na_Resposta_MS06}'
+                        , '{idTransacaoUnica}'
                         , '{ms05.Geracao_de_Codigo_de_Abertura_de_Porta_na_Resposta_MS06}'
+                        , '{Codigo_Abertura_Porta}'
                         , '{ms05.URL_CALL_BACK}'
                         , '{Inicio_reserva}'
                         , '{Final_reserva}'
+                        , {1}
                         );"""
         command_sql = command_sql.replace("'None'", "Null")
         command_sql = command_sql.replace("None", "Null")
@@ -412,8 +417,8 @@ def insert_tracking_reserva(ms05, idTransacaoUnica):
                                             `idRede`,
                                             `idEncomenda`,
                                             `DataHoraOcorrencia`,
-                                            `idStatusEncomendaAnterior`,
-                                            `idStatusEncomendaAtual`,
+                                            `idStatusReservaAnterior`,
+                                            `idStatusReservaAtual`,
                                             `TipoFluxoAnterior`,
                                             `TipoFluxoAtual`,
                                             `idServicoReserva`)
@@ -439,7 +444,7 @@ def insert_tracking_reserva(ms05, idTransacaoUnica):
         return result
 
 
-def insert_tracking_porta(ms05, idTransacaoUnica,record_Porta):
+def insert_tracking_porta(ms05, idTransacaoUnica, record_Porta):
     try:
         idTicketOcorrencia = str(uuid.uuid1())
         command_sql = f'''INSERT INTO `rede1minuto`.`tracking_portas`
@@ -452,21 +457,18 @@ def insert_tracking_porta(ms05, idTransacaoUnica,record_Porta):
                                         `idStatusPortaAnterior`,
                                         `idStatusPortaAtual`,
                                         `TipoFluxoAnterior`,
-                                        `TipoFluxoAtual`,
-                                        `idServicoReserva`)
+                                        `TipoFluxoAtual`)
                                     VALUES
                                         ('{idTicketOcorrencia}',
-                                        '{idTransacaoUnica}',
                                         {ms05.ID_Rede_Lockers},
                                         '{ms05.ID_da_Estacao_do_Locker}',
                                         '{record_Porta[0]}',
                                         null,
                                         NOW(),
-                                        {0},
+                                        {1},
                                         {2},
                                         {0},
-                                        {0},  
-                                        {ms05.Tipo_de_Servico_Reserva});'''  # 1 - Reserva efetivada, 2 - Reserva cancelada, 3 - Reserva em andamento, 4 - Reserva em espera
+                                        {0});'''  # 1 - Reserva efetivada, 2 - Reserva cancelada, 3 - Reserva em andamento, 4 - Reserva em espera
         command_sql = command_sql.replace("'None'", "Null")
         command_sql = command_sql.replace("None", "Null")
         conn.execute(command_sql)

@@ -3,8 +3,8 @@ from pydantic import BaseModel
 from datetime import datetime,time
 
 class Encomendas(BaseModel):
-    ID_Encomenda: str
-    Tipo_de_Servico_Reserva: int
+    ID_Encomenda: Optional[str] = None
+    Tipo_de_Servico_Reserva: Optional[int] = None
 
 class MS20(BaseModel):
     Codigo_de_MSG : str
