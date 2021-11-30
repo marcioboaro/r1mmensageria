@@ -1851,3 +1851,21 @@ ValueError: [TypeError("'wrapper_descriptor' object is not iterable"), TypeError
 2021/11/22 10:28:37 AM - pika.adapters.utils.io_services_utils - INFO - Closing transport socket and unlinking: state=3; <socket.socket fd=17, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=6, laddr=('172.27.156.32', 51234), raddr=('167.71.26.87', 5672)>
 2021/11/22 10:28:37 AM - pika.adapters.blocking_connection - INFO - User-initiated close: result=BlockingConnection__OnClosedArgs(connection=<SelectConnection CLOSED transport=None params=<URLParameters host=167.71.26.87 port=5672 virtual_host=/ ssl=False>>, error=ConnectionClosedByClient: (200) 'Normal shutdown')
 2021/11/22 10:28:37 AM - Rede1Minuto Server - INFO - (None, None, None)
+2021/11/30 09:49:27 AM - uvicorn.error - INFO - Shutting down
+2021/11/30 09:49:27 AM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/30 09:49:27 AM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/30 09:49:27 AM - uvicorn.error - INFO - Finished server process [29595]
+2021/11/30 09:49:32 AM - uvicorn.error - INFO - Started server process [16915]
+2021/11/30 09:49:32 AM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/30 09:49:32 AM - uvicorn.error - INFO - Application startup complete.
+2021/11/30 09:50:51 AM - uvicorn.error - INFO - Shutting down
+2021/11/30 09:50:51 AM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/30 09:50:51 AM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/30 09:50:51 AM - uvicorn.error - INFO - Finished server process [16915]
+2021/11/30 09:50:53 AM - uvicorn.error - INFO - Started server process [19042]
+2021/11/30 09:50:53 AM - uvicorn.error - INFO - Waiting for application startup.
+2021/11/30 09:50:53 AM - uvicorn.error - INFO - Application startup complete.
+2021/11/30 09:51:17 AM - uvicorn.error - INFO - Shutting down
+2021/11/30 09:51:17 AM - uvicorn.error - INFO - Waiting for application shutdown.
+2021/11/30 09:51:17 AM - uvicorn.error - INFO - Application shutdown complete.
+2021/11/30 09:51:17 AM - uvicorn.error - INFO - Finished server process [19042]
