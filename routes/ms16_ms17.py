@@ -12,7 +12,10 @@ from schemas.ms16 import MS16
 from cryptography.fernet import Fernet
 import random
 import os
+import pika
 import json
+import requests
+
 
 ms16_ms17 = APIRouter()
 key = Fernet.generate_key()
@@ -112,7 +115,11 @@ def ms16(ms16: MS16, public_id=Depends(auth_handler.auth_wrapper)):
         update_reserva(ms16)
         update_tracking_reserva(ms16)
         update_tracking_porta(ms16)
-        send_lc07_mq(ms16)
+        reserva_wb02(ms16)
+        reserva_wb04(ms16)
+        ret_fila = send_lc07_mq(ms16)
+        if ret_fila is False:
+            logger.error("lc07 não inserido")
 
         return ms17
     except:
@@ -200,21 +207,26 @@ def update_tracking_porta(ms16):
 def send_lc07_mq(ms16):
     try:  # Envia LC01 para fila do RabbitMQ o aplicativo do locker a pega lá
 
-        command_sql = f"SELECT idLockerPorta, idLockerPortaFisica, idLocker from reserva_encomenda where reserva_encomenda.IdTransacaoUnica = '{ms16.ID_Transacao_Unica}'";
+        command_sql = f"SELECT idLockerPorta from reserva_encomenda where reserva_encomenda.IdTransacaoUnica = '{ms16.ID_Transacao_Unica}'";
+        record = conn.execute(command_sql).fetchone()
+        command_sql = f"SELECT idLockerPorta, idLockerPortaFisica, idLocker from locker_porta where locker_porta.idLockerPorta = '{record[0]}'";
         record_Porta = conn.execute(command_sql).fetchone()
+        idLocker = record_Porta[2]
+        idLockerPorta = record_Porta[0]
+        idLockerPortaFisica = record_Porta[1]
 
         lc07 = {}
         lc07["CD_MSG"] = "LC07"
 
         content = {}
-        content["ID_Referencia"] = ms07.ID_de_Referencia
-        content["ID_Solicitante"] = ms07.ID_do_Solicitante
-        content["ID_Rede"] = ms07.ID_Rede_Lockers
-        content["ID_Transacao"] = ms07.ID_Transacao_Unica
-        content["idLocker"] = record_Porta[3]
+        content["ID_Referencia"] = ms16.ID_de_Referencia
+        content["ID_Solicitante"] = ms16.ID_do_Solicitante
+        content["ID_Rede"] = ms16.ID_Rede_Lockers
+        content["ID_Transacao"] = ms16.ID_Transacao_Unica
+        content["idLocker"] = idLocker
         content["AcaoExecutarPorta"] = 4
-        content["idLockerPorta"] = record_Porta[0]
-        content["idLockerPortaFisica"] = record_Porta[1]
+        content["idLockerPorta"] = idLockerPorta
+        content["idLockerPortaFisica"] = idLockerPortaFisica
         content["Versão_Software"] = "0.1"
         content["Versao_Mensageria"] = "1.0.0"
 
@@ -222,7 +234,7 @@ def send_lc07_mq(ms16):
 
         MQ_Name = 'Rede1Min_MQ'
         URL = 'amqp://rede1min:Minuto@167.71.26.87' # URL do RabbitMQ
-        queue_name = record_Porta[3] + '_locker_output' # Nome da fila do RabbitMQ
+        queue_name = idLocker + '_locker_output' # Nome da fila do RabbitMQ
 
         url = os.environ.get(MQ_Name, URL)
         params = pika.URLParameters(url)
@@ -233,7 +245,7 @@ def send_lc07_mq(ms16):
 
         channel.queue_declare(queue=queue_name, durable=True)
 
-        message = json.dumps(lc01) # Converte o dicionario em string
+        message = json.dumps(lc07) # Converte o dicionario em string
 
         channel.basic_publish(
                     exchange='',
@@ -244,10 +256,66 @@ def send_lc07_mq(ms16):
                     ))
 
         connection.close()
-        logger.info(sys.exc_info())
+        return True
+    except:
+        logger.error(sys.exc_info())
+        return False
+
+
+
+###################### teste no webhook a ser retirado posteriormente ###############################
+def reserva_wb02(ms16):
+    try:
+        now = datetime.now()
+        dt_string = now.strftime('%Y-%m-%d %H:%M:%S')
+        wb02 = {}
+        wb02['CD_MSG'] = "WH002"
+        wb02['ID_Referencia'] = ms16.ID_de_Referencia
+        wb02['ID_Transacao'] = ms16.ID_Transacao_Unica
+        wb02['Data_Hora_Resposta'] = dt_string
+        wb02['CD_Resposta'] = "WH2000 - Prorrogação da reserva da porta executada"
+
+        command_sql = f"""SELECT `reserva_encomenda`.`URL_CALL_BACK`
+                                                        FROM `rede1minuto`.`reserva_encomenda`
+                                                        where reserva_encomenda.IdTransacaoUnica = '{ms16.ID_Transacao_Unica}';"""
+        record = conn.execute(command_sql).fetchone()
+        logger.warning(command_sql)
+        url_wb02 = record[0]
+
+        r = requests.post(url_wb02, data=json.dumps(wb02), headers={'Content-Type': 'application/json'})
 
     except:
         logger.error(sys.exc_info())
         result = dict()
-        result['Error send_lc07_mq'] = sys.exc_info()
+        result['Error reserva_wb02'] = sys.exc_info()
         return result
+
+
+def reserva_wb04(ms16):
+    try:
+        now = datetime.now()
+        dt_string = now.strftime('%Y-%m-%d %H:%M:%S')
+        command_sql = f"""SELECT `reserva_encomenda`.`URL_CALL_BACK`
+                                                                FROM `rede1minuto`.`reserva_encomenda`
+                                                                where reserva_encomenda.IdTransacaoUnica = '{ms16.ID_Transacao_Unica}';"""
+        record = conn.execute(command_sql).fetchone()
+        logger.warning(command_sql)
+
+        url = record[0]
+        wb04 = {}
+        wb04['CD_MSG'] = "WH004"
+        wb04['ID_Referencia'] = ms16.ID_de_Referencia
+        wb04['ID_Transacao'] = ms16.ID_Transacao_Unica
+        wb04['Data_Hora_Resposta'] = dt_string
+        wb04['CD_Resposta'] = "WH4001 - Prorrogação de Reserva"
+
+        url = record[0]
+        r = requests.post(url, data=json.dumps(wb04), headers={'Content-Type': 'application/json'})
+
+    except:
+        logger.error(sys.exc_info())
+        result = dict()
+        result['Error reserva_wb04'] = sys.exc_info()
+        return result
+
+###################### teste no webhook a ser retirado posteriormente ###############################

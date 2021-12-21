@@ -16,6 +16,7 @@ import random
 import os
 import json
 import re
+import requests
 
 ms05_ms06 = APIRouter()
 key = Fernet.generate_key()
@@ -44,6 +45,10 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
     try:
         logger.info("Consulta da disponibilidade de Portas em Locker")
         logger.info(f"Usuário que fez a solicitação: {public_id}")
+
+        now = datetime.now()
+        dt_string = now.strftime("%Y-%m-%dT%H:%M:%S")
+
         if ms05.ID_do_Solicitante is None:
             return {"status_code": 422, "detail": "M06006 - ID_do_Solicitante obrigatório"}
         if len(ms05.ID_do_Solicitante) != 20:  # 20 caracteres
@@ -115,8 +120,7 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
         #        for encomenda in info_encomendas:
         #            insert_ms05_encomendas(idTransacaoUnica, encomenda)
 
-        now = datetime.now()
-        dt_string = now.strftime("%Y-%m-%dT%H:%M:%S")
+
 
         ms06 = {}
         ms06['Codigo_de_MSG'] = "MS06"
@@ -200,9 +204,17 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
             insert_reserva_encomenda_encomendas(idTransacaoUnica, ms05, etiqueta)
             insert_reserva_encomenda(ms05, idTransacaoUnica, Inicio_reserva, Final_reserva, record_Porta,Codigo_Abertura_Porta)
             insert_tracking_reserva(ms05, idTransacaoUnica)
-            insert_tracking_porta(ms05, idTransacaoUnica, record_Porta)
+            insert_tracking_porta(ms05, record_Porta)
             insert_shopper(ms05)
-            send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_reserva)
+
+            ############ teste no webhook a ser retirado posteriormente #################
+            reserva_wb01(ms05, idTransacaoUnica)
+            reserva_wb04(ms05, idTransacaoUnica)
+            ############ teste no webhook a ser retirado posteriormente #################
+
+            ret_fila = send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_reserva)
+            if ret_fila is False:
+                logger.error("lc01 não inserido")
 
         return ms06
     except:
@@ -211,9 +223,67 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
         result['Error ms05'] = sys.exc_info()
         return result
 
+###################### teste no webhook a ser retirado posteriormente ###############################
+def reserva_wb01(ms05,idTransacaoUnica):
+    try:
+        now = datetime.now()
+        dt_string = now.strftime('%Y-%m-%d %H:%M:%S')
+        wb01 = {}
+        wb01['CD_MSG'] = "WH001"
+        wb01['ID_Referencia'] = ms05.ID_de_Referencia
+        wb01['ID_Transacao'] = idTransacaoUnica
+        wb01['Data_Hora_Resposta'] = dt_string
+        wb01['CD_Resposta'] = "WH1000 - Reserva confirmada"
+
+        command_sql = f"""SELECT `reserva_encomenda`.`URL_CALL_BACK`
+                                                        FROM `rede1minuto`.`reserva_encomenda`
+                                                        where reserva_encomenda.IdTransacaoUnica = '{idTransacaoUnica}';"""
+        record = conn.execute(command_sql).fetchone()
+        logger.warning(command_sql)
+        url_wb01 = record[0]
+
+        r = requests.post(url_wb01, data=json.dumps(wb01), headers={'Content-Type': 'application/json'})
+
+    except:
+        logger.error(sys.exc_info())
+        result = dict()
+        result['Error reserva_wb01'] = sys.exc_info()
+        return result
+
+
+def reserva_wb04(ms05, idTransacaoUnica):
+    try:
+        now = datetime.now()
+        dt_string = now.strftime('%Y-%m-%d %H:%M:%S')
+        command_sql = f"""SELECT `reserva_encomenda`.`URL_CALL_BACK`
+                                                                FROM `rede1minuto`.`reserva_encomenda`
+                                                                where reserva_encomenda.IdTransacaoUnica = '{idTransacaoUnica}';"""
+        record = conn.execute(command_sql).fetchone()
+        logger.warning(command_sql)
+
+        url = record[0]
+        wb04 = {}
+        wb04['CD_MSG'] = "WH004"
+        wb04['ID_Referencia'] = ms05.ID_de_Referencia
+        wb04['ID_Transacao'] = idTransacaoUnica
+        wb04['Data_Hora_Resposta'] = dt_string
+        wb04['CD_Resposta'] = "WH4001 - Reserva confirmada"
+
+        url = record[0]
+        r = requests.post(url, data=json.dumps(wb04), headers={'Content-Type': 'application/json'})
+
+    except:
+        logger.error(sys.exc_info())
+        result = dict()
+        result['Error reserva_wb04'] = sys.exc_info()
+        return result
+
+###################### teste no webhook a ser retirado posteriormente ###############################
+
 
 def send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_reserva):
     try:  # Envia LC01 para fila do RabbitMQ o aplicativo do locker a pega lá
+
         lc01 = {}
         lc01["CD_MSG"] = "LC01"
 
@@ -278,13 +348,10 @@ def send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_res
             ))
 
         connection.close()
-        logger.info(sys.exc_info())
-
+        return True
     except:
         logger.error(sys.exc_info())
-        result = dict()
-        result['Error send_lc01_mq'] = sys.exc_info()
-        return result
+        return False
 
 
 def insert_reserva_encomenda_encomendas(idTransacaoUnica, ms05, etiqueta):
@@ -379,7 +446,7 @@ def insert_reserva_encomenda(ms05, idTransacaoUnica, Inicio_reserva, Final_reser
                         , '{ms05.ID_de_Referencia}'
                         , '{ms05.ID_do_Solicitante}'
                         , {ms05.ID_Rede_Lockers}
-                        , NOW()
+                        , '{ms05.Data_Hora_Solicitacao}'
                         , '{ms05.ID_da_Estacao_do_Locker}'
                         , {ms05.Tipo_de_Servico_Reserva}
                         , '{ms05.ID_PSL_Designado}'
@@ -427,7 +494,7 @@ def insert_tracking_reserva(ms05, idTransacaoUnica):
                                             '{idTransacaoUnica}',
                                             {ms05.ID_Rede_Lockers},
                                             '{encomenda.ID_Encomenda}',
-                                            NOW(),
+                                            '{ms05.Data_Hora_Solicitacao}',
                                             {0},
                                             {1},
                                             {0},
@@ -444,8 +511,9 @@ def insert_tracking_reserva(ms05, idTransacaoUnica):
         return result
 
 
-def insert_tracking_porta(ms05, idTransacaoUnica, record_Porta):
+def insert_tracking_porta(ms05, record_Porta):
     try:
+
         idTicketOcorrencia = str(uuid.uuid1())
         command_sql = f'''INSERT INTO `rede1minuto`.`tracking_portas`
                                         (`idTicketOcorrencia`,
@@ -464,7 +532,7 @@ def insert_tracking_porta(ms05, idTransacaoUnica, record_Porta):
                                         '{ms05.ID_da_Estacao_do_Locker}',
                                         '{record_Porta[0]}',
                                         null,
-                                        NOW(),
+                                        '{ms05.Data_Hora_Solicitacao}',
                                         {1},
                                         {2},
                                         {0},
@@ -511,7 +579,7 @@ def insert_shopper(ms05):
                                                     '{encomenda.Endereco_Shopper}',
                                                     '{encomenda.Numero_Shopper}',
                                                     '{encomenda.Complemento_Shopper}',
-                                                    NOW());'''  # 1 - Reserva efetivada, 2 - Reserva cancelada, 3 - Reserva em andamento, 4 - Reserva em espera
+                                                    '{ms05.Data_Hora_Solicitacao}');'''  # 1 - Reserva efetivada, 2 - Reserva cancelada, 3 - Reserva em andamento, 4 - Reserva em espera
                     command_sql = command_sql.replace("'None'", "Null")
                     command_sql = command_sql.replace("None", "Null")
                     conn.execute(command_sql)

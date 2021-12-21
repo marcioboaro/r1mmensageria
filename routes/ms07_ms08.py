@@ -12,7 +12,10 @@ from schemas.ms07 import MS07
 from cryptography.fernet import Fernet
 import random
 import os
+import pika
 import json
+import requests
+
 
 ms07_ms08 = APIRouter()
 key = Fernet.generate_key()
@@ -49,9 +52,13 @@ def ms07(ms07: MS07, public_id=Depends(auth_handler.auth_wrapper)):
         if ms07.ID_Transacao_Unica is None:
             return {"status_code": 422, "detail": "M08009 - ID_Transacao_Unica obrigatório"}
         if ms07.ID_Transacao_Unica is not None:
-            command_sql = f"SELECT IdTransacaoUnica from reserva_encomenda where reserva_encomenda.IdTransacaoUnica = '{ms07.ID_Transacao_Unica}';"
-            if conn.execute(command_sql).fetchone() is None:
+            command_sql = f"SELECT IdTransacaoUnica,idStatusReserva from reserva_encomenda where reserva_encomenda.IdTransacaoUnica = '{ms07.ID_Transacao_Unica}';"
+            record = conn.execute(command_sql).fetchone()
+            if record[0] is None:
                 return {"status_code": 422, "detail": "M08001 - Reserva não Existe"}
+            elif record[1] == 2:
+                return {"status_code": 422, "detail": "M08010 - Reserva já cancelada"}
+
 
         # validando versao mensageria
         if ms07.Versao_Mensageria is None:
@@ -70,12 +77,39 @@ def ms07(ms07: MS07, public_id=Depends(auth_handler.auth_wrapper)):
         ms08['ID_Transacao_Unica'] = ms07.ID_Transacao_Unica
         ms08['Versao_Mensageria'] = ms07.Versao_Mensageria
 
-        update_reserva(ms07)
-        update_porta(ms07)
-        update_tracking_reserva(ms07)
-        update_tracking_porta(ms07)
-        send_lc07_mq(ms07)
+        command_sql = f"SELECT idStatusReserva from reserva_encomenda where reserva_encomenda.IdTransacaoUnica = '{ms07.ID_Transacao_Unica}'";
+        record_status = conn.execute(command_sql).fetchone()
 
+        # Cancelamento com Encomenda no Seller
+        if record_status[0] == 1 or record_status[0] == 4:
+            update_reserva_encomenda_seller(ms07)
+            update_tracking_reserva_seller(ms07)
+            wh04_encomendaseller(ms07)
+        # Cancelamento com Encomenda CD
+        elif record_status[0] == 5 or record_status[0] == 15 or record_status[0] == 16 or record_status[0] == 17 or record_status[0] == 38:
+            update_reserva_encomenda_cd(ms07)
+            update_tracking_reserva_cd(ms07)
+            wh04_encomendacd(ms07)
+            #insert_ocorrencia_encomenda_cd(ms07) # Gerar requisição para Coleta de Devolução
+        # Cancelamento com Encomenda Embarcada
+        elif record_status[0] == 18:
+            update_reserva_encomenda_embarcada(ms07)
+            update_tracking_reserva_embarcada(ms07)
+            wh04_encomendaembarcada(ms07)
+            #insert_ocorrencia_encomenda_embarcada(ms07) # Gerar requisição para Coleta de Devolução
+        # Cancelamento com Encomenda no Locker
+        elif record_status[0] == 23 or record_status[0] == 24:
+            update_reserva_encomenda_locker(ms07)
+            update_tracking_reserva_locker(ms07)
+            wh04_encomendanolocker(ms07)
+            #insert_ocorrencia_encomenda_locker(ms07) # Gerar requisição para Coleta de Devolução
+
+        update_porta(ms07)
+        update_tracking_porta(ms07)
+        reserva_wb03(ms07)
+        ret_fila = send_lc07_mq(ms07)
+        if ret_fila is False:
+            logger.error("lc01 não inserido")
         return ms08
 
     except:
@@ -85,8 +119,146 @@ def ms07(ms07: MS07, public_id=Depends(auth_handler.auth_wrapper)):
         return {"status_code": 500, "detail": "MS07 - Cancelamento de reserva"}
 
 
+
+###################### teste no webhook a ser retirado posteriormente ###############################
+def reserva_wb03(ms07):
+    try:
+        now = datetime.now()
+        dt_string = now.strftime('%Y-%m-%d %H:%M:%S')
+        wb03 = {}
+        wb03['CD_MSG'] = "WH001"
+        wb03['ID_Referencia'] = ms07.ID_de_Referencia
+        wb03['ID_Transacao'] = ms07.ID_Transacao_Unica
+        wb03['Data_Hora_Resposta'] = dt_string
+        wb03['CD_Resposta'] = "WH3000 - Cancelamento da reserva da porta executada"
+
+        command_sql = f"""SELECT `reserva_encomenda`.`URL_CALL_BACK`
+                                                        FROM `rede1minuto`.`reserva_encomenda`
+                                                        where reserva_encomenda.IdTransacaoUnica = '{ms07.ID_Transacao_Unica}';"""
+        record = conn.execute(command_sql).fetchone()
+        logger.warning(command_sql)
+        url_wb01 = record[0]
+
+        r = requests.post(url_wb01, data=json.dumps(wb03), headers={'Content-Type': 'application/json'})
+
+    except:
+        logger.error(sys.exc_info())
+        result = dict()
+        result['Error reserva_wb03'] = sys.exc_info()
+        return result
+
+
+def wh04_encomendaseller(ms07):
+    try:
+        now = datetime.now()
+        dt_string = now.strftime('%Y-%m-%d %H:%M:%S')
+        wb04 = {}
+        wb04['CD_MSG'] = "WH004"
+        wb04['ID_Referencia'] = ms07.ID_de_Referencia
+        wb04['ID_Transacao'] = ms07.ID_Transacao_Unica
+        wb04['Data_Hora_Resposta'] = dt_string
+        wb04['CD_Resposta'] = "WH4002 - Cancelamento Reserva"
+
+        command_sql = f"""SELECT `reserva_encomenda`.`URL_CALL_BACK`
+                                                FROM `rede1minuto`.`reserva_encomenda`
+                                                where reserva_encomenda.IdTransacaoUnica = '{ms07.ID_Transacao_Unica}';"""
+        record = conn.execute(command_sql).fetchone()
+        logger.warning(command_sql)
+        url = record[0]
+
+        r = requests.post(url, data=json.dumps(wb04), headers={'Content-Type': 'application/json'})
+
+    except:
+        logger.error(sys.exc_info())
+        result = dict()
+        result['Error wh04_wh4002'] = sys.exc_info()
+        return result
+
+
+def wh04_encomendacd(ms07):
+    try:
+        now = datetime.now()
+        dt_string = now.strftime('%Y-%m-%d %H:%M:%S')
+        wb04 = {}
+        wb04['CD_MSG'] = "WH004"
+        wb04['ID_Referencia'] = ms07.ID_de_Referencia
+        wb04['ID_Transacao'] = ms07.ID_Transacao_Unica
+        wb04['Data_Hora_Resposta'] = dt_string
+        wb04['CD_Resposta'] = "WH4010 - Cancelamento com Encomenda CD"
+
+        command_sql = f"""SELECT `reserva_encomenda`.`URL_CALL_BACK`
+                                                FROM `rede1minuto`.`reserva_encomenda`
+                                                where reserva_encomenda.IdTransacaoUnica = '{ms07.ID_Transacao_Unica}';"""
+        record = conn.execute(command_sql).fetchone()
+        logger.warning(command_sql)
+        url = record[0]
+
+        r = requests.post(url, data=json.dumps(wb04), headers={'Content-Type': 'application/json'})
+
+    except:
+        logger.error(sys.exc_info())
+        result = dict()
+        result['Error wh04_encomendacd'] = sys.exc_info()
+        return result
+
+
+def wh04_encomendaembarcada(ms07):
+    try:
+        now = datetime.now()
+        dt_string = now.strftime('%Y-%m-%d %H:%M:%S')
+        wb04 = {}
+        wb04['CD_MSG'] = "WH004"
+        wb04['ID_Referencia'] = ms07.ID_de_Referencia
+        wb04['ID_Transacao'] = ms07.ID_Transacao_Unica
+        wb04['Data_Hora_Resposta'] = dt_string
+        wb04['CD_Resposta'] = "WH4019 - Cancelamento com Encomenda Embarcada"
+
+        command_sql = f"""SELECT `reserva_encomenda`.`URL_CALL_BACK`
+                                                FROM `rede1minuto`.`reserva_encomenda`
+                                                where reserva_encomenda.IdTransacaoUnica = '{ms07.ID_Transacao_Unica}';"""
+        record = conn.execute(command_sql).fetchone()
+        logger.warning(command_sql)
+        url = record[0]
+
+        r = requests.post(url, data=json.dumps(wb04), headers={'Content-Type': 'application/json'})
+
+    except:
+        logger.error(sys.exc_info())
+        result = dict()
+        result['Error wh04_encomendacd'] = sys.exc_info()
+        return result
+
+def wh04_encomendanolocker(ms07):
+    try:
+        now = datetime.now()
+        dt_string = now.strftime('%Y-%m-%d %H:%M:%S')
+        wb04 = {}
+        wb04['CD_MSG'] = "WH004"
+        wb04['ID_Referencia'] = ms07.ID_de_Referencia
+        wb04['ID_Transacao'] = ms07.ID_Transacao_Unica
+        wb04['Data_Hora_Resposta'] = dt_string
+        wb04['CD_Resposta'] = "WH4026 - Cancelamento com Encomenda no Locker"
+
+        command_sql = f"""SELECT `reserva_encomenda`.`URL_CALL_BACK`
+                                                FROM `rede1minuto`.`reserva_encomenda`
+                                                where reserva_encomenda.IdTransacaoUnica = '{ms07.ID_Transacao_Unica}';"""
+        record = conn.execute(command_sql).fetchone()
+        logger.warning(command_sql)
+        url = record[0]
+
+        r = requests.post(url, data=json.dumps(wb04), headers={'Content-Type': 'application/json'})
+
+    except:
+        logger.error(sys.exc_info())
+        result = dict()
+        result['Error wh04_encomendanolocker'] = sys.exc_info()
+        return result
+###################### teste no webhook a ser retirado posteriormente ###############################
+
+
 def update_porta(ms07):
     try:
+
         command_sql = f"SELECT idLockerPorta from reserva_encomenda where reserva_encomenda.IdTransacaoUnica = '{ms07.ID_Transacao_Unica}'";
         record_Porta = conn.execute(command_sql).fetchone()
 
@@ -103,8 +275,10 @@ def update_porta(ms07):
         result['Error update_porta'] = sys.exc_info()
         return result
 
-def update_reserva(ms07):
+
+def update_reserva_encomenda_seller(ms07):
     try:
+
         command_sql = f"""UPDATE `reserva_encomenda`
                                             SET     `IdSolicitante` = '{ms07.ID_do_Solicitante}',
                                                     `IdReferencia` = '{ms07.ID_de_Referencia}',
@@ -119,11 +293,70 @@ def update_reserva(ms07):
     except:
         logger.error(sys.exc_info())
         result = dict()
-        result['Error update_ms07'] = sys.exc_info()
+        result['Error update_reserva_encomenda_seller'] = sys.exc_info()
         return result
 
-def update_tracking_reserva(ms07):
+def update_reserva_encomenda_cd(ms07):
     try:
+        command_sql = f"""UPDATE `reserva_encomenda`
+                                            SET     `IdSolicitante` = '{ms07.ID_do_Solicitante}',
+                                                    `IdReferencia` = '{ms07.ID_de_Referencia}',
+                                                    `idStatusReserva` = 10,
+                                                    `ComentarioCancelamento` = '{ms07.Comentario_Cancelamento_Reserva}',
+                                                    `DateUpdate` = now()
+                                            WHERE `IdTransacaoUnica` = '{ms07.ID_Transacao_Unica}';"""
+        command_sql = command_sql.replace("'None'", "Null")
+        command_sql = command_sql.replace("None", "Null")
+        conn.execute(command_sql)
+        logger.warning(command_sql)
+    except:
+        logger.error(sys.exc_info())
+        result = dict()
+        result['Error update_reserva_encomenda_cd'] = sys.exc_info()
+        return result
+
+def update_reserva_encomenda_embarcada(ms07):
+    try:
+        command_sql = f"""UPDATE `reserva_encomenda`
+                                            SET     `IdSolicitante` = '{ms07.ID_do_Solicitante}',
+                                                    `IdReferencia` = '{ms07.ID_de_Referencia}',
+                                                    `idStatusReserva` = 19,
+                                                    `ComentarioCancelamento` = '{ms07.Comentario_Cancelamento_Reserva}',
+                                                    `DateUpdate` = now()
+                                            WHERE `IdTransacaoUnica` = '{ms07.ID_Transacao_Unica}';"""
+        command_sql = command_sql.replace("'None'", "Null")
+        command_sql = command_sql.replace("None", "Null")
+        conn.execute(command_sql)
+        logger.warning(command_sql)
+    except:
+        logger.error(sys.exc_info())
+        result = dict()
+        result['Error update_reserva_encomenda_embarcada'] = sys.exc_info()
+        return result
+
+
+def update_reserva_encomenda_locker(ms07):
+    try:
+        command_sql = f"""UPDATE `reserva_encomenda`
+                                            SET     `IdSolicitante` = '{ms07.ID_do_Solicitante}',
+                                                    `IdReferencia` = '{ms07.ID_de_Referencia}',
+                                                    `idStatusReserva` = 26,
+                                                    `ComentarioCancelamento` = '{ms07.Comentario_Cancelamento_Reserva}',
+                                                    `DateUpdate` = now()
+                                            WHERE `IdTransacaoUnica` = '{ms07.ID_Transacao_Unica}';"""
+        command_sql = command_sql.replace("'None'", "Null")
+        command_sql = command_sql.replace("None", "Null")
+        conn.execute(command_sql)
+        logger.warning(command_sql)
+    except:
+        logger.error(sys.exc_info())
+        result = dict()
+        result['Error update_reserva_encomenda_locker'] = sys.exc_info()
+        return result
+
+def update_tracking_reserva_seller(ms07):
+    try:
+
         command_sql = f"SELECT idStatusReservaAtual from tracking_encomenda where tracking_encomenda.IdTransacaoUnica = '{ms07.ID_Transacao_Unica}'";
         record_status = conn.execute(command_sql).fetchone()
         command_sql = f"""UPDATE `tracking_encomenda`
@@ -138,7 +371,64 @@ def update_tracking_reserva(ms07):
     except:
         logger.error(sys.exc_info())
         result = dict()
-        result['Error update_tracking'] = sys.exc_info()
+        result['Error update_tracking_reserva_seller'] = sys.exc_info()
+        return result
+
+def update_tracking_reserva_cd(ms07):
+    try:
+        command_sql = f"SELECT idStatusReservaAtual from tracking_encomenda where tracking_encomenda.IdTransacaoUnica = '{ms07.ID_Transacao_Unica}'";
+        record_status = conn.execute(command_sql).fetchone()
+        command_sql = f"""UPDATE `tracking_encomenda`
+                        SET     `idStatusReservaAnterior` = '{record_status[0]}',
+                                `idStatusReservaAtual` = 10,
+                                `DateUpdate` = now()
+                        WHERE `IdTransacaoUnica` = '{ms07.ID_Transacao_Unica}';"""
+        command_sql = command_sql.replace("'None'", "Null")
+        command_sql = command_sql.replace("None", "Null")
+        conn.execute(command_sql)
+        logger.warning(command_sql)
+    except:
+        logger.error(sys.exc_info())
+        result = dict()
+        result['Error update_tracking_reserva_cd'] = sys.exc_info()
+        return result
+
+def update_tracking_reserva_embarcada(ms07):
+    try:
+        command_sql = f"SELECT idStatusReservaAtual from tracking_encomenda where tracking_encomenda.IdTransacaoUnica = '{ms07.ID_Transacao_Unica}'";
+        record_status = conn.execute(command_sql).fetchone()
+        command_sql = f"""UPDATE `tracking_encomenda`
+                        SET     `idStatusReservaAnterior` = '{record_status[0]}',
+                                `idStatusReservaAtual` = 19,
+                                `DateUpdate` = now()
+                        WHERE `IdTransacaoUnica` = '{ms07.ID_Transacao_Unica}';"""
+        command_sql = command_sql.replace("'None'", "Null")
+        command_sql = command_sql.replace("None", "Null")
+        conn.execute(command_sql)
+        logger.warning(command_sql)
+    except:
+        logger.error(sys.exc_info())
+        result = dict()
+        result['Error update_tracking_reserva_embarcada'] = sys.exc_info()
+        return result
+
+def update_tracking_reserva_locker(ms07):
+    try:
+        command_sql = f"SELECT idStatusReservaAtual from tracking_encomenda where tracking_encomenda.IdTransacaoUnica = '{ms07.ID_Transacao_Unica}'";
+        record_status = conn.execute(command_sql).fetchone()
+        command_sql = f"""UPDATE `tracking_encomenda`
+                        SET     `idStatusReservaAnterior` = '{record_status[0]}',
+                                `idStatusReservaAtual` = 26,
+                                `DateUpdate` = now()
+                        WHERE `IdTransacaoUnica` = '{ms07.ID_Transacao_Unica}';"""
+        command_sql = command_sql.replace("'None'", "Null")
+        command_sql = command_sql.replace("None", "Null")
+        conn.execute(command_sql)
+        logger.warning(command_sql)
+    except:
+        logger.error(sys.exc_info())
+        result = dict()
+        result['Error update_tracking_reserva_locker'] = sys.exc_info()
         return result
 
 def update_tracking_porta(ms07):
@@ -165,8 +455,13 @@ def update_tracking_porta(ms07):
 def send_lc07_mq(ms07):
     try:  # Envia LC01 para fila do RabbitMQ o aplicativo do locker a pega lá
 
-        command_sql = f"SELECT idLockerPorta, idLockerPortaFisica, idLocker from reserva_encomenda where reserva_encomenda.IdTransacaoUnica = '{ms07.ID_Transacao_Unica}'";
+        command_sql = f"SELECT idLockerPorta from reserva_encomenda where reserva_encomenda.IdTransacaoUnica = '{ms07.ID_Transacao_Unica}'";
+        record = conn.execute(command_sql).fetchone()
+        command_sql = f"SELECT idLockerPorta, idLockerPortaFisica, idLocker from locker_porta where locker_porta.idLockerPorta = '{record[0]}'";
         record_Porta = conn.execute(command_sql).fetchone()
+        idLocker = record_Porta[2]
+        idLockerPorta = record_Porta[0]
+        idLockerPortaFisica = record_Porta[1]
 
         lc07 = {}
         lc07["CD_MSG"] = "LC07"
@@ -176,10 +471,10 @@ def send_lc07_mq(ms07):
         content["ID_Solicitante"] = ms07.ID_do_Solicitante
         content["ID_Rede"] = ms07.ID_Rede_Lockers
         content["ID_Transacao"] = ms07.ID_Transacao_Unica
-        content["idLocker"] = record_Porta[3]
+        content["idLocker"] = idLocker
         content["AcaoExecutarPorta"] = 3
-        content["idLockerPorta"] = record_Porta[0]
-        content["idLockerPortaFisica"] = record_Porta[1]
+        content["idLockerPorta"] = idLockerPorta
+        content["idLockerPortaFisica"] = idLockerPortaFisica
         content["Versão_Software"] = "0.1"
         content["Versao_Mensageria"] = "1.0.0"
 
@@ -187,7 +482,7 @@ def send_lc07_mq(ms07):
 
         MQ_Name = 'Rede1Min_MQ'
         URL = 'amqp://rede1min:Minuto@167.71.26.87' # URL do RabbitMQ
-        queue_name = record_Porta[3] + '_locker_output' # Nome da fila do RabbitMQ
+        queue_name = idLocker + '_locker_output' # Nome da fila do RabbitMQ
 
         url = os.environ.get(MQ_Name, URL)
         params = pika.URLParameters(url)
@@ -198,7 +493,7 @@ def send_lc07_mq(ms07):
 
         channel.queue_declare(queue=queue_name, durable=True)
 
-        message = json.dumps(lc01) # Converte o dicionario em string
+        message = json.dumps(lc07) # Converte o dicionario em string
 
         channel.basic_publish(
                     exchange='',
@@ -209,10 +504,7 @@ def send_lc07_mq(ms07):
                     ))
 
         connection.close()
-        logger.info(sys.exc_info())
-
+        return True
     except:
         logger.error(sys.exc_info())
-        result = dict()
-        result['Error send_lc07_mq'] = sys.exc_info()
-        return result 
+        return False

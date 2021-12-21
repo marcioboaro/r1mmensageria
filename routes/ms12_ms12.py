@@ -13,6 +13,7 @@ from cryptography.fernet import Fernet
 import random
 import os
 import json
+import requests
 
 ms12_ms12 = APIRouter()
 key = Fernet.generate_key()
@@ -79,6 +80,7 @@ def ms12(ms12: MS12, public_id=Depends(auth_handler.auth_wrapper)):
         update_reserva_encomenda(ms12)
         update_reserva_encomenda_encomendas(ms12)
         update_tracking_reserva(ms12)
+        rotina_pod(ms12, dt_string)
 
         return {"status_code": 200, "detail": "M012000 - Enviado com sucesso"}
 
@@ -134,3 +136,28 @@ def update_reserva_encomenda(ms12):
     command_sql = command_sql.replace("'None'", "Null")
     command_sql = command_sql.replace("None", "Null")
     conn.execute(command_sql)
+
+def rotina_pod(ms12,dt_string):
+    try:
+        # atualizando status do pedido no webhook
+        wb04 = {}
+        wb04['CD_MSG'] = "WH004"
+        wb04['ID_Referencia'] = ms12.ID_de_Referencia
+        wb04['ID_Transacao'] = ms12.ID_Transacao_Unica
+        wb04['Data_Hora_Resposta'] = dt_string
+        wb04['CD_Resposta'] = "WH4027 - POD Recebido"
+
+        command_sql = f"""SELECT `reserva_encomenda`.`URL_CALL_BACK`
+                                FROM `rede1minuto`.`reserva_encomenda`
+                                where reserva_encomenda.IdTransacaoUnica = '{ms12.ID_Transacao_Unica}';"""
+        record = conn.execute(command_sql).fetchone()
+        logger.warning(command_sql)
+        url = record[0]
+
+        r = requests.post(url, data=json.dumps(wb04), headers={'Content-Type': 'application/json'})
+
+    except:
+        logger.error(sys.exc_info())
+        result = dict()
+        result['Error rotina_pod'] = sys.exc_info()
+        return result
