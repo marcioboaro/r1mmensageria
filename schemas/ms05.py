@@ -35,7 +35,7 @@ class MS05(BaseModel):
     ID_da_Estacao_do_Locker: str
     Tipo_de_Servico_Reserva: str
     ID_Transacao_Unica: Optional[str] = None
-    ID_PSL_Designado: int
+    ID_PSL_Designado:  Optional[int] = None
     Autenticacao_Login_Operador_Logistico: int
     Categoria_Porta: str
     Geracao_de_QRCODE_na_Resposta_MS06: int
