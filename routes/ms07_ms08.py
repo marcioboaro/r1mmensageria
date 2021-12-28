@@ -475,7 +475,7 @@ def send_lc07_mq(ms07):
         content["AcaoExecutarPorta"] = 3
         content["idLockerPorta"] = idLockerPorta
         content["idLockerPortaFisica"] = idLockerPortaFisica
-        content["Versão_Software"] = "0.1"
+        content["Versao_Software"] = "0.1"
         content["Versao_Mensageria"] = "1.0.0"
 
         lc07["Content"] = content

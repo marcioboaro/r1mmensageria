@@ -319,7 +319,7 @@ def send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_res
         content["EnvProtocoloOpCelular"] = 0
         content["DT_InicioReservaLocacao"] = Inicio_reserva
         content["DT_finalReservaLocacao"] = Final_reserva
-        content["Versão_Software"] = "0.1"
+        content["Versao_Software"] = "0.1"
         content["Versao_Mensageria"] = "1.0.0"
 
         lc01["Content"] = content

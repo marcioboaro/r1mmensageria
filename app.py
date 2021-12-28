@@ -12,7 +12,11 @@ from routes.ms14_ms15 import ms14_ms15
 from routes.ms16_ms17 import ms16_ms17
 from routes.ms18_ms19 import ms18_ms19
 from routes.ms20_ms21 import ms20_ms21
+from routes.lc07_lc07 import lc07_lc07
+from routes.lc11_lc11 import lc11_lc11
+from routes.lc13_lc13 import lc13_lc13
 from routes.lc16_lc16 import lc16_lc16
+from routes.lc18_lc18 import lc18_lc18
 import uuid  
 from config.db import conn
 from config.log import logger
@@ -188,4 +192,8 @@ app.include_router(ms14_ms15)
 app.include_router(ms16_ms17)
 app.include_router(ms18_ms19)
 app.include_router(ms20_ms21)
+app.include_router(lc07_lc07)
+app.include_router(lc11_lc11)
+app.include_router(lc13_lc13)
 app.include_router(lc16_lc16)
+app.include_router(lc18_lc18)

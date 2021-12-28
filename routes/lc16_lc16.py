@@ -40,10 +40,17 @@ def lc16(lc16: LC16, public_id=Depends(auth_handler.auth_wrapper)):
             if conn.execute(command_sql).fetchone() is None:
                 return {"status_code": 422, "detail": "LC1602 - idRede inválido"}
 
-        if lc16.IdLocker is not None:
-            command_sql = f"SELECT idLocker from locker where locker.idLocker = '{lc16.IdLocker}';"
+        if lc16.idLocker is not None:
+            command_sql = f"SELECT idLocker from locker where locker.idLocker = '{lc16.idLocker}';"
             if conn.execute(command_sql).fetchone() is None:
-                return {"status_code": 422, "detail": "LC1603 - IdLocker inválido"}
+                return {"status_code": 422, "detail": "LC1603 - idLocker inválido"}
+
+        if lc16.VersaoSoftware is None:
+            lc16.VersaoSoftware = "0.1"
+
+
+        if lc16.VersaoMensageria is None:
+            lc16.VersaoMensageria = "1.0.0"
 
         if lc16.VersaoMensageria is not None:
             if lc16.VersaoMensageria != "1.0.0":
@@ -55,7 +62,7 @@ def lc16(lc16: LC16, public_id=Depends(auth_handler.auth_wrapper)):
         now = datetime.now()
         ret_fila = send_lc016_mq(lc16)
         if ret_fila is False:
-            logger.error("lc01 não inserido")
+            logger.error("lc16 não inserido")
 
         return {"status_code": 200, "detail": "LC16000 - Enviado com sucesso"}
     except:
@@ -72,16 +79,16 @@ def send_lc016_mq(lc16):
 
         content = {}
         content["idRede"] = lc16.idRede
-        content["IdLocker"] = lc16.IdLocker
+        content["idLocker"] = lc16.idLocker
         content["DT"] = lc16.DT
-        content["Versão_Software"] = "0.1"
-        content["VersaoMensageria"] = lc16.VersaoMensageria
+        content["Versao_Software"] = lc16.VersaoSoftware
+        content["Versao_Mensageria"] = lc16.VersaoSoftware
 
         lc016["Content"] = content
 
         MQ_Name = 'Rede1Min_MQ'
         URL = 'amqp://rede1min:Minuto@167.71.26.87'  # URL do RabbitMQ
-        queue_name = lc16.IdLocker + '_locker_output'  # Nome da fila do RabbitMQ
+        queue_name = lc16.idLocker + '_locker_output'  # Nome da fila do RabbitMQ
 
         url = os.environ.get(MQ_Name, URL)
         params = pika.URLParameters(url)

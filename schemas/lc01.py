@@ -26,7 +26,7 @@ class Content(BaseModel):
    EnvProtocoloOpCelular: bool
    DT_InicioReservaLocacao: datetime
    DT_finalReservaLocacao: datetime
-   Versão_Software: str
+   Versao_Software: str
    Versao_Mensageria: int
 
 class LC01(BaseModel):
