@@ -15,6 +15,7 @@ RUN pip install uvicorn
 RUN pip install PyJWT
 RUN pip install passlib
 RUN pip install cryptography
+RUN pip install requests
 
 #RUN pip install --no-cache-dir -r requirements.txt
 
