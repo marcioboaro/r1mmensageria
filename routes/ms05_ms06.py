@@ -231,7 +231,7 @@ def reserva_wb01(ms05,idTransacaoUnica):
         wb01 = {}
         wb01['CD_MSG'] = "WH001"
         wb01['ID_Referencia'] = ms05.ID_de_Referencia
-        wb01['ID_Transacao'] = idTransacaoUnica
+        wb01['ID_Transacao_Unica'] = idTransacaoUnica
         wb01['Data_Hora_Resposta'] = dt_string
         wb01['CD_Resposta'] = "WH1000 - Reserva confirmada"
 
@@ -265,7 +265,7 @@ def reserva_wb04(ms05, idTransacaoUnica):
         wb04 = {}
         wb04['CD_MSG'] = "WH004"
         wb04['ID_Referencia'] = ms05.ID_de_Referencia
-        wb04['ID_Transacao'] = idTransacaoUnica
+        wb04['ID_Transacao_Unica'] = idTransacaoUnica
         wb04['Data_Hora_Resposta'] = dt_string
         wb04['CD_Resposta'] = "WH4001 - Reserva confirmada"
 

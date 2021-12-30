@@ -128,7 +128,7 @@ def reserva_wb03(ms07):
         wb03 = {}
         wb03['CD_MSG'] = "WH001"
         wb03['ID_Referencia'] = ms07.ID_de_Referencia
-        wb03['ID_Transacao'] = ms07.ID_Transacao_Unica
+        wb03['ID_Transacao_Unica'] = ms07.ID_Transacao_Unica
         wb03['Data_Hora_Resposta'] = dt_string
         wb03['CD_Resposta'] = "WH3000 - Cancelamento da reserva da porta executada"
 
@@ -155,7 +155,7 @@ def wh04_encomendaseller(ms07):
         wb04 = {}
         wb04['CD_MSG'] = "WH004"
         wb04['ID_Referencia'] = ms07.ID_de_Referencia
-        wb04['ID_Transacao'] = ms07.ID_Transacao_Unica
+        wb04['ID_Transacao_Unica'] = ms07.ID_Transacao_Unica
         wb04['Data_Hora_Resposta'] = dt_string
         wb04['CD_Resposta'] = "WH4002 - Cancelamento Reserva"
 
@@ -182,7 +182,7 @@ def wh04_encomendacd(ms07):
         wb04 = {}
         wb04['CD_MSG'] = "WH004"
         wb04['ID_Referencia'] = ms07.ID_de_Referencia
-        wb04['ID_Transacao'] = ms07.ID_Transacao_Unica
+        wb04['ID_Transacao_Unica'] = ms07.ID_Transacao_Unica
         wb04['Data_Hora_Resposta'] = dt_string
         wb04['CD_Resposta'] = "WH4010 - Cancelamento com Encomenda CD"
 
@@ -209,7 +209,7 @@ def wh04_encomendaembarcada(ms07):
         wb04 = {}
         wb04['CD_MSG'] = "WH004"
         wb04['ID_Referencia'] = ms07.ID_de_Referencia
-        wb04['ID_Transacao'] = ms07.ID_Transacao_Unica
+        wb04['ID_Transacao_Unica'] = ms07.ID_Transacao_Unica
         wb04['Data_Hora_Resposta'] = dt_string
         wb04['CD_Resposta'] = "WH4019 - Cancelamento com Encomenda Embarcada"
 
@@ -235,7 +235,7 @@ def wh04_encomendanolocker(ms07):
         wb04 = {}
         wb04['CD_MSG'] = "WH004"
         wb04['ID_Referencia'] = ms07.ID_de_Referencia
-        wb04['ID_Transacao'] = ms07.ID_Transacao_Unica
+        wb04['ID_Transacao_Unica'] = ms07.ID_Transacao_Unica
         wb04['Data_Hora_Resposta'] = dt_string
         wb04['CD_Resposta'] = "WH4026 - Cancelamento com Encomenda no Locker"
 

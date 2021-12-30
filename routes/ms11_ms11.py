@@ -142,7 +142,7 @@ def  rotina_teste(ms11):
         wb04 = {}
         wb04['CD_MSG'] = "WH004"
         wb04['ID_Referencia'] = ms11.ID_de_Referencia
-        wb04['ID_Transacao'] = ms11.ID_Transacao_Unica
+        wb04['ID_Transacao_Unica'] = ms11.ID_Transacao_Unica
         wb04['Data_Hora_Resposta'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         if ms11.Status_Reserva_Atual == 24:
             wb04['CD_Resposta'] = "WH4024 - Encomenda Aguardando Retirada no Locker"
@@ -201,7 +201,7 @@ def rotina_avaria(ms11):
         wb04 = {}
         wb04['CD_MSG'] = "WH004"
         wb04['ID_Referencia'] = ms11.ID_de_Referencia
-        wb04['ID_Transacao'] = ms11.ID_Transacao_Unica
+        wb04['ID_Transacao_Unica'] = ms11.ID_Transacao_Unica
         wb04['Data_Hora_Resposta'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         if ms11.Status_Reserva_Atual == 6:
             wb04['CD_Resposta'] = "WH4006 - Avaria First Mile"
@@ -235,7 +235,7 @@ def rotina_extravio(ms11):
         wb04 = {}
         wb04['CD_MSG'] = "WH004"
         wb04['ID_Referencia'] = ms11.ID_de_Referencia
-        wb04['ID_Transacao'] = ms11.ID_Transacao_Unica
+        wb04['ID_Transacao_Unica'] = ms11.ID_Transacao_Unica
         wb04['Data_Hora_Resposta'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         if ms11.Status_Reserva_Atual == 7:
             wb04['CD_Resposta'] = "WH4007 -  Extravio First Mile"
@@ -270,7 +270,7 @@ def rotina_roubo(ms11):
         wb04 = {}
         wb04['CD_MSG'] = "WH004"
         wb04['ID_Referencia'] = ms11.ID_de_Referencia
-        wb04['ID_Transacao'] = ms11.ID_Transacao_Unica
+        wb04['ID_Transacao_Unica'] = ms11.ID_Transacao_Unica
         wb04['Data_Hora_Resposta'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         if ms11.Status_Reserva_Atual == 8:
             wb04['CD_Resposta'] = "WH4008 - Roubo First Mile"
@@ -302,7 +302,7 @@ def  rotina_operador(ms11):
         wb04 = {}
         wb04['CD_MSG'] = "WH004"
         wb04['ID_Referencia'] = ms11.ID_de_Referencia
-        wb04['ID_Transacao'] = ms11.ID_Transacao_Unica
+        wb04['ID_Transacao_Unica'] = ms11.ID_Transacao_Unica
         wb04['Data_Hora_Resposta'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         if ms11.Status_Reserva_Atual == 4:
             wb04['CD_Resposta'] = "WH4004 - Disponivel para coleta first mile no solicitante"
@@ -356,7 +356,7 @@ def  rotina_prorrogacao_sla(ms11):
         content["ID_Referencia"] = ms11.ID_de_Referencia
         content["ID_Solicitante"] = ms11.ID_do_Solicitante
         content["ID_Rede"] = ms11.ID_Rede_Lockers
-        content["ID_Transacao"] = ms11.ID_Transacao_Unica
+        content["ID_Transacao_Unica"] = ms11.ID_Transacao_Unica
         content["idLocker"] = record_Porta[3]
         content["AcaoExecutarPorta"] = 4
         content["idLockerPorta"] = record_Porta[0]
