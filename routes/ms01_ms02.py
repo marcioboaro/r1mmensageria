@@ -193,7 +193,8 @@ def ms01(ms01: MS01, public_id=Depends(auth_handler.auth_wrapper)):
                             JOIN `locker_categoria` ON (`locker_categoria`.`idLockerCategoria` = `locker`.`idLockerCategoria`)
                             JOIN `locker_refrigeracao_coluna` ON (`locker_refrigeracao_coluna`.`idLockerRefrigeracaoColuna` = `locker`.`idLockerRefrigeracaoColuna`)
                             JOIN `locker_operacao` ON (`locker_operacao`.`idLockerOperacao` = `locker`.`idLockerOperacao`)
-                            where `locker`.`idRede` = {ms01.ID_Rede_Lockers}"""
+                            where `locker`.`idLockerStatus` = 1
+                              and `locker`.`idRede` = {ms01.ID_Rede_Lockers}"""
 
         if ms01.Codigo_Pais_Locker is not None:
             command_sql += f" and `idPais` = '{ms01.Codigo_Pais_Locker}'"
