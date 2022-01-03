@@ -48,7 +48,6 @@ def lc16(lc16: LC16, public_id=Depends(auth_handler.auth_wrapper)):
         if lc16.VersaoSoftware is None:
             lc16.VersaoSoftware = "0.1"
 
-
         if lc16.VersaoMensageria is None:
             lc16.VersaoMensageria = "1.0.0"
 
@@ -82,7 +81,7 @@ def send_lc016_mq(lc16):
         content["idLocker"] = lc16.idLocker
         content["DT"] = lc16.DT
         content["Versao_Software"] = lc16.VersaoSoftware
-        content["Versao_Mensageria"] = lc16.VersaoSoftware
+        content["Versao_Mensageria"] = lc16.VersaoMensageria
 
         lc016["Content"] = content
 
@@ -110,6 +109,7 @@ def send_lc016_mq(lc16):
             ))
 
         connection.close()
+        print("passou 3")
         return True
     except:
         logger.error(sys.exc_info())
