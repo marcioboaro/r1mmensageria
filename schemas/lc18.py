@@ -4,8 +4,8 @@ from datetime import datetime
 
 class LC18(BaseModel):
    CD_MSG: Optional [str]
-   idRede: Optional [int]
-   idLocker: Optional [str]
+   idRede: int
+   idLocker: str
    DT: datetime
    CD_NovaVersao: Optional [str]
    URL_CD_Nova_Versao: Optional[str]
