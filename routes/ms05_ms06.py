@@ -165,8 +165,8 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
             ms06['ID_da_Porta_do_Locker'] = None
             ms06['ID_Transacao_Unica'] = 0
             ms06['Tipo_de_Servico_Reserva'] = 0
-            ms06['DataHora_Inicio_Reserva'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            ms06['DataHora_Final_Reserva'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            ms06['DataHora_Inicio_Reserva'] = None
+            ms06['DataHora_Final_Reserva'] = None
         else:
             ms06['Codigo_Resposta_MS06'] = 'M06000 - Sucesso'
             ms06['ID_da_Porta_do_Locker'] = record_Porta[0]
@@ -230,7 +230,7 @@ def reserva_wb01(ms05,idTransacaoUnica):
         dt_string = now.strftime('%Y-%m-%d %H:%M:%S')
         wb01 = {}
         wb01['CD_MSG'] = "WH001"
-        wb01['ID_Referencia'] = ms05.ID_de_Referencia
+        wb01['ID_de_Referencia'] = ms05.ID_de_Referencia
         wb01['ID_Transacao_Unica'] = idTransacaoUnica
         wb01['Data_Hora_Resposta'] = dt_string
         wb01['CD_Resposta'] = "WH1000 - Reserva confirmada"

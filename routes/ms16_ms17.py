@@ -270,7 +270,7 @@ def reserva_wb02(ms16):
         dt_string = now.strftime('%Y-%m-%d %H:%M:%S')
         wb02 = {}
         wb02['CD_MSG'] = "WH002"
-        wb02['ID_Referencia'] = ms16.ID_de_Referencia
+        wb02['ID_de_Referencia'] = ms16.ID_de_Referencia
         wb02['ID_Transacao'] = ms16.ID_Transacao_Unica
         wb02['Data_Hora_Resposta'] = dt_string
         wb02['CD_Resposta'] = "WH2000 - Prorrogação da reserva da porta executada"
@@ -304,7 +304,7 @@ def reserva_wb04(ms16):
         url = record[0]
         wb04 = {}
         wb04['CD_MSG'] = "WH004"
-        wb04['ID_Referencia'] = ms16.ID_de_Referencia
+        wb04['ID_de_Referencia'] = ms16.ID_de_Referencia
         wb04['ID_Transacao'] = ms16.ID_Transacao_Unica
         wb04['Data_Hora_Resposta'] = dt_string
         wb04['CD_Resposta'] = "WH4001 - Prorrogação de Reserva"

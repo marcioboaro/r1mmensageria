@@ -141,7 +141,7 @@ def  rotina_teste(ms11):
         # atualizando status do pedido no webhook
         wb04 = {}
         wb04['CD_MSG'] = "WH004"
-        wb04['ID_Referencia'] = ms11.ID_de_Referencia
+        wb04['ID_de_Referencia'] = ms11.ID_de_Referencia
         wb04['ID_Transacao_Unica'] = ms11.ID_Transacao_Unica
         wb04['Data_Hora_Resposta'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         if ms11.Status_Reserva_Atual == 24:
@@ -200,7 +200,7 @@ def rotina_avaria(ms11):
         # atualizando status do pedido no webhook
         wb04 = {}
         wb04['CD_MSG'] = "WH004"
-        wb04['ID_Referencia'] = ms11.ID_de_Referencia
+        wb04['ID_de_Referencia'] = ms11.ID_de_Referencia
         wb04['ID_Transacao_Unica'] = ms11.ID_Transacao_Unica
         wb04['Data_Hora_Resposta'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         if ms11.Status_Reserva_Atual == 6:
@@ -234,7 +234,7 @@ def rotina_extravio(ms11):
         # atualizando status do pedido no webhook
         wb04 = {}
         wb04['CD_MSG'] = "WH004"
-        wb04['ID_Referencia'] = ms11.ID_de_Referencia
+        wb04['ID_de_Referencia'] = ms11.ID_de_Referencia
         wb04['ID_Transacao_Unica'] = ms11.ID_Transacao_Unica
         wb04['Data_Hora_Resposta'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         if ms11.Status_Reserva_Atual == 7:
@@ -269,7 +269,7 @@ def rotina_roubo(ms11):
         # atualizando status do pedido no webhook
         wb04 = {}
         wb04['CD_MSG'] = "WH004"
-        wb04['ID_Referencia'] = ms11.ID_de_Referencia
+        wb04['ID_de_Referencia'] = ms11.ID_de_Referencia
         wb04['ID_Transacao_Unica'] = ms11.ID_Transacao_Unica
         wb04['Data_Hora_Resposta'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         if ms11.Status_Reserva_Atual == 8:
@@ -301,7 +301,7 @@ def  rotina_operador(ms11):
     try:
         wb04 = {}
         wb04['CD_MSG'] = "WH004"
-        wb04['ID_Referencia'] = ms11.ID_de_Referencia
+        wb04['ID_de_Referencia'] = ms11.ID_de_Referencia
         wb04['ID_Transacao_Unica'] = ms11.ID_Transacao_Unica
         wb04['Data_Hora_Resposta'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         if ms11.Status_Reserva_Atual == 4:
