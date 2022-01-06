@@ -25,10 +25,10 @@ f = Fernet(key)
 auth_handler = AuthHandler()
 
 
-@lc13_lc13.post("/api/v01/lc13", tags=["lc13"], description="Envio de Mensagem de Sonda de Monitoração  da Central para Locker")
+@lc13_lc13.post("/api/v01/lc13", tags=["lc13"], description="Envio de Mensagem de Sonda de Monitorização da Central para Locker")
 def lc13(lc13: LC13, public_id=Depends(auth_handler.auth_wrapper)):
     try:
-        logger.info("Envio de Mensagem de Sonda de Monitoração  da Central para Locker")
+        logger.info("Envio de Mensagem de Sonda de Monitorização da Central para Locker")
         logger.info(f"Usuário que fez a solicitação: {public_id}")
 
         if lc13.CD_MSG is None:
@@ -70,7 +70,7 @@ def lc13(lc13: LC13, public_id=Depends(auth_handler.auth_wrapper)):
         logger.error(sys.exc_info())
         result = dict()
         result['Error lc13'] = sys.exc_info()
-        return {"status_code": 500, "detail": "LC13 - Envio de Mensagem de Sonda de Monitoração  da Central para Locker"}
+        return {"status_code": 500, "detail": "LC13 - Envio de Mensagem de Sonda de Monitorização da Central para Locker"}
 
 
 def send_lc013_mq(lc13):
@@ -79,7 +79,7 @@ def send_lc013_mq(lc13):
         lc013["CD_MSG"] = "LC13"
 
         content = {}
-        content["idRede"] = lc13.idRede
+        content["ID_Rede"] = lc13.idRede
         content["idLocker"] = lc13.idLocker
         content["DT"] = lc13.DT
         content["Versao_Software"] = lc13.VersaoSoftware

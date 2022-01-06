@@ -17,6 +17,8 @@ import os
 import json
 import requests
 import logging
+import random
+import uuid
 
 
 lc07_lc07 = APIRouter()
@@ -59,6 +61,8 @@ def lc07(lc07: LC07, public_id=Depends(auth_handler.auth_wrapper)):
         if lc07.DT_Prorrogacao is None:
             if lc07.AcaoExecutarPorta == 4:
                 lc07.DT_Prorrogacao = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            elif lc07.AcaoExecutarPorta != 4:
+                lc07.DT_Prorrogacao = None
 
 
         now = datetime.now()
@@ -91,6 +95,11 @@ def send_lc07_mq(lc07):
         content["idLockerPorta"] = lc07.idLockerPorta
         content["idLockerPortaFisica"] = idLockerPortaFisica
         content["DT_Prorrogacao"] = lc07.DT_Prorrogacao
+        if lc07.AcaoExecutarPorta == 5:
+            NovoQRCODE = str(uuid.uuid1())
+            NovoCD_PortaAbertura = random.randint(100000000000, 1000000000000)
+            content["NovoQRCODE"] = NovoQRCODE
+            content["NovoCD_PortaAbertura"] = NovoCD_PortaAbertura
         content["Versao_Software"] = lc07.VersaoSoftware
         content["Versao_Mensageria"] = lc07.VersaoMensageria
 

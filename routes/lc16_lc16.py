@@ -77,7 +77,7 @@ def send_lc016_mq(lc16):
         lc016["CD_MSG"] = "LC16"
 
         content = {}
-        content["idRede"] = lc16.idRede
+        content["ID_Rede"] = lc16.idRede
         content["idLocker"] = lc16.idLocker
         content["DT"] = lc16.DT
         content["Versao_Software"] = lc16.VersaoSoftware

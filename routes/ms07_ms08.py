@@ -467,14 +467,13 @@ def send_lc07_mq(ms07):
         lc07["CD_MSG"] = "LC07"
 
         content = {}
-        content["ID_Referencia"] = ms07.ID_de_Referencia
-        content["ID_Solicitante"] = ms07.ID_do_Solicitante
         content["ID_Rede"] = ms07.ID_Rede_Lockers
         content["ID_Transacao"] = ms07.ID_Transacao_Unica
         content["idLocker"] = idLocker
         content["AcaoExecutarPorta"] = 3
         content["idLockerPorta"] = idLockerPorta
         content["idLockerPortaFisica"] = idLockerPortaFisica
+        content["DT_Prorrogacao"] = None
         content["Versao_Software"] = "0.1"
         content["Versao_Mensageria"] = "1.0.0"
 

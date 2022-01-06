@@ -219,15 +219,13 @@ def send_lc07_mq(ms16):
         lc07["CD_MSG"] = "LC07"
 
         content = {}
-        content["ID_Referencia"] = ms16.ID_de_Referencia
-        content["ID_Solicitante"] = ms16.ID_do_Solicitante
         content["ID_Rede"] = ms16.ID_Rede_Lockers
         content["ID_Transacao"] = ms16.ID_Transacao_Unica
         content["idLocker"] = idLocker
         content["AcaoExecutarPorta"] = 4
         content["idLockerPorta"] = idLockerPorta
         content["idLockerPortaFisica"] = idLockerPortaFisica
-        content["DataHora_Final_Reserva"] = ms16.DataHora_Final_Reserva
+        content["DT_Prorrogacao"] = ms16.DataHora_Final_Reserva
         content["Versão_Software"] = "0.1"
         content["Versao_Mensageria"] = "1.0.0"
 

@@ -307,8 +307,8 @@ def send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_res
         for encomenda in info_encomendas:
             enc_temp = {}
             enc_temp["ID_Encomenda"] = encomenda.ID_Encomenda
-            enc_temp["EncomendaRastreio"] = "Não imprementado"
-            enc_temp["EncomendaBarras"] = "Não imprementado"
+            enc_temp["EncomendaRastreio"] = "Nao implementado"
+            enc_temp["EncomendaBarras"] = "Nao implementado"
             encomendas.append(enc_temp)
         content["Encomendas"] = encomendas
 
