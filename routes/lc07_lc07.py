@@ -24,9 +24,9 @@ key = Fernet.generate_key()
 f = Fernet(key)
 auth_handler = AuthHandler()
 
-
 @lc07_lc07.post("/api/v01/lc07", tags=["lc07"], description="Notificação da Central para Procedimentos a executar no Locker")
 def lc07(lc07: LC07, public_id=Depends(auth_handler.auth_wrapper)):
+
     try:
         logger.info("Notificação da Central para Procedimentos a executar no Locker")
         logger.info(f"Usuário que fez a solicitação: {public_id}")
@@ -61,7 +61,6 @@ def lc07(lc07: LC07, public_id=Depends(auth_handler.auth_wrapper)):
                 lc07.DT_Prorrogacao = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 
-
         now = datetime.now()
         ret_fila = send_lc07_mq(lc07)
         if ret_fila is False:
@@ -76,52 +75,30 @@ def lc07(lc07: LC07, public_id=Depends(auth_handler.auth_wrapper)):
 
 
 def send_lc07_mq(lc07):
-    try:
-        lc007 = {}
-        lc007["CD_MSG"] = "LC07"
+    try:  # Envia LC01 para fila do RabbitMQ o aplicativo do locker a pega lá
+
+        command_sql = f"SELECT idLockerPortaFisica from locker_porta where locker_porta.idLockerPorta = '{record[0]}'";
+        record_Porta = conn.execute(command_sql).fetchone()
+        idLockerPortaFisica = record_Porta[0]
+
+        lc07 = {}
+        lc07["CD_MSG"] = "LC07"
 
         content = {}
         content["idRede"] = lc07.idRede
         content["idLocker"] = lc07.idLocker
         content["AcaoExecutarPorta"] = lc07.AcaoExecutarPorta
         content["idLockerPorta"] = lc07.idLockerPorta
+        content["idLockerPortaFisica"] = idLockerPortaFisica
         content["DT_Prorrogacao"] = lc07.DT_Prorrogacao
-        content["idRotaLocker"] = lc07.idRotaLocker
-        content["idTicketRotaLocker"] = lc07.idTicketRotaLocker
-        content["TipoParada"] = lc07.TipoParada
-        content["StatusEntregaParadaLocker"] = lc07.StatusEntregaParadaLocker
-        porta = {}
-        portas = []
-        info_portas = lc07.Portas
-        for porta in info_portas:
-            port_temp = {}
-            port_temp["idLockerPorta"] = porta.idLockerPorta
-            portas.append(port_temp)
-        content["Portas"] = portas
+        content["Versao_Software"] = lc07.VersaoSoftware
+        content["Versao_Mensageria"] = lc07.VersaoMensageria
 
-        encomenda = {}
-        encomendas = []
-        info_encomendas = lc07.Info_Encomendas
-        for encomenda in info_encomendas:
-            enc_temp = {}
-            enc_temp["ID_Encomenda"] = encomenda.idEncomenda
-            enc_temp["EncomendaRastreio"] = encomenda.CodigoRastreamentoEncomenda
-            enc_temp["EncomendaBarras"] = encomenda.CodigoBarrasConteudoEncomenda
-            enc_temp["QRCODE"] = encomenda.QRCODE
-            enc_temp["CD_PortaAbertura"] = encomenda.CD_PortaAbertura
-            enc_temp["TipoAcao"] = encomenda.TipoAcao
-            enc_temp["idTransacao"] = encomenda.idTransacao
-            encomendas.append(enc_temp)
-        content["Encomendas"] = encomendas
-        content["VersaoSoftware"] = lc07.VersaoSoftware
-        content["VersaoMensageria"] = lc07.VersaoMensageria
-
-
-        lc007["Content"] = content
+        lc07["Content"] = content
 
         MQ_Name = 'Rede1Min_MQ'
-        URL = 'amqp://rede1min:Minuto@167.71.26.87'  # URL do RabbitMQ
-        queue_name = lc07.idLocker + '_locker_output'  # Nome da fila do RabbitMQ
+        URL = 'amqp://rede1min:Minuto@167.71.26.87' # URL do RabbitMQ
+        queue_name = lc07.idLocker + '_locker_output' # Nome da fila do RabbitMQ
 
         url = os.environ.get(MQ_Name, URL)
         params = pika.URLParameters(url)
@@ -132,19 +109,18 @@ def send_lc07_mq(lc07):
 
         channel.queue_declare(queue=queue_name, durable=True)
 
-        message = json.dumps(lc007)  # Converte o dicionario em string
+        message = json.dumps(lc07) # Converte o dicionario em string
 
         channel.basic_publish(
-            exchange='',
-            routing_key=queue_name,
-            body=message,
-            properties=pika.BasicProperties(
-                delivery_mode=2,  # make message persistent
-            ))
+                    exchange='',
+                    routing_key=queue_name,
+                    body=message,
+                    properties=pika.BasicProperties(
+                        delivery_mode=2,  # make message persistent
+                    ))
 
         connection.close()
         return True
     except:
         logger.error(sys.exc_info())
         return False
-

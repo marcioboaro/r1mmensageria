@@ -227,6 +227,7 @@ def send_lc07_mq(ms16):
         content["AcaoExecutarPorta"] = 4
         content["idLockerPorta"] = idLockerPorta
         content["idLockerPortaFisica"] = idLockerPortaFisica
+        content["DataHora_Final_Reserva"] = ms16.DataHora_Final_Reserva
         content["Versão_Software"] = "0.1"
         content["Versao_Mensageria"] = "1.0.0"
 

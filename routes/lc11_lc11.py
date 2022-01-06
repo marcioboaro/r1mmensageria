@@ -75,6 +75,7 @@ def lc11(lc11: LC11, public_id=Depends(auth_handler.auth_wrapper)):
 
 def send_lc011_mq(lc11):
     try:
+
         lc011 = {}
         lc011["CD_MSG"] = "LC11"
 
@@ -82,8 +83,8 @@ def send_lc011_mq(lc11):
         content["idRede"] = lc11.idRede
         content["idLocker"] = lc11.idLocker
         content["DT"] = lc11.DT
-        content["VersaoSoftware"] = lc11.VersaoSoftware
-        content["VersaoMensageria"] = lc11.VersaoMensageria
+        content["Versao_Software"] = lc11.VersaoSoftware
+        content["Versao_Mensageria"] = lc11.VersaoMensageria
 
         lc011["Content"] = content
 

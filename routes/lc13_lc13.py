@@ -82,8 +82,8 @@ def send_lc013_mq(lc13):
         content["idRede"] = lc13.idRede
         content["idLocker"] = lc13.idLocker
         content["DT"] = lc13.DT
-        content["VersaoSoftware"] = lc13.VersaoSoftware
-        content["VersaoMensageria"] = lc13.VersaoMensageria
+        content["Versao_Software"] = lc13.VersaoSoftware
+        content["Versao_Mensageria"] = lc13.VersaoMensageria
 
         lc013["Content"] = content
 

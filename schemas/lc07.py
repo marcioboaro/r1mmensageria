@@ -21,12 +21,6 @@ class LC07(BaseModel):
    AcaoExecutarPorta: int
    idLockerPorta: str
    DT_Prorrogacao: Optional[datetime]
-   idRotaLocker: Optional[str]
-   idTicketRotaLocker: Optional[str]
-   TipoParada: Optional[int]
-   StatusEntregaParadaLocker: Optional[str]
-   Portas: list[Portas]
-   Info_Encomendas: list[Encomendas]
    VersaoSoftware: Optional[str]
    VersaoMensageria: Optional[str]
 

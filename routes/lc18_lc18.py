@@ -82,7 +82,7 @@ def lc18(lc18: LC18, public_id=Depends(auth_handler.auth_wrapper)):
         logger.error(sys.exc_info())
         result = dict()
         result['Error lc18'] = sys.exc_info()
-        return {"status_code": 500, "detail": "LC18 - Transferencia de  Carga de Nova Versão de Software"}
+        return {"status_code": 500, "detail": "LC18 - Transferencia de Carga de Nova Versão de Software"}
 
 
 def send_lc018_mq(lc18):
@@ -100,11 +100,8 @@ def send_lc018_mq(lc18):
         content["URL_Script_Instalacao"] = lc18.URL_Script_Instalacao
         content["Longitude"] = lc18.Longitude
         content["Latitude"] = lc18.Latitude
-        content["VersaoSoftware"] = lc18.VersaoSoftware
-        content["VersaoMensageria"] = lc18.VersaoMensageria
-
-
-
+        content["Versao_Software"] = lc18.VersaoSoftware
+        content["Versao_Mensageria"] = lc18.VersaoMensageria
         lc018["Content"] = content
 
         MQ_Name = 'Rede1Min_MQ'
