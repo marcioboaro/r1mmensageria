@@ -85,8 +85,8 @@ def send_lc07_mq(lc07):
         record_Porta = conn.execute(command_sql).fetchone()
         idLockerPortaFisica = record_Porta[0]
 
-        lc07 = {}
-        lc07["CD_MSG"] = "LC07"
+        lc007 = {}
+        lc007["CD_MSG"] = "LC07"
 
         content = {}
         content["idRede"] = lc07.idRede
@@ -103,7 +103,7 @@ def send_lc07_mq(lc07):
         content["Versao_Software"] = lc07.VersaoSoftware
         content["Versao_Mensageria"] = lc07.VersaoMensageria
 
-        lc07["Content"] = content
+        lc007["Content"] = content
 
         MQ_Name = 'Rede1Min_MQ'
         URL = 'amqp://rede1min:Minuto@167.71.26.87' # URL do RabbitMQ
@@ -118,7 +118,7 @@ def send_lc07_mq(lc07):
 
         channel.queue_declare(queue=queue_name, durable=True)
 
-        message = json.dumps(lc07) # Converte o dicionario em string
+        message = json.dumps(lc007) # Converte o dicionario em string
 
         channel.basic_publish(
                     exchange='',

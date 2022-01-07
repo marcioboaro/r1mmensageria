@@ -102,7 +102,10 @@ def send_lc018_mq(lc18):
         content["Latitude"] = lc18.Latitude
         content["Versao_Software"] = lc18.VersaoSoftware
         content["Versao_Mensageria"] = lc18.VersaoMensageria
+
         lc018["Content"] = content
+
+        print(logger.warning)
 
         MQ_Name = 'Rede1Min_MQ'
         URL = 'amqp://rede1min:Minuto@167.71.26.87'  # URL do RabbitMQ
@@ -114,8 +117,11 @@ def send_lc018_mq(lc18):
 
         connection = pika.BlockingConnection(params)
         channel = connection.channel()
+        print(logger.warning)
 
         channel.queue_declare(queue=queue_name, durable=True)
+
+        print(logger.warning)
 
         message = json.dumps(lc018)  # Converte o dicionario em string
 
@@ -129,6 +135,8 @@ def send_lc018_mq(lc18):
 
         connection.close()
         return True
+
+        print(logger.warning)
     except:
         logger.error(sys.exc_info())
         return False
