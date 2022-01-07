@@ -81,7 +81,7 @@ def lc07(lc07: LC07, public_id=Depends(auth_handler.auth_wrapper)):
 def send_lc07_mq(lc07):
     try:  # Envia LC01 para fila do RabbitMQ o aplicativo do locker a pega lá
 
-        command_sql = f"SELECT idLockerPortaFisica from locker_porta where locker_porta.idLockerPorta = '{record[0]}'";
+        command_sql = f"SELECT idLockerPortaFisica from locker_porta where locker_porta.idLockerPorta = '{lc07.idLockerPorta}'";
         record_Porta = conn.execute(command_sql).fetchone()
         idLockerPortaFisica = record_Porta[0]
 
