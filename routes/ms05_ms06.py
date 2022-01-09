@@ -340,7 +340,7 @@ def send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_res
         message = json.dumps(lc01)  # Converte o dicionario em string
 
         channel.basic_publish(
-            exchange='',
+            exchange='amq.direct',
             routing_key=queue_name,
             body=message,
             properties=pika.BasicProperties(

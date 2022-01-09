@@ -121,7 +121,7 @@ def send_lc07_mq(lc07):
         message = json.dumps(lc007) # Converte o dicionario em string
 
         channel.basic_publish(
-                    exchange='',
+                    exchange='amq.direct',
                     routing_key=queue_name,
                     body=message,
                     properties=pika.BasicProperties(

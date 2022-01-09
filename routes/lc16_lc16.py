@@ -101,7 +101,7 @@ def send_lc016_mq(lc16):
         message = json.dumps(lc016)  # Converte o dicionario em string
 
         channel.basic_publish(
-            exchange='',
+            exchange='amq.direct',
             routing_key=queue_name,
             body=message,
             properties=pika.BasicProperties(
