@@ -56,7 +56,7 @@ def ms14(ms14: MS14, public_id=Depends(auth_handler.auth_wrapper)):
 
         # validando ID_TICKET_Ocorrencia_Encomenda
         if ms14.ID_TICKET_Ocorrencia_Encomenda is not None:
-            command_sql = f"SELECT IdEncomenda from reserva_encomenda_encomendas where reserva_encomenda_encomendas.IdEncomenda = '{ms14.ID_TICKET_Ocorrencia_Encomenda}';"
+            command_sql = f"SELECT IdEncomenda from encomendas where encomendas.IdEncomenda = '{ms14.ID_TICKET_Ocorrencia_Encomenda}';"
             if conn.execute(command_sql).fetchone() is None:
                 return {"status_code": 422, "detail": "M014001 - ID_TICKET_Ocorrencia_Encomenda não Existe"}
 
@@ -156,8 +156,8 @@ def ms14(ms14: MS14, public_id=Depends(auth_handler.auth_wrapper)):
             reserva['Contador_de_Encomendas_por_Designacao'] = row[15]
             reservas.append(reserva)
         for reserva_encomenda_encomendas in records:
-            command_sql = f"""SELECT `reserva_encomenda_encomendas`.`IdTransacaoUnica`, 
-                                    `reserva_encomenda_encomendas`.`IdEncomenda`,
+            command_sql = f"""SELECT `encomendas`.`IdTransacaoUnica`, 
+                                    `encomendas`.`IdEncomenda`,
                                     `ShopperMobileNumero`,
                                     `ShopperEmail`,
                                     `idShopperCPF_CNPJ`,
@@ -165,9 +165,9 @@ def ms14(ms14: MS14, public_id=Depends(auth_handler.auth_wrapper)):
                                     `ShopperMobileNumero`,
                                     `ShopperValorEncomenda`,
                                     `ShopperNotaFiscal`,
-                                    `reserva_encomenda_encomendas`.`idPais`,
+                                    `encomendas`.`idPais`,
                                     `ShopperCidade`,
-                                    `reserva_encomenda_encomendas`.`cep`,
+                                    `encomendas`.`cep`,
                                     `ShopperBairro`,
                                     `ShopperEndereco`,
                                     `ShopperNumero`,
@@ -180,10 +180,10 @@ def ms14(ms14: MS14, public_id=Depends(auth_handler.auth_wrapper)):
                                     `ShopperComplemento`,
                                     `CodigoRastreamentoEncomenda`,
                                     `CodigoBarrasConteudoEncomenda`
-                                    FROM `rede1minuto`.`reserva_encomenda_encomendas`
-                                    LEFT JOIN `reserva_encomenda` ON (`reserva_encomenda_encomendas`.`IdTransacaoUnica` = `reserva_encomenda`.`IdTransacaoUnica`)
+                                    FROM `rede1minuto`.`encomendas`
+                                    LEFT JOIN `reserva_encomenda` ON (`encomendas`.`IdTransacaoUnica` = `reserva_encomenda`.`IdTransacaoUnica`)
                                     LEFT JOIN `locker` ON (`reserva_encomenda`.`idLocker` = `locker`.`idLocker`)
-                                    where reserva_encomenda_encomendas.IdTransacaoUnica = '{reserva_encomenda_encomendas[0]}'"""
+                                    where encomendas.IdTransacaoUnica = '{reserva_encomenda_encomendas[0]}'"""
             command_sql = command_sql.replace("'None'", "Null")
             command_sql = command_sql.replace("None", "Null")
             records0 = conn.execute(command_sql).fetchall()

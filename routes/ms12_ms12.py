@@ -57,7 +57,7 @@ def ms12(ms12: MS12, public_id=Depends(auth_handler.auth_wrapper)):
             if encomenda.ID_Encomenda is None:
                 return {"status_code": 422, "detail": "M021007 - ID_Encomenda obrigatório"}
             if encomenda.ID_Encomenda is not None:
-                command_sql = f"SELECT IdEncomenda from reserva_encomenda_encomendas where reserva_encomenda_encomendas.IdEncomenda = '{encomenda.ID_Encomenda}';"
+                command_sql = f"SELECT IdEncomenda from encomendas where encomendas.IdEncomenda = '{encomenda.ID_Encomenda}';"
                 if conn.execute(command_sql).fetchone() is None:
                     return {"status_code": 422, "detail": "M021008 - Não existe essa encomenda para essa reserva"}
 
@@ -114,7 +114,7 @@ def update_reserva_encomenda_encomendas(ms12):
     try:
         encomendas = ms12.Dados_POD
         for pod in encomendas:
-            command_sql = f"""UPDATE `reserva_encomenda_encomendas`
+            command_sql = f"""UPDATE `encomendas`
                                                         SET     `CopiaAssinaturaPOD` = '{pod.Codigo_Conformidade_POD}',
                                                                 `DateUpdate` = now()
                                                         WHERE `IdTransacaoUnica` = '{ms12.ID_Transacao_Unica}' and `IdEncomenda` = '{pod.ID_Encomenda}';"""

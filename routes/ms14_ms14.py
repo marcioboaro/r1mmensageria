@@ -153,7 +153,7 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
                 enc_temp['Geracao_QRCODE'] = idTransacaoUnica
                 enc_temp['Geracao_Codigo_Abertura_Porta'] = Codigo_Abertura_Porta
                 encomendas.append(enc_temp)
-                command_sql = f"""INSERT INTO `reserva_encomenda_encomendas`
+                command_sql = f"""INSERT INTO `encomendas`
                                             (`IdTransacaoUnica`,
                                             `IdEncomenda`,
                                             `ShopperMobileNumero`,
@@ -298,7 +298,7 @@ def send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_res
 
 def insert_ms05_encomendas(idTransacaoUnica, encomenda, ms05, etiqueta):
     try:
-        command_sql = f"""INSERT INTO `reserva_encomenda_encomendas`
+        command_sql = f"""INSERT INTO `encomendas`
                             (`IdTransacaoUnica`,
                             `IdEncomenda`,
                             `ShopperMobileNumero`,

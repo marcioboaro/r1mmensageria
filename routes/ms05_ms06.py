@@ -358,7 +358,7 @@ def insert_reserva_encomenda_encomendas(idTransacaoUnica, ms05, etiqueta):
     try:
         encomendas = ms05.Info_Encomendas
         for encomenda in encomendas:
-            command_sql = f"""INSERT INTO `reserva_encomenda_encomendas`
+            command_sql = f"""INSERT INTO `encomendas`
                                 (`IdEncomenda`,
                                 `IdTransacaoUnica`,
                                 `ShopperMobileNumero`,

@@ -13,6 +13,7 @@ from cryptography.fernet import Fernet
 import random
 import os
 import json
+import pika
 
 ms18_ms19 = APIRouter()
 key = Fernet.generate_key()
