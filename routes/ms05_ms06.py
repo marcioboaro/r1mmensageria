@@ -299,7 +299,7 @@ def send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_res
         content["ID_OpLog"] = record_Porta[2]
         content["OpLogAutenticacao"] = 0
         content["QRCODE"] = idTransacaoUnica
-        content["CD_PortaAbertura"] = Codigo_Abertura_Porta
+        content["CD_PortaAbertura"] = str(Codigo_Abertura_Porta)
 
         encomenda = {}
         encomendas = []
