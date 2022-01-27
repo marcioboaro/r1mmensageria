@@ -212,7 +212,7 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
             reserva_wb04(ms05, idTransacaoUnica)
             ############ teste no webhook a ser retirado posteriormente #################
 
-            ret_fila = send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_reserva)
+            ret_fila = send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_reserva,Codigo_Abertura_Porta)
             if ret_fila is False:
                 logger.error("lc01 não inserido")
 
@@ -281,7 +281,7 @@ def reserva_wb04(ms05, idTransacaoUnica):
 ###################### teste no webhook a ser retirado posteriormente ###############################
 
 
-def send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_reserva):
+def send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_reserva,Codigo_Abertura_Porta):
     try:  # Envia LC01 para fila do RabbitMQ o aplicativo do locker a pega lá
 
         lc01 = {}
@@ -299,7 +299,7 @@ def send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_res
         content["ID_OpLog"] = record_Porta[2]
         content["OpLogAutenticacao"] = 0
         content["QRCODE"] = idTransacaoUnica
-        content["CD_PortaAbertura"] = 1
+        content["CD_PortaAbertura"] = Codigo_Abertura_Porta
 
         encomenda = {}
         encomendas = []
