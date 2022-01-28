@@ -513,34 +513,48 @@ def insert_tracking_reserva(ms05, idTransacaoUnica):
 
 def insert_tracking_porta(ms05, record_Porta):
     try:
+        command_sql = f"SELECT idTicketOcorrencia from tracking_portas where tracking_portas.idLockerPorta = '{record_Porta[0]}';"
+        record = conn.execute(command_sql).fetchone()
+        if record is None:
+            idTicketOcorrencia = str(uuid.uuid1())
+            command_sql = f'''INSERT INTO `rede1minuto`.`tracking_portas`
+                                            (`idTicketOcorrencia`,
+                                            `idRede`,
+                                            `idLocker`,
+                                            `idLockerPorta`,
+                                            `idOcorrencia`,
+                                            `DataHoraOcorrencia`,
+                                            `idStatusPortaAnterior`,
+                                            `idStatusPortaAtual`,
+                                            `TipoFluxoAnterior`,
+                                            `TipoFluxoAtual`)
+                                        VALUES
+                                            ('{idTicketOcorrencia}',
+                                            {ms05.ID_Rede_Lockers},
+                                            '{ms05.ID_da_Estacao_do_Locker}',
+                                            '{record_Porta[0]}',
+                                            null,
+                                            '{ms05.Data_Hora_Solicitacao}',
+                                            {1},
+                                            {2},
+                                            {0},
+                                            {0});'''  # 1 - Reserva efetivada, 2 - Reserva cancelada, 3 - Reserva em andamento, 4 - Reserva em espera
+            command_sql = command_sql.replace("'None'", "Null")
+            command_sql = command_sql.replace("None", "Null")
+            conn.execute(command_sql)
+            logger.warning(command_sql)
+        if record is not None:
+            command_sql = f"""UPDATE `tracking_portas`
+                                    SET     `idStatusReservaAnterior` = 1,
+                                            `idStatusReservaAtual` = 2,
+                                            `DateUpdate` = now()
+                                    WHERE `idTicketOcorrencia` = '{record[0]}';"""
+            command_sql = command_sql.replace("'None'", "Null")
+            command_sql = command_sql.replace("None", "Null")
+            conn.execute(command_sql)
+            logger.warning(command_sql)
 
-        idTicketOcorrencia = str(uuid.uuid1())
-        command_sql = f'''INSERT INTO `rede1minuto`.`tracking_portas`
-                                        (`idTicketOcorrencia`,
-                                        `idRede`,
-                                        `idLocker`,
-                                        `idLockerPorta`,
-                                        `idOcorrencia`,
-                                        `DataHoraOcorrencia`,
-                                        `idStatusPortaAnterior`,
-                                        `idStatusPortaAtual`,
-                                        `TipoFluxoAnterior`,
-                                        `TipoFluxoAtual`)
-                                    VALUES
-                                        ('{idTicketOcorrencia}',
-                                        {ms05.ID_Rede_Lockers},
-                                        '{ms05.ID_da_Estacao_do_Locker}',
-                                        '{record_Porta[0]}',
-                                        null,
-                                        '{ms05.Data_Hora_Solicitacao}',
-                                        {1},
-                                        {2},
-                                        {0},
-                                        {0});'''  # 1 - Reserva efetivada, 2 - Reserva cancelada, 3 - Reserva em andamento, 4 - Reserva em espera
-        command_sql = command_sql.replace("'None'", "Null")
-        command_sql = command_sql.replace("None", "Null")
-        conn.execute(command_sql)
-        logger.warning(command_sql)
+
     except:
         logger.error(sys.exc_info())
         result = dict()
