@@ -99,7 +99,22 @@ def send_lc07_mq(lc07):
             NovoQRCODE = str(uuid.uuid1())
             NovoCD_PortaAbertura = random.randint(100000000000, 1000000000000)
             content["NovoQRCODE"] = NovoQRCODE
-            content["NovoCD_PortaAbertura"] = NovoCD_PortaAbertura
+            content["NovoCD_PortaAbertura"] = str(NovoCD_PortaAbertura)
+        if lc07.AcaoExecutarPorta == 3:
+            command_sql = f"""SELECT `reserva_encomenda`.`IdTransacaoUnica`,
+                                        FROM `rede1minuto`.`reserva_encomenda`
+                                        where reserva_encomenda.idLocker = '{lc07.idLockerPorta}'
+                                        order by reserva_encomenda.DataHoraInicioReserva DESC;"""
+            reserva = conn.execute(command_sql).fetchone()
+            content["ID_Transacao"] = reserva[0]
+        if lc07.AcaoExecutarPorta == 4:
+            command_sql = f"""SELECT `reserva_encomenda`.`IdTransacaoUnica`,
+                                                FROM `rede1minuto`.`reserva_encomenda`
+                                                where reserva_encomenda.idLocker = '{lc07.idLockerPorta}'
+                                                order by reserva_encomenda.DataHoraInicioReserva DESC;"""
+            reserva = conn.execute(command_sql).fetchone()
+            content["ID_Transacao"] = reserva[0]
+        content["NotificacaoCentral"] = 1
         content["Versao_Software"] = lc07.VersaoSoftware
         content["Versao_Mensageria"] = lc07.VersaoMensageria
 
