@@ -290,7 +290,7 @@ def send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_res
         content = {}
         content["ID_Referencia"] = ms05.ID_de_Referencia
         content["ID_Solicitante"] = ms05.ID_do_Solicitante
-        content["ID_Rede"] = ms05.ID_Rede_Lockers
+        content["idRede"] = ms05.ID_Rede_Lockers
         content["ID_Transacao"] = idTransacaoUnica
         content["Tipo_de_Servico_Reserva"] = ms05.Tipo_de_Servico_Reserva
         content["idLocker"] = ms05.ID_da_Estacao_do_Locker

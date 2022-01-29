@@ -79,7 +79,7 @@ def send_lc013_mq(lc13):
         lc013["CD_MSG"] = "LC13"
 
         content = {}
-        content["ID_Rede"] = lc13.idRede
+        content["idRede"] = lc13.idRede
         content["idLocker"] = lc13.idLocker
         content["DT"] = lc13.DT
         content["Versao_Software"] = lc13.VersaoSoftware

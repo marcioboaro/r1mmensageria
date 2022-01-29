@@ -91,7 +91,7 @@ def send_lc018_mq(lc18):
         lc018["CD_MSG"] = "LC18"
 
         content = {}
-        content["ID_Rede"] = lc18.idRede
+        content["idRede"] = lc18.idRede
         content["idLocker"] = lc18.idLocker
         content["DT"] = lc18.DT
         content["CD_NovaVersao"] = lc18.CD_NovaVersao

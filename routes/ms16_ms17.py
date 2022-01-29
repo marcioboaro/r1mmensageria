@@ -219,7 +219,7 @@ def send_lc07_mq(ms16):
         lc07["CD_MSG"] = "LC07"
 
         content = {}
-        content["ID_Rede"] = ms16.ID_Rede_Lockers
+        content["idRede"] = ms16.ID_Rede_Lockers
         content["ID_Transacao"] = ms16.ID_Transacao_Unica
         content["idLocker"] = idLocker
         content["AcaoExecutarPorta"] = 4
