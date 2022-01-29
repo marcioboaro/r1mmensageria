@@ -100,7 +100,12 @@ def send_lc07_mq(lc07):
             NovoCD_PortaAbertura = random.randint(100000000000, 1000000000000)
             content["NovoQRCODE"] = NovoQRCODE
             content["NovoCD_PortaAbertura"] = str(NovoCD_PortaAbertura)
-        if lc07.AcaoExecutarPorta == 3:
+        # Quando tem encomenda no locker Ação = 6 (Devolução)
+        if record[1] == 23 or record[1] == 24:
+            content["AcaoExecutarPorta"] = 6
+        # Quando não tem encomenda no locker Ação = 3 (Cancelamento de reserva)
+        if record[1] != 23 or record[1] != 24:
+            content["AcaoExecutarPorta"] = 3
             command_sql = f"""SELECT `reserva_encomenda`.`IdTransacaoUnica`,
                                         FROM `rede1minuto`.`reserva_encomenda`
                                         where reserva_encomenda.idLocker = '{lc07.idLockerPorta}'
