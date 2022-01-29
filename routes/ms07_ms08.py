@@ -433,9 +433,9 @@ def update_tracking_reserva_locker(ms07):
 
 def update_tracking_porta(ms07):
     try:
-        command_sql = f"SELECT idLockerPorta from reserva_encomenda where reserva_encomenda.IdTransacaoUnica = '{ms07.ID_Transacao_Unica}'";
+        command_sql = f"SELECT idLockerPorta from reserva_encomenda where reserva_encomenda.IdTransacaoUnica = '{ms07.ID_Transacao_Unica}';"
         record_Porta = conn.execute(command_sql).fetchone()
-        command_sql = f"SELECT idStatusPortaAtual from tracking_portas where tracking_portas.idLockerPorta = '{record_Porta[0]}'";
+        command_sql = f"SELECT idStatusPortaAtual from tracking_portas where tracking_portas.idLockerPorta = '{record_Porta[0]}';"
         record_status = conn.execute(command_sql).fetchone()
         command_sql = f"""UPDATE `tracking_portas`
                                             SET     `idStatusPortaAnterior` = '{record_status[0]}',
@@ -455,9 +455,10 @@ def update_tracking_porta(ms07):
 def send_lc07_mq(ms07):
     try:  # Envia LC01 para fila do RabbitMQ o aplicativo do locker a pega lá
 
-        command_sql = f"SELECT idLockerPorta,idStatusReserva from reserva_encomenda where reserva_encomenda.IdTransacaoUnica = '{ms07.ID_Transacao_Unica}'";
+        command_sql = f"SELECT idStatusReserva from reserva_encomenda where reserva_encomenda.IdTransacaoUnica = '{ms07.ID_Transacao_Unica}';"
         record = conn.execute(command_sql).fetchone()
-        command_sql = f"SELECT idLockerPorta, idLockerPortaFisica, idLocker from locker_porta where locker_porta.idLockerPorta = '{record[0]}'";
+
+        command_sql = f"SELECT idLockerPorta, idLockerPortaFisica, idLocker from locker_porta where locker_porta.idLockerPorta = '{record[0]}';"
         record_Porta = conn.execute(command_sql).fetchone()
         idLocker = record_Porta[2]
         idLockerPorta = record_Porta[0]
@@ -471,10 +472,10 @@ def send_lc07_mq(ms07):
         content["ID_Transacao"] = ms07.ID_Transacao_Unica
         content["idLocker"] = idLocker
         # Quando tem encomenda no locker Ação = 6 (Devolução)
-        if record[1] == 23  or record[1] == 24:
+        if record[0] == 23  or record[0] == 24:
             content["AcaoExecutarPorta"] = 6
         # Quando não tem encomenda no locker Ação = 3 (Cancelamento de reserva)
-        if record[1] != 23 or record[1] != 24:
+        if record[0] != 23 or record[0] != 24:
             content["AcaoExecutarPorta"] = 3
         content["idLockerPorta"] = idLockerPorta
         content["idLockerPortaFisica"] = idLockerPortaFisica

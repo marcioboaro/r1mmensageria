@@ -60,7 +60,9 @@ def lc07(lc07: LC07, public_id=Depends(auth_handler.auth_wrapper)):
 
         if lc07.DT_Prorrogacao is None:
             if lc07.AcaoExecutarPorta == 4:
-                lc07.DT_Prorrogacao = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                date_after = datetime.now() + timedelta(days=3)  # 3 é o valor Default
+                Final_reserva = date_after.strftime('%Y-%m-%d %H:%M:%S')
+                lc07.DT_Prorrogacao = Final_reserva
             elif lc07.AcaoExecutarPorta != 4:
                 lc07.DT_Prorrogacao = None
 
@@ -81,7 +83,7 @@ def lc07(lc07: LC07, public_id=Depends(auth_handler.auth_wrapper)):
 def send_lc07_mq(lc07):
     try:  # Envia LC01 para fila do RabbitMQ o aplicativo do locker a pega lá
 
-        command_sql = f"SELECT idLockerPortaFisica from locker_porta where locker_porta.idLockerPorta = '{lc07.idLockerPorta}'";
+        command_sql = f"SELECT idLockerPortaFisica from locker_porta where locker_porta.idLockerPorta = '{lc07.idLockerPorta}';"
         record_Porta = conn.execute(command_sql).fetchone()
         idLockerPortaFisica = record_Porta[0]
 
@@ -91,18 +93,29 @@ def send_lc07_mq(lc07):
         content = {}
         content["idRede"] = lc07.idRede
         content["idLocker"] = lc07.idLocker
-        content["AcaoExecutarPorta"] = lc07.AcaoExecutarPorta
         content["idLockerPorta"] = lc07.idLockerPorta
         content["idLockerPortaFisica"] = idLockerPortaFisica
         content["DT_Prorrogacao"] = lc07.DT_Prorrogacao
+        if lc07.AcaoExecutarPorta == 1:
+            content["AcaoExecutarPorta"] = 1
+        if lc07.AcaoExecutarPorta == 2:
+            content["AcaoExecutarPorta"] = 2
         if lc07.AcaoExecutarPorta == 5:
             NovoQRCODE = str(uuid.uuid1())
             NovoCD_PortaAbertura = random.randint(100000000000, 1000000000000)
             content["NovoQRCODE"] = NovoQRCODE
             content["NovoCD_PortaAbertura"] = str(NovoCD_PortaAbertura)
+        command_sql = f"SELECT idLockerPorta,idStatusReserva from reserva_encomenda where reserva_encomenda.idLockerPorta = '{lc07.idLockerPorta}' order by DataHoraInicioReserva DESC;"
+        record = conn.execute(command_sql).fetchone()
         # Quando tem encomenda no locker Ação = 6 (Devolução)
         if record[1] == 23 or record[1] == 24:
             content["AcaoExecutarPorta"] = 6
+            command_sql = f"""SELECT `reserva_encomenda`.`IdTransacaoUnica`,
+                                        FROM `rede1minuto`.`reserva_encomenda`
+                                        where reserva_encomenda.idLocker = '{lc07.idLockerPorta}'
+                                        order by reserva_encomenda.DataHoraInicioReserva DESC;"""
+            reserva = conn.execute(command_sql).fetchone()
+            content["ID_Transacao"] = reserva[0]
         # Quando não tem encomenda no locker Ação = 3 (Cancelamento de reserva)
         if record[1] != 23 or record[1] != 24:
             content["AcaoExecutarPorta"] = 3
@@ -119,7 +132,6 @@ def send_lc07_mq(lc07):
                                                 order by reserva_encomenda.DataHoraInicioReserva DESC;"""
             reserva = conn.execute(command_sql).fetchone()
             content["ID_Transacao"] = reserva[0]
-        content["NotificacaoCentral"] = 1
         content["Versao_Software"] = lc07.VersaoSoftware
         content["Versao_Mensageria"] = lc07.VersaoMensageria
 
