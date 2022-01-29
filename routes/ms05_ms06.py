@@ -181,7 +181,7 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
             ms06['Tipo_de_Servico_Reserva'] = ms05.Tipo_de_Servico_Reserva # Contratação de Serviço de Reserva Com encomendas em Lockers Inteligentes
 
  #           tz = pytz.timezone('America/Sao_Paulo')
-            Inicio_reserva = datetime.now().strftime('%Y-%m-%d %H:%M:%S') + timedelta(hours=3)  # São Paulo
+            Inicio_reserva = datetime.now().strftime('%Y-%m-%d %H:%M:%S') #+ timedelta(hours=3)  # São Paulo
             date_after = datetime.now() + timedelta(days=3)  # 3 é o valor Default
             Final_reserva = date_after.strftime('%Y-%m-%d %H:%M:%S')
 
@@ -227,7 +227,7 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
 ###################### teste no webhook a ser retirado posteriormente ###############################
 def reserva_wb01(ms05,idTransacaoUnica):
     try:
-        now = datetime.now() + timedelta(hours=3)  # São Paulo
+        now = datetime.now() #+ timedelta(hours=3)  # São Paulo
         dt_string = now.strftime('%Y-%m-%d %H:%M:%S')
         wb01 = {}
         wb01['CD_MSG'] = "WH001"
@@ -255,7 +255,7 @@ def reserva_wb01(ms05,idTransacaoUnica):
 def reserva_wb04(ms05, idTransacaoUnica):
     try:
         now = datetime.now()
-        dt_string = now.strftime('%Y-%m-%d %H:%M:%S') + timedelta(hours=3)  # São Paulo
+        dt_string = now.strftime('%Y-%m-%d %H:%M:%S') #+ timedelta(hours=3)  # São Paulo
         command_sql = f"""SELECT `reserva_encomenda`.`URL_CALL_BACK`
                                                                 FROM `rede1minuto`.`reserva_encomenda`
                                                                 where reserva_encomenda.IdTransacaoUnica = '{idTransacaoUnica}';"""

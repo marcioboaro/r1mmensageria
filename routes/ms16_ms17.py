@@ -46,7 +46,7 @@ def ms16(ms16: MS16, public_id=Depends(auth_handler.auth_wrapper)):
 
         # gerando Data_Hora_Solicitacao
         if ms16.Data_Hora_Solicitacao is None:
-            ms16.Data_Hora_Solicitacao = datetime.now().strftime('%Y-%m-%d %H:%M:%S') + timedelta(hours=3)  # São Paulo
+            ms16.Data_Hora_Solicitacao = datetime.now().strftime('%Y-%m-%d %H:%M:%S') #+ timedelta(hours=3)  # São Paulo
 
         # validando mensagem "Reserva não Existe"
         if ms16.ID_Transacao_Unica is None:
@@ -84,7 +84,7 @@ def ms16(ms16: MS16, public_id=Depends(auth_handler.auth_wrapper)):
         if ms16.Versao_Mensageria is None:
             ms16.Versao_Mensageria = "1.0.0"
 
-        Inicio_reserva = datetime.now().strftime('%Y-%m-%d %H:%M:%S')  + timedelta(hours=3)  # São Paulo
+        Inicio_reserva = datetime.now().strftime('%Y-%m-%d %H:%M:%S') # + timedelta(hours=3)  # São Paulo
         date_after = datetime.now() + timedelta(days=3)  # 3 é o valor Default
         Final_reserva = date_after.strftime('%Y-%m-%d %H:%M:%S')
 
@@ -94,7 +94,7 @@ def ms16(ms16: MS16, public_id=Depends(auth_handler.auth_wrapper)):
         if ms16.DataHora_Final_Reserva is None:
             ms16.DataHora_Final_Reserva = Final_reserva
 
-        now = datetime.now() + timedelta(hours=3)  # São Paulo
+        now = datetime.now() # + timedelta(hours=3)  # São Paulo
         dt_string = now.strftime("%Y-%m-%dT%H:%M:%S")
 
         ms17 = {}
@@ -265,7 +265,7 @@ def send_lc07_mq(ms16):
 ###################### teste no webhook a ser retirado posteriormente ###############################
 def reserva_wb02(ms16):
     try:
-        now = datetime.now()  + timedelta(hours=3)  # São Paulo
+        now = datetime.now() # + timedelta(hours=3)  # São Paulo
         dt_string = now.strftime('%Y-%m-%d %H:%M:%S')
         wb02 = {}
         wb02['CD_MSG'] = "WH002"
@@ -292,7 +292,7 @@ def reserva_wb02(ms16):
 
 def reserva_wb04(ms16):
     try:
-        now = datetime.now()  + timedelta(hours=3)  # São Paulo
+        now = datetime.now() # + timedelta(hours=3)  # São Paulo
         dt_string = now.strftime('%Y-%m-%d %H:%M:%S')
         command_sql = f"""SELECT `reserva_encomenda`.`URL_CALL_BACK`
                                                                 FROM `rede1minuto`.`reserva_encomenda`
