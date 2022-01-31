@@ -17,6 +17,16 @@ from routes.lc11_lc11 import lc11_lc11
 from routes.lc13_lc13 import lc13_lc13
 from routes.lc16_lc16 import lc16_lc16
 from routes.lc18_lc18 import lc18_lc18
+from routes.lc51_lc51 import lc51_lc51
+from routes.lc53_lc53 import lc53_lc53
+from routes.lc55_lc55 import lc55_lc55
+from routes.lc57_lc57 import lc57_lc57
+from routes.lc59_lc59 import lc59_lc59
+from routes.lc61_lc61 import lc61_lc61
+from routes.lc63_lc63 import lc63_lc63
+from routes.lc65_lc65 import lc65_lc65
+from routes.lc67_lc67 import lc67_lc67
+from routes.lc69_lc69 import lc69_lc69
 import uuid  
 from config.db import conn
 from config.log import logger
@@ -133,7 +143,7 @@ def login(auth_details: AuthDetails):
         row = conn.execute(command_sql).fetchone()
         ID_do_Solicitante = row[3] + str(row[1]).zfill(3) + str(row[2]).zfill(3)
         if (row is None) or (not auth_handler.verify_password(auth_details.password, row['password'])):
-            return {'status_code':401, detail:'Invalid username and/or password'}
+            return {'status_code':401, 'detail':'Invalid username and/or password'}
         token = auth_handler.encode_token(row['public_id'])
         return { 'token': token, 'ID_do_Solicitante': ID_do_Solicitante }
     except:
@@ -197,3 +207,13 @@ app.include_router(lc11_lc11)
 app.include_router(lc13_lc13)
 app.include_router(lc16_lc16)
 app.include_router(lc18_lc18)
+app.include_router(lc51_lc51)
+app.include_router(lc53_lc53)
+app.include_router(lc55_lc55)
+app.include_router(lc57_lc57)
+app.include_router(lc59_lc59)
+app.include_router(lc61_lc61)
+app.include_router(lc63_lc63)
+app.include_router(lc65_lc65)
+app.include_router(lc67_lc67)
+app.include_router(lc69_lc69)

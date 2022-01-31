@@ -86,6 +86,12 @@ def send_lc07_mq(lc07):
         command_sql = f"SELECT idLockerPortaFisica from locker_porta where locker_porta.idLockerPorta = '{lc07.idLockerPorta}';"
         record_Porta = conn.execute(command_sql).fetchone()
         idLockerPortaFisica = record_Porta[0]
+        command_sql = f"""SELECT `reserva_encomenda`.`IdTransacaoUnica`,
+                        `reserva_encomenda`.`idStatusReserva`
+                        FROM `rede1minuto`.`reserva_encomenda`
+                        where reserva_encomenda.idLocker = '{lc07.idLockerPorta}'
+                        order by reserva_encomenda.DataHoraInicioReserva DESC;"""
+        reserva = conn.execute(command_sql).fetchone()
 
         lc007 = {}
         lc007["CD_MSG"] = "LC07"
@@ -103,35 +109,22 @@ def send_lc07_mq(lc07):
         if lc07.AcaoExecutarPorta == 5:
             NovoQRCODE = str(uuid.uuid1())
             NovoCD_PortaAbertura = random.randint(100000000000, 1000000000000)
+            content["AcaoExecutarPorta"] = 5
             content["NovoQRCODE"] = NovoQRCODE
             content["NovoCD_PortaAbertura"] = str(NovoCD_PortaAbertura)
-        command_sql = f"SELECT idLockerPorta,idStatusReserva from reserva_encomenda where reserva_encomenda.idLockerPorta = '{lc07.idLockerPorta}' order by DataHoraInicioReserva DESC;"
-        record = conn.execute(command_sql).fetchone()
-        # Quando tem encomenda no locker Ação = 6 (Devolução)
-        if record[1] == 23 or record[1] == 24:
-            content["AcaoExecutarPorta"] = 6
-            command_sql = f"""SELECT `reserva_encomenda`.`IdTransacaoUnica`,
-                                        FROM `rede1minuto`.`reserva_encomenda`
-                                        where reserva_encomenda.idLocker = '{lc07.idLockerPorta}'
-                                        order by reserva_encomenda.DataHoraInicioReserva DESC;"""
-            reserva = conn.execute(command_sql).fetchone()
-            content["ID_Transacao"] = reserva[0]
-        # Quando não tem encomenda no locker Ação = 3 (Cancelamento de reserva)
-        if record[1] != 23 or record[1] != 24:
-            content["AcaoExecutarPorta"] = 3
-            command_sql = f"""SELECT `reserva_encomenda`.`IdTransacaoUnica`,
-                                        FROM `rede1minuto`.`reserva_encomenda`
-                                        where reserva_encomenda.idLocker = '{lc07.idLockerPorta}'
-                                        order by reserva_encomenda.DataHoraInicioReserva DESC;"""
-            reserva = conn.execute(command_sql).fetchone()
-            content["ID_Transacao"] = reserva[0]
         if lc07.AcaoExecutarPorta == 4:
-            command_sql = f"""SELECT `reserva_encomenda`.`IdTransacaoUnica`,
-                                                FROM `rede1minuto`.`reserva_encomenda`
-                                                where reserva_encomenda.idLocker = '{lc07.idLockerPorta}'
-                                                order by reserva_encomenda.DataHoraInicioReserva DESC;"""
-            reserva = conn.execute(command_sql).fetchone()
+            content["AcaoExecutarPorta"] = 4
             content["ID_Transacao"] = reserva[0]
+        if lc07.AcaoExecutarPorta == 3:
+            # Quando tem encomenda no locker Ação = 6 (Devolução)
+            if reserva[1] == 23 or reserva[1] == 24:
+                content["AcaoExecutarPorta"] = 6
+                content["ID_Transacao"] = reserva[0]
+            # Quando não tem encomenda no locker Ação = 3 (Cancelamento de reserva)
+            if reserva[1] != 23 or reserva[1] != 24:
+                content["AcaoExecutarPorta"] = 3
+                content["ID_Transacao"] = reserva[0]
+        
         content["Versao_Software"] = lc07.VersaoSoftware
         content["Versao_Mensageria"] = lc07.VersaoMensageria
 
