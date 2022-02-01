@@ -89,7 +89,7 @@ def send_lc07_mq(lc07):
         command_sql = f"""SELECT `reserva_encomenda`.`IdTransacaoUnica`,
                         `reserva_encomenda`.`idStatusReserva`
                         FROM `rede1minuto`.`reserva_encomenda`
-                        where reserva_encomenda.idLocker = '{lc07.idLockerPorta}'
+                        where reserva_encomenda.idLockerPorta = '{lc07.idLockerPorta}'
                         order by reserva_encomenda.DataHoraInicioReserva DESC;"""
         reserva = conn.execute(command_sql).fetchone()
 

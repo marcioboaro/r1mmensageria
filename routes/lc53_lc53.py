@@ -26,7 +26,7 @@ key = Fernet.generate_key()
 f = Fernet(key)
 auth_handler = AuthHandler()
 
-@lc53_lc53.post("/api/v01/lc51", tags=["lc53"], description="Envio busca log locker.engine_error.txt")
+@lc53_lc53.post("/api/v01/lc53", tags=["lc53"], description="Envio busca log locker.engine_error.txt")
 def lc53(lc53: LC53, public_id=Depends(auth_handler.auth_wrapper)):
 
     try:

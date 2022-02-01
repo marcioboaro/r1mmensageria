@@ -68,7 +68,7 @@ def send_lc51_mq(lc51):
 
  
         lc051 = {}
-        lc051["CD_MSG"] = "lc51"
+        lc051["CD_MSG"] = "LC51"
 
         content = {}
         content["idRede"] = lc51.idRede

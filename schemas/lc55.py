@@ -8,4 +8,5 @@ class Content(BaseModel):
 
 class LC55(BaseModel):
    Codigo_de_MSG: str
-   content: Optional[Content] = None
+   idRede: int
+   idLocker: str
