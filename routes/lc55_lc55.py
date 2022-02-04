@@ -26,7 +26,7 @@ key = Fernet.generate_key()
 f = Fernet(key)
 auth_handler = AuthHandler()
 
-@lc55_lc55.post("/api/v01/lc51", tags=["lc55"], description="Envio log locker.engine_info.txt")
+@lc55_lc55.post("/api/v01/lc55", tags=["lc55"], description="Envio log locker.engine_info.txt")
 def lc55(lc55: LC55, public_id=Depends(auth_handler.auth_wrapper)):
 
     try:

@@ -42,7 +42,9 @@ def ms12(ms12: MS12, public_id=Depends(auth_handler.auth_wrapper)):
 
         # gerando Data_Hora_POD
         if ms12.Data_Hora_POD is None:
-            ms12.Data_Hora_POD = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            now = datetime.now() - timedelta(hours=3)
+            dt_string = now.strftime('%Y-%m-%d %H:%M:%S')
+            ms12.Data_Hora_POD = dt_string
 
         # validando ID_Transacao_Unica
         if ms12.ID_Transacao_Unica is None:
@@ -74,7 +76,8 @@ def ms12(ms12: MS12, public_id=Depends(auth_handler.auth_wrapper)):
             ms12.Versao_Mensageria = "1.0.0"
 
         now = datetime.now()
-        dt_string = now.strftime("%Y-%m-%dT%H:%M:%S")
+        now = datetime.now() - timedelta(hours=3)
+        dt_string = now.strftime('%Y-%m-%d %H:%M:%S')
         idTransacaoUnica = ms12.ID_Transacao_Unica
 
         update_reserva_encomenda(ms12)

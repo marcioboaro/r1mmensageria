@@ -93,6 +93,7 @@ def send_lc07_mq(lc07):
                         order by reserva_encomenda.DataHoraInicioReserva DESC;"""
         reserva = conn.execute(command_sql).fetchone()
 
+
         lc007 = {}
         lc007["CD_MSG"] = "LC07"
 
@@ -116,12 +117,14 @@ def send_lc07_mq(lc07):
             content["AcaoExecutarPorta"] = 4
             content["ID_Transacao"] = reserva[0]
         if lc07.AcaoExecutarPorta == 3:
+            print(reserva[1])
+            logger.warning(reserva[1])
             # Quando tem encomenda no locker Ação = 6 (Devolução)
             if reserva[1] == 23 or reserva[1] == 24:
                 content["AcaoExecutarPorta"] = 6
                 content["ID_Transacao"] = reserva[0]
             # Quando não tem encomenda no locker Ação = 3 (Cancelamento de reserva)
-            if reserva[1] != 23 or reserva[1] != 24:
+            else:
                 content["AcaoExecutarPorta"] = 3
                 content["ID_Transacao"] = reserva[0]
         

@@ -46,7 +46,9 @@ def ms07(ms07: MS07, public_id=Depends(auth_handler.auth_wrapper)):
 
         # gerando Data_Hora_Solicitacao
         if ms07.Data_Hora_Solicitacao is None:
-            ms07.Data_Hora_Solicitacao = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            now = datetime.now() - timedelta(hours=3)
+            dt_string = now.strftime('%Y-%m-%d %H:%M:%S')
+            ms07.Data_Hora_Solicitacao = dt_string
 
         # validando mensagem "Reserva não Existe"
         if ms07.ID_Transacao_Unica is None:
@@ -64,8 +66,8 @@ def ms07(ms07: MS07, public_id=Depends(auth_handler.auth_wrapper)):
         if ms07.Versao_Mensageria is None:
             ms07.Versao_Mensageria = "1.0.0"
 
-        now = datetime.now()
-        dt_string = now.strftime("%Y-%m-%dT%H:%M:%S")
+        now = datetime.now() - timedelta(hours=3)
+        dt_string = now.strftime('%Y-%m-%d %H:%M:%S')
 
         ms08 = {}
         ms08['Codigo_de_MSG'] = "MS08"
@@ -123,7 +125,7 @@ def ms07(ms07: MS07, public_id=Depends(auth_handler.auth_wrapper)):
 ###################### teste no webhook a ser retirado posteriormente ###############################
 def reserva_wb03(ms07):
     try:
-        now = datetime.now()
+        now = datetime.now() - timedelta(hours=3)
         dt_string = now.strftime('%Y-%m-%d %H:%M:%S')
         wb03 = {}
         wb03['CD_MSG'] = "WH001"
@@ -150,7 +152,7 @@ def reserva_wb03(ms07):
 
 def wh04_encomendaseller(ms07):
     try:
-        now = datetime.now()
+        now = datetime.now() - timedelta(hours=3)
         dt_string = now.strftime('%Y-%m-%d %H:%M:%S')
         wb04 = {}
         wb04['CD_MSG'] = "WH004"
@@ -177,7 +179,7 @@ def wh04_encomendaseller(ms07):
 
 def wh04_encomendacd(ms07):
     try:
-        now = datetime.now()
+        now = datetime.now() - timedelta(hours=3)
         dt_string = now.strftime('%Y-%m-%d %H:%M:%S')
         wb04 = {}
         wb04['CD_MSG'] = "WH004"
@@ -204,7 +206,7 @@ def wh04_encomendacd(ms07):
 
 def wh04_encomendaembarcada(ms07):
     try:
-        now = datetime.now()
+        now = datetime.now() - timedelta(hours=3)
         dt_string = now.strftime('%Y-%m-%d %H:%M:%S')
         wb04 = {}
         wb04['CD_MSG'] = "WH004"
@@ -230,7 +232,7 @@ def wh04_encomendaembarcada(ms07):
 
 def wh04_encomendanolocker(ms07):
     try:
-        now = datetime.now()
+        now = datetime.now() - timedelta(hours=3)
         dt_string = now.strftime('%Y-%m-%d %H:%M:%S')
         wb04 = {}
         wb04['CD_MSG'] = "WH004"

@@ -55,7 +55,9 @@ def ms11(ms11: MS11, public_id=Depends(auth_handler.auth_wrapper)):
 
         # gerando Data_Hora
         if ms11.Data_Hora_Notificacao_Evento_Reserva is None:
-            ms11.Data_Hora_Notificacao_Evento_Reserva = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            now = datetime.now() - timedelta(hours=3)
+            dt_string = now.strftime('%Y-%m-%d %H:%M:%S')
+            ms11.Data_Hora_Notificacao_Evento_Reserva = dt_string
 
         # validando versao mensageria
         if ms11.Versao_Mensageria is None:

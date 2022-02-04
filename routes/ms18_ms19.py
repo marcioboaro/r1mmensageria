@@ -58,7 +58,9 @@ def ms18(ms18: MS18, public_id=Depends(auth_handler.auth_wrapper)):
 
         # gerando Data_Hora_Solicitacao
         if ms18.Data_Hora_Solicitacao is None:
-            ms18.Data_Hora_Solicitacao = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            now = datetime.now() - timedelta(hours=3)
+            dt_string = now.strftime('%Y-%m-%d %H:%M:%S')
+            ms18.Data_Hora_Solicitacao = dt_string
 
         # validando ID_da_Estacao_do_Locker
         if ms18.ID_da_Estacao_do_Locker is None:

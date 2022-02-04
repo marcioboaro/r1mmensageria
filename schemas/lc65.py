@@ -3,6 +3,6 @@ from pydantic import BaseModel
 
 
 class LC65(BaseModel):
-   Codigo_de_MSG: str
+   CD_MSG: str
    idRede: int
    idLocker: str

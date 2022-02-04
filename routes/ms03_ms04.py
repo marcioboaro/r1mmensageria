@@ -158,8 +158,8 @@ def ms03(ms03: MS03, public_id=Depends(auth_handler.auth_wrapper)):
         where = 0
         if ms03.ID_de_Referencia is None:
             ms03.ID_de_Referencia = "c67a298f-015f-4b65-a62b-8a6e42dc789a"
-        now = datetime.now()
-        dt_string = now.strftime("%Y-%m-%dT%H:%M:%S")
+        now = datetime.now() - timedelta(hours=3)
+        dt_string = now.strftime('%Y-%m-%d %H:%M:%S')
         ms04 = {}
         ms04['Codigo_de_MSG'] = "MS04"
         ms04['ID_de_Referencia'] = ms03.ID_de_Referencia

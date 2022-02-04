@@ -84,8 +84,9 @@ def ms16(ms16: MS16, public_id=Depends(auth_handler.auth_wrapper)):
         if ms16.Versao_Mensageria is None:
             ms16.Versao_Mensageria = "1.0.0"
 
-        Inicio_reserva = datetime.now().strftime('%Y-%m-%d %H:%M:%S') # + timedelta(hours=3)  # São Paulo
-        date_after = datetime.now() + timedelta(days=3)  # 3 é o valor Default
+        horario_ajustado = datetime.now() - timedelta(hours=3)
+        Inicio_reserva = horario_ajustado.strftime('%Y-%m-%d %H:%M:%S') #+ timedelta(hours=3)  # São Paulo
+        date_after = horario_ajustado + timedelta(days=3)  # 3 é o valor Default
         Final_reserva = date_after.strftime('%Y-%m-%d %H:%M:%S')
 
         if ms16.DataHora_Inicio_Reserva is None:
@@ -94,8 +95,8 @@ def ms16(ms16: MS16, public_id=Depends(auth_handler.auth_wrapper)):
         if ms16.DataHora_Final_Reserva is None:
             ms16.DataHora_Final_Reserva = Final_reserva
 
-        now = datetime.now() # + timedelta(hours=3)  # São Paulo
-        dt_string = now.strftime("%Y-%m-%dT%H:%M:%S")
+        now = datetime.now() - timedelta(hours=3)
+        dt_string = now.strftime('%Y-%m-%d %H:%M:%S')
 
         ms17 = {}
         ms17['Codigo_de_MSG'] = "MS17"

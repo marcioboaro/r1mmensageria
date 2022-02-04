@@ -26,7 +26,7 @@ key = Fernet.generate_key()
 f = Fernet(key)
 auth_handler = AuthHandler()
 
-@lc63_lc63.post("/api/v01/lc61", tags=["lc63"], description="Envio dos dados da tabela Device")
+@lc63_lc63.post("/api/v01/lc63", tags=["lc63"], description="Envio dos dados da tabela Device")
 def lc63(lc63: LC63, public_id=Depends(auth_handler.auth_wrapper)):
 
     try:

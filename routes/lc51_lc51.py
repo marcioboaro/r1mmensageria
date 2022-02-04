@@ -34,7 +34,7 @@ def lc51(lc51: LC51, public_id=Depends(auth_handler.auth_wrapper)):
         logger.info(f"Usuário que fez a solicitação: {public_id}")
 
         if lc51.CD_MSG is None:
-            lc51.CD_MSG = "lc51"
+            lc51.CD_MSG = "LC51"
 
         if lc51.idRede is None:
             return {"status_code": 422, "detail": "LC5101 - idRede obrigatório"}

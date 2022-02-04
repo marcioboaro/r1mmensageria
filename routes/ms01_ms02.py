@@ -147,14 +147,15 @@ def ms01(ms01: MS01, public_id=Depends(auth_handler.auth_wrapper)):
         where = 0
         if ms01.ID_de_Referencia is None:
             ms01.ID_de_Referencia = "Não informado"
-        now = datetime.now()
-        dt_string = now.strftime("%Y-%m-%dT%H:%M:%S")
+            
         ms02 = dict()
         ms02['Codigo_de_MSG'] = ms01.Codigo_de_MSG
         ms02['ID_de_Referencia'] = ms01.ID_de_Referencia
         ms02['ID_do_Solicitante'] = ms01.ID_do_Solicitante
         ms02['ID_Rede_Lockers'] = ms01.ID_Rede_Lockers
         ms02['Versao_Mensageria'] = ms01.Versao_Mensageria
+        now = datetime.now() - timedelta(hours=3)
+        dt_string = now.strftime('%Y-%m-%d %H:%M:%S')
         ms02['Data_Hora_Resposta'] = dt_string
 
         command_sql = f"""select `locker`.`idPais`,

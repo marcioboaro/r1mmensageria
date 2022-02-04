@@ -59,8 +59,11 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
             command_sql = f"SELECT idRede from rede where rede.idRede = '{ms05.ID_Rede_Lockers}';"
             if conn.execute(command_sql).fetchone() is None:
                 return {"status_code": 422, "detail": "M06011 - ID_Rede_Lockers inválido"}
+        
+        data_hora = datetime.now() - timedelta(hours=3)
+        data_hora_solic = data_hora.strftime('%Y-%m-%d %H:%M:%S')
         if ms05.Data_Hora_Solicitacao is None:
-            ms05.Data_Hora_Solicitacao = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            ms05.Data_Hora_Solicitacao = data_hora_solic.strftime('%Y-%m-%d %H:%M:%S')
 
 
         if ms05.ID_da_Estacao_do_Locker is not None:
@@ -141,7 +144,7 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
         record = conn.execute(command_sql).fetchone()
 
         ms06['Codigo_Resposta_MS06'] = 'M06000 - Solicitação executada com sucesso'
-        ms06['Data_Hora_Resposta'] = dt_string
+        ms06['Data_Hora_Resposta'] = data_hora_solic
         ms06['Codigo_Pais_Locker'] = record[0]
         ms06['CEP_Locker'] = record[1]
         ms06['Cidade_Locker'] = record[2]
@@ -181,8 +184,9 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
             ms06['Tipo_de_Servico_Reserva'] = ms05.Tipo_de_Servico_Reserva # Contratação de Serviço de Reserva Com encomendas em Lockers Inteligentes
 
  #           tz = pytz.timezone('America/Sao_Paulo')
-            Inicio_reserva = datetime.now().strftime('%Y-%m-%d %H:%M:%S') #+ timedelta(hours=3)  # São Paulo
-            date_after = datetime.now() + timedelta(days=3)  # 3 é o valor Default
+            horario_ajustado = datetime.now() - timedelta(hours=3)
+            Inicio_reserva = horario_ajustado.strftime('%Y-%m-%d %H:%M:%S') #+ timedelta(hours=3)  # São Paulo
+            date_after = horario_ajustado + timedelta(days=3)  # 3 é o valor Default
             Final_reserva = date_after.strftime('%Y-%m-%d %H:%M:%S')
 
             ms06['DataHora_Inicio_Reserva'] = Inicio_reserva
@@ -208,11 +212,7 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
             insert_tracking_porta(ms05, record_Porta)
             insert_shopper(ms05)
 
-            ############ teste no webhook a ser retirado posteriormente #################
-            reserva_wb01(ms05, idTransacaoUnica)
-            reserva_wb04(ms05, idTransacaoUnica)
-            ############ teste no webhook a ser retirado posteriormente #################
-
+           
             ret_fila = send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_reserva,Codigo_Abertura_Porta)
             if ret_fila is False:
                 logger.error("lc01 não inserido")
@@ -223,63 +223,6 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
         result = dict()
         result['Error ms05'] = sys.exc_info()
         return result
-
-###################### teste no webhook a ser retirado posteriormente ###############################
-def reserva_wb01(ms05,idTransacaoUnica):
-    try:
-        now = datetime.now() #+ timedelta(hours=3)  # São Paulo
-        dt_string = now.strftime('%Y-%m-%d %H:%M:%S')
-        wb01 = {}
-        wb01['CD_MSG'] = "WH001"
-        wb01['ID_de_Referencia'] = ms05.ID_de_Referencia
-        wb01['ID_Transacao_Unica'] = idTransacaoUnica
-        wb01['Data_Hora_Resposta'] = dt_string
-        wb01['CD_Resposta'] = "WH1000 - Reserva confirmada"
-
-        command_sql = f"""SELECT `reserva_encomenda`.`URL_CALL_BACK`
-                                                        FROM `rede1minuto`.`reserva_encomenda`
-                                                        where reserva_encomenda.IdTransacaoUnica = '{idTransacaoUnica}';"""
-        record = conn.execute(command_sql).fetchone()
-        logger.warning(command_sql)
-        url_wb01 = record[0]
-
-        r = requests.post(url_wb01, data=json.dumps(wb01), headers={'Content-Type': 'application/json'})
-
-    except:
-        logger.error(sys.exc_info())
-        result = dict()
-        result['Error reserva_wb01'] = sys.exc_info()
-        return result
-
-
-def reserva_wb04(ms05, idTransacaoUnica):
-    try:
-        now = datetime.now()
-        dt_string = now.strftime('%Y-%m-%d %H:%M:%S') #+ timedelta(hours=3)  # São Paulo
-        command_sql = f"""SELECT `reserva_encomenda`.`URL_CALL_BACK`
-                                                                FROM `rede1minuto`.`reserva_encomenda`
-                                                                where reserva_encomenda.IdTransacaoUnica = '{idTransacaoUnica}';"""
-        record = conn.execute(command_sql).fetchone()
-        logger.warning(command_sql)
-
-        url = record[0]
-        wb04 = {}
-        wb04['CD_MSG'] = "WH004"
-        wb04['ID_Referencia'] = ms05.ID_de_Referencia
-        wb04['ID_Transacao_Unica'] = idTransacaoUnica
-        wb04['Data_Hora_Resposta'] = dt_string
-        wb04['CD_Resposta'] = "WH4001 - Reserva confirmada"
-
-        url = record[0]
-        r = requests.post(url, data=json.dumps(wb04), headers={'Content-Type': 'application/json'})
-
-    except:
-        logger.error(sys.exc_info())
-        result = dict()
-        result['Error reserva_wb04'] = sys.exc_info()
-        return result
-
-###################### teste no webhook a ser retirado posteriormente ###############################
 
 
 def send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_reserva,Codigo_Abertura_Porta):
