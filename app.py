@@ -45,6 +45,10 @@ app = FastAPI(
 
 auth_handler = AuthHandler()
 
+@app.get("/")
+def raiz():
+    return .
+
 @app.post('/signup', status_code=201)
 def register(auth_details: AuthDetails):
     try:
