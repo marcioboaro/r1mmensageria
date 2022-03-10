@@ -1,6 +1,6 @@
-FROM python:3
+FROM python:3.10-slim-buster
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 #COPY ./requirements.txt ./
 
@@ -19,6 +19,6 @@ RUN pip install requests
 
 #RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
-
-#CMD [ "python", "./main.py" ]
+COPY . /app
+EXPOSE 8008
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0"]
