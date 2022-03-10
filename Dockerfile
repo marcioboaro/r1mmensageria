@@ -10,7 +10,7 @@ RUN pip install pydantic
 RUN pip install fastapi
 RUN pip install PyMySQL
 RUN pip install Pika
-RUN pip install uvicorn
+RUN pip install uvicorn[standard]
 RUN pip install PyJWT
 RUN pip install passlib
 RUN pip install cryptography
