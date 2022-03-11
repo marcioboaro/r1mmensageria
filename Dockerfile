@@ -1,7 +1,6 @@
 FROM python:3.10-slim-buster
 
-WORKDIR /app
-COPY . /app
+WORKDIR /usr/src/app
 
 RUN pip install -U setuptools
 RUN pip install -U wheel
@@ -16,5 +15,7 @@ RUN pip install passlib
 RUN pip install cryptography
 RUN pip install requests
 
+
+COPY . .
 EXPOSE 8008
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0"]
+CMD [ "uvicorn", "app:app", "--host=0.0.0.0", "--reload" ]
