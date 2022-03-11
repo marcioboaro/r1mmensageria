@@ -48,7 +48,7 @@ auth_handler = AuthHandler()
 
 @app.get("/")
 def raiz():
-    return "Versão 1.0"
+    return OK
 
 @app.post('/signup', status_code=201)
 def register(auth_details: AuthDetails):
