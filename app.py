@@ -1,3 +1,4 @@
+from http.client import OK
 from fastapi import FastAPI, Depends
 from routes.pais import pais
 from routes.user import user
@@ -46,7 +47,7 @@ app = FastAPI(
 auth_handler = AuthHandler()
 
 @app.get("/")
-def read_root():
+def raiz():
     return "Versão 1.0"
 
 @app.post('/signup', status_code=201)
