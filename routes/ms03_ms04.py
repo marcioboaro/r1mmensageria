@@ -241,15 +241,17 @@ def ms03(ms03: MS03, public_id=Depends(auth_handler.auth_wrapper)):
                         `locker_porta_dimensao`.`LockerPortaComprimento`,
                         `locker_porta_dimensao`.`LockerPortaLargura`,
                         `locker_porta_dimensao`.`LockerPortaAltura`,
-                        `locker_porta_dimensao`.`LockerPortaPesoMax`
+                        `locker_porta_dimensao`.`LockerPortaPesoMax`,
+                        `locker_porta_status`.`LockerPortaStatusDescricao`,
             FROM
                     ((((`locker_porta`
                     JOIN `locker_porta_categoria` ON (`locker_porta_categoria`.`idLockerPortaCategoria` = `locker_porta`.`idLockerPortaCategoria`))
                     JOIN `locker_porta_uso` ON (`locker_porta_uso`.`idLockerPortaUso` = `locker_porta`.`idLockerPortaUso`))
                     JOIN `locker_porta_operacao` ON (`locker_porta_operacao`. `idLockerPortaOperacao` = `locker_porta`.`idLockerPortaOperacao`))
                     JOIN `locker_porta_dimensao` ON (`locker_porta_dimensao`.`idLockerPortaDimensao` = `locker_porta`.`idLockerPortaDimensao`))
-                    WHERE `locker_porta`.`idLockerPortaStatus` = 1
-                        AND `locker_porta`.`idLocker` = '{locker_porta[0]}'"""
+                    JOIN `locker_porta_status` ON (`locker_porta_status`.`idLockerPortaStatus` = `locker_porta_status`.`idLockerPortaStatus`))
+                    WHERE `locker_porta`.`idLocker` = '{locker_porta[0]}'"""
+
             command_sql = command_sql.replace("'None'", "Null")
             command_sql = command_sql.replace("None", "Null")
             records0 = conn.execute(command_sql).fetchall()
@@ -266,6 +268,7 @@ def ms03(ms03: MS03, public_id=Depends(auth_handler.auth_wrapper)):
                 portalocker['Largura_Porta'] = row[7]
                 portalocker['Altura_Porta'] = row[8]
                 portalocker['Peso_Maximo_Porta'] = row[9]
+                portalocker['Status_Porta'] = row[10]
                 portas.append(portalocker)
             for locker in lockers:
                 if locker['Id_da_Estacao_do_Locker'] == locker_porta[0]:
