@@ -242,7 +242,7 @@ def ms03(ms03: MS03, public_id=Depends(auth_handler.auth_wrapper)):
                         `locker_porta_dimensao`.`LockerPortaLargura`,
                         `locker_porta_dimensao`.`LockerPortaAltura`,
                         `locker_porta_dimensao`.`LockerPortaPesoMax`,
-                        `locker_porta_status`.`LockerPortaStatusDescricao`,
+                        `locker_porta_status`.`LockerPortaStatusDescricao`
             FROM
                     ((((`locker_porta`
                     JOIN `locker_porta_categoria` ON (`locker_porta_categoria`.`idLockerPortaCategoria` = `locker_porta`.`idLockerPortaCategoria`))
