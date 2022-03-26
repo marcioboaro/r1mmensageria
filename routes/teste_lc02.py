@@ -6,7 +6,8 @@ import sys
 try:
 #    url = "http://137.184.137.84:80/login"
 #    url = "http://127.0.0.1:8000/login"
-    url = "http://ec2-34-206-134-100.compute-1.amazonaws.com:8008/login"
+#    url = "http://ec2-34-206-134-100.compute-1.amazonaws.com:8008/login"
+    url = "http://apimensageriahm.rede1minuto.com.br/login"
     payload = {
     "username": "Pico",
     "email": "pico.mirandola@gmail.com",
@@ -30,7 +31,8 @@ try:
             "Status_Reserva_Atual": 4,
             "Data_Hora_Notificacao_Evento_Reserva": "2021-11-11T20:20:27",
             "Versao_Mensageria": "1.0.0"}
-    url = "http://137.184.137.84:80/msg/v01/lockers/order/tracking"
+    url = "http://apimensageriahm.rede1minuto.com.br/msg/v01/lockers"
+#    url = "http://137.184.137.84:80/msg/v01/lockers/order/tracking"
 #    url = "http://127.0.0.1:8000/msg/v01/lockers"
 #    url = "http://ec2-34-206-134-100.compute-1.amazonaws.com:8008/msg/v01/lockers"
     print(headers)
