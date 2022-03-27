@@ -16,7 +16,7 @@ RUN pip install PyJWT
 RUN pip install passlib
 RUN pip install cryptography
 RUN pip install requests
-RUN pip install brcrypt
+#RUN pip install brcrypt
 RUN apt-get update && \
     apt-get install -y nano vim && \
     rm -fr /var/lib/apt/lists/*
