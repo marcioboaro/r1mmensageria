@@ -1,7 +1,7 @@
 FROM python:3.10-slim-buster
 
 WORKDIR /usr/src/app
-
+ENV TZ=America/Sao_Paulo
 #COPY ./requirements.txt ./
 
 RUN pip install -U setuptools
