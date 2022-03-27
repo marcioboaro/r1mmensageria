@@ -1,4 +1,4 @@
-FROM python:3.9-slim-buster
+FROM python:3.10-slim-buster
 
 WORKDIR /usr/src/app
 ENV TZ=America/Sao_Paulo
@@ -16,6 +16,7 @@ RUN pip install PyJWT
 RUN pip install passlib
 RUN pip install cryptography
 RUN pip install requests
+RUN pip install brcrypt
 RUN apt-get update && \
     apt-get install -y nano vim && \
     rm -fr /var/lib/apt/lists/*
