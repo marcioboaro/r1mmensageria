@@ -23,6 +23,6 @@ RUN apt-get update && \
 #RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
-ENV tz=america/sao_paulo
+ENV TZ=America/Sao_Paulo
 EXPOSE 8000
 CMD [ "uvicorn", "app:app", "--host=0.0.0.0", "--reload" ]
