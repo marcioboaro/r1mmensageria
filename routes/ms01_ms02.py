@@ -197,8 +197,6 @@ def ms01(ms01: MS01, public_id=Depends(auth_handler.auth_wrapper)):
                             where `locker`.`idLockerStatus` = 2
                               and `locker`.`idRede` = {ms01.ID_Rede_Lockers}"""
         command_sql = command_sql.replace("'None'", "Null")
-        logger.info(command_sql)
-        logger.info("Select MS01")
 
         if ms01.Codigo_Pais_Locker is not None:
             command_sql += f" and `idPais` = '{ms01.Codigo_Pais_Locker}'"
@@ -218,6 +216,9 @@ def ms01(ms01: MS01, public_id=Depends(auth_handler.auth_wrapper)):
             command_sql += f" and `locker_operacao`.`idLockerOperacao` = '{ms01.Modelo_Operacao_Locker}'"
         if ms01.ID_da_Estacao_do_Locker is not None:
             command_sql += f" and `idLocker` = '{ms01.ID_da_Estacao_do_Locker}'"
+        logger.info(command_sql)
+        logger.info("******************************************************************************************")
+
         records = conn.execute(command_sql).fetchall()
         Estacao_Locker = []    
         for record in records:
