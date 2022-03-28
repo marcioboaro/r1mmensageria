@@ -244,7 +244,7 @@ def ms03(ms03: MS03, public_id=Depends(auth_handler.auth_wrapper)):
                         `locker_porta_dimensao`.`LockerPortaPesoMax`,
                         `locker_porta_status`.`LockerPortaStatusDescricao`
             FROM
-                    ((((`locker_porta`
+                    (((((`locker_porta`
                     JOIN `locker_porta_categoria` ON (`locker_porta_categoria`.`idLockerPortaCategoria` = `locker_porta`.`idLockerPortaCategoria`))
                     JOIN `locker_porta_uso` ON (`locker_porta_uso`.`idLockerPortaUso` = `locker_porta`.`idLockerPortaUso`))
                     JOIN `locker_porta_operacao` ON (`locker_porta_operacao`. `idLockerPortaOperacao` = `locker_porta`.`idLockerPortaOperacao`))
