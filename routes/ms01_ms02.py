@@ -198,8 +198,8 @@ def ms01(ms01: MS01, public_id=Depends(auth_handler.auth_wrapper)):
                               and `locker`.`idRede` = {ms01.ID_Rede_Lockers}"""
         command_sql = command_sql.replace("'None'", "Null")
 
-        if ms01.Codigo_Pais_Locker is not None:
-            command_sql += f" and `idPais` = '{ms01.Codigo_Pais_Locker}'"
+#        if ms01.Codigo_Pais_Locker is not None:
+#            command_sql += f" and `idPais` = '{ms01.Codigo_Pais_Locker}'"
         if ms01.Cep_Locker is not None:
             command_sql += f" and `cep` = '{ms01.Cep_Locker}'"
         if ms01.Cidade_Locker is not None:

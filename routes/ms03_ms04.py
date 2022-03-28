@@ -61,10 +61,10 @@ def ms03(ms03: MS03, public_id=Depends(auth_handler.auth_wrapper)):
             ms03.Data_Hora_Solicitacao = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         if ms03.Codigo_Pais_Locker is None:
             ms03.Codigo_Pais_Locker = "BR" # Considerando Brasil com Default
-        else:
-            command_sql = f"SELECT idPais from Pais where Pais.idPais = '{ms03.Codigo_Pais_Locker}';"
-            if conn.execute(command_sql).fetchone() is None:
-                return {"status_code": 422, "detail": "M04012 - Codigo País_Locker inválido"}
+#        else:
+#            command_sql = f"SELECT idPais from Pais where Pais.idPais = '{ms03.Codigo_Pais_Locker}';"
+#            if conn.execute(command_sql).fetchone() is None:
+#                return {"status_code": 422, "detail": "M04012 - Codigo País_Locker inválido"}
         if ms03.Cidade_Locker is not None:
             command_sql = f"SELECT cidade from cepbr_cidade where cidade = '{ms03.Cidade_Locker}';"
             if conn.execute(command_sql).fetchone() is None:
@@ -183,8 +183,8 @@ def ms03(ms03: MS03, public_id=Depends(auth_handler.auth_wrapper)):
             JOIN `locker_refrigeracao_coluna` ON (`locker_refrigeracao_coluna`.`idLockerRefrigeracaoColuna` = `locker`.`idLockerRefrigeracaoColuna`))
             JOIN `locker_operacao` ON (`locker_operacao`.`idLockerOperacao` = `locker`.`idLockerOperacao`))
             where `idRede` = '{ms03.ID_Rede_Lockers}'"""
-        if ms03.Codigo_Pais_Locker is not None:
-            command_sql += f" and `idPais` = '{ms03.Codigo_Pais_Locker}'"
+#        if ms03.Codigo_Pais_Locker is not None:
+#            command_sql += f" and `idPais` = '{ms03.Codigo_Pais_Locker}'"
         if ms03.Cep_Locker is not None:
             command_sql += f" and `cep` = '{ms03.Cep_Locker}'"
         if ms03.Cidade_Locker is not None:
