@@ -16,9 +16,13 @@ RUN pip install PyJWT
 RUN pip install passlib
 RUN pip install cryptography
 RUN pip install requests
-
+RUN pip install bcrypt
+RUN apt-get update && \
+    apt-get install -y nano vim && \
+    rm -fr /var/lib/apt/lists/*
 #RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
+ENV TZ=America/Sao_Paulo
 EXPOSE 8000
 CMD [ "uvicorn", "app:app", "--host=0.0.0.0", "--reload" ]
