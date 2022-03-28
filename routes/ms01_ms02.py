@@ -196,6 +196,9 @@ def ms01(ms01: MS01, public_id=Depends(auth_handler.auth_wrapper)):
                             JOIN `locker_operacao` ON (`locker_operacao`.`idLockerOperacao` = `locker`.`idLockerOperacao`)
                             where `locker`.`idLockerStatus` = 2
                               and `locker`.`idRede` = {ms01.ID_Rede_Lockers}"""
+        command_sql = command_sql.replace("'None'", "Null")
+        logger.info(command_sql)
+        logger.info("Select MS01")
 
         if ms01.Codigo_Pais_Locker is not None:
             command_sql += f" and `idPais` = '{ms01.Codigo_Pais_Locker}'"
