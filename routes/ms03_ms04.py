@@ -254,6 +254,8 @@ def ms03(ms03: MS03, public_id=Depends(auth_handler.auth_wrapper)):
 
             command_sql = command_sql.replace("'None'", "Null")
             command_sql = command_sql.replace("None", "Null")
+            logger.info(command_sql)
+            logger.info("******************************************************************************************")
             records0 = conn.execute(command_sql).fetchall()
             portas = []
             for row in records0:
