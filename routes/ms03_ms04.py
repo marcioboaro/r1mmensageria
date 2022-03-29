@@ -270,7 +270,7 @@ def ms03(ms03: MS03, public_id=Depends(auth_handler.auth_wrapper)):
                 portalocker['Largura_Porta'] = row[7]
                 portalocker['Altura_Porta'] = row[8]
                 portalocker['Peso_Maximo_Porta'] = row[9]
-                portalocker['Status_Porta'] = row[10]
+                portalocker['Status_Porta'] = row['LockerPortaStatusDescricao']
                 portas.append(portalocker)
             for locker in lockers:
                 if locker['Id_da_Estacao_do_Locker'] == locker_porta[0]:
