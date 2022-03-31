@@ -122,14 +122,17 @@ def ms14(ms14: MS14, public_id=Depends(auth_handler.auth_wrapper)):
 #                        INNER JOIN `reserva_encomenda_encomendas` ON (`reserva_encomenda`.`IdTransacaoUnica` = `reserva_encomenda_encomendas`.`IdTransacaoUnica`)
 #                               Count(reserva_encomenda_encomendas.IdEncomenda)
 
-        if ms14.DataHora_Inicio_Consuta_Encomendas_Designadas and ms14.DataHora_Final_Consuta_Encomendas_Designadas is not None:
-            command_sql += f" and reserva_encomenda.DateAt BETWEEN '{ms14.DataHora_Inicio_Consuta_Encomendas_Designadas}' AND '{ms14.DataHora_Final_Consuta_Encomendas_Designadas}'"
-        if ms14.Codigo_Pais_Locker is not None:
-            command_sql += f" and `locker`.`idPais` = '{ms14.Codigo_Pais_Locker}'"
-        if ms14.Cidade_Locker is not None:
-            command_sql += f" and `locker`.`LockerCidade` = '{ms14.Cidade_Locker}'"
-#        if ms14.ID_TICKET_Ocorrencia_Encomenda is not None:
-#            command_sql += f" and `reserva_encomenda_encomendas`.`IdEncomenda` = '{ms14.ID_TICKET_Ocorrencia_Encomenda}'"
+#        if ms14.DataHora_Inicio_Consuta_Encomendas_Designadas and ms14.DataHora_Final_Consuta_Encomendas_Designadas is not None:
+#            command_sql += f" and reserva_encomenda.DateAt BETWEEN '{ms14.DataHora_Inicio_Consuta_Encomendas_Designadas}' AND '{ms14.DataHora_Final_Consuta_Encomendas_Designadas}'"
+#        if ms14.Codigo_Pais_Locker is not None:
+#            command_sql += f" and `locker`.`idPais` = '{ms14.Codigo_Pais_Locker}'"
+#        if ms14.Cidade_Locker is not None:
+#            command_sql += f" and `locker`.`LockerCidade` = '{ms14.Cidade_Locker}'"
+
+        if ms14.ID_TICKET_Ocorrencia_Encomenda is None:
+            command_sql += f" and `reserva_encomenda_encomendas`.`IdEncomenda` = '1223344'"
+        if ms14.ID_TICKET_Ocorrencia_Encomenda is not None:
+            command_sql += f" and `reserva_encomenda_encomendas`.`IdEncomenda` = '{ms14.ID_TICKET_Ocorrencia_Encomenda}'"
         if ms14.ID_Rede_Lockers is not None:
             command_sql += f" and `reserva_encomenda`.`idRede` = '{ms14.ID_Rede_Lockers}'"
         command_sql += f" group by `reserva_encomenda`.`IdTransacaoUnica`"
