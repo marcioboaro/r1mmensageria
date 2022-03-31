@@ -128,8 +128,8 @@ def ms14(ms14: MS14, public_id=Depends(auth_handler.auth_wrapper)):
             command_sql += f" and `locker`.`idPais` = '{ms14.Codigo_Pais_Locker}'"
         if ms14.Cidade_Locker is not None:
             command_sql += f" and `locker`.`LockerCidade` = '{ms14.Cidade_Locker}'"
-        if ms14.ID_TICKET_Ocorrencia_Encomenda is not None:
-            command_sql += f" and `reserva_encomenda_encomendas`.`IdEncomenda` = '{ms14.ID_TICKET_Ocorrencia_Encomenda}'"
+#        if ms14.ID_TICKET_Ocorrencia_Encomenda is not None:
+#            command_sql += f" and `reserva_encomenda_encomendas`.`IdEncomenda` = '{ms14.ID_TICKET_Ocorrencia_Encomenda}'"
         if ms14.ID_Rede_Lockers is not None:
             command_sql += f" and `reserva_encomenda`.`idRede` = '{ms14.ID_Rede_Lockers}'"
         command_sql += f" group by `reserva_encomenda`.`IdTransacaoUnica`"
