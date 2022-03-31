@@ -40,7 +40,7 @@ def ms14(ms14: MS14, public_id=Depends(auth_handler.auth_wrapper)):
         if len(ms14.ID_do_Solicitante_Designado) != 20:  # 20 caracteres
             return {"status_code": 422, "detail": "M012007 - ID_do_Solicitante_Designado deve conter 20 caracteres"}
 
-        # validando ID_do_Solicitante_Designado
+        # validando ID_do_Solicitante_Designador
         if ms14.ID_do_Solicitante_Designador is None:
             return {"status_code": 422, "detail": "M012006 - ID_do_Solicitante_Designador obrigatório"}
         if len(ms14.ID_do_Solicitante_Designador) != 20:  # 20 caracteres
@@ -61,10 +61,10 @@ def ms14(ms14: MS14, public_id=Depends(auth_handler.auth_wrapper)):
                 return {"status_code": 422, "detail": "M014001 - ID_TICKET_Ocorrencia_Encomenda não Existe"}
 
         # validando Codigo_Pais_Locker
-        if ms14.Codigo_Pais_Locker is not None:
-            command_sql = f"SELECT idPais from locker where locker.idPais = '{ms14.Codigo_Pais_Locker}';"
-            if conn.execute(command_sql).fetchone() is None:
-                return {"status_code": 422, "detail": "M014001 - Codigo_Pais_Locker não Existe"}
+#        if ms14.Codigo_Pais_Locker is not None:
+#            command_sql = f"SELECT idPais from locker where locker.idPais = '{ms14.Codigo_Pais_Locker}';"
+#            if conn.execute(command_sql).fetchone() is None:
+#                return {"status_code": 422, "detail": "M014001 - Codigo_Pais_Locker não Existe"}
 
         if ms14.DataHora_Inicio_Consuta_Encomendas_Designadas is None:
             return {"status_code": 422, "detail": "M014004 - DataHora_Inicio_Consuta_Encomendas_Designadas obrigatório"}
