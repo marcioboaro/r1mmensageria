@@ -186,7 +186,8 @@ def ms14(ms14: MS14, public_id=Depends(auth_handler.auth_wrapper)):
                                     FROM `rede1minuto`.`encomendas`
                                     LEFT JOIN `reserva_encomenda` ON (`encomendas`.`IdTransacaoUnica` = `reserva_encomenda`.`IdTransacaoUnica`)
                                     LEFT JOIN `locker` ON (`reserva_encomenda`.`idLocker` = `locker`.`idLocker`)
-                                    where encomendas.IdTransacaoUnica = '{reserva_encomenda_encomendas[0]}'"""
+                                    where encomendas.IdTransacaoUnica = '017656c6-85ca-11ec-b237-0242ac120002'"""
+#                                    where encomendas.IdTransacaoUnica = '{reserva_encomenda_encomendas[0]}'"""
             command_sql = command_sql.replace("'None'", "Null")
             command_sql = command_sql.replace("None", "Null")
             records0 = conn.execute(command_sql).fetchall()
