@@ -113,7 +113,7 @@ def ms14(ms14: MS14, public_id=Depends(auth_handler.auth_wrapper)):
                                 `reserva_encomenda`.`DataHoraInicioReserva`,
                                 `reserva_encomenda`.`DataHoraFinalReserva`,
                                 `reserva_tipo_servico`.`ServicoReservaTipo`,
-                                Count(encomendas.IdEncomenda)
+                                Count(`encomendas`.`IdEncomenda`)
                         FROM `rede1minuto`.`reserva_encomenda`
                         INNER JOIN `locker` ON (`reserva_encomenda`.`idLocker` = `locker`.`idLocker`)
                         INNER JOIN `encomendas` ON (`reserva_encomenda`.`IdTransacaoUnica` = `encomendas`.`IdTransacaoUnica`)
