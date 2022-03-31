@@ -99,7 +99,7 @@ def ms14(ms14: MS14, public_id=Depends(auth_handler.auth_wrapper)):
         ms15['Data_Hora_Resposta'] = dt_string
 
         command_sql = f"""SELECT `reserva_encomenda`.`IdTransacaoUnica`,
-                                `reserva_status`.`StatusReservaDescricao`,
+                                "Reserva efetivada" `StatusReservaDescricao`,
                                 `reserva_encomenda`.`idPSLDesignado`,
                                 `locker`.`idPais`,
                                 `locker`.`LockerCidade`,
@@ -115,9 +115,10 @@ def ms14(ms14: MS14, public_id=Depends(auth_handler.auth_wrapper)):
                                 `reserva_tipo_servico`.`ServicoReservaTipo`,
                                 1
                         FROM `rede1minuto`.`reserva_encomenda`
-                        INNER JOIN `reserva_status` ON (`reserva_encomenda`.`idStatusEncomenda` = `reserva_status`.`idStatusReserva`)
                         INNER JOIN `locker` ON (`reserva_encomenda`.`idLocker` = `locker`.`idLocker`)
                         INNER JOIN `reserva_tipo_servico` ON (`reserva_encomenda`.`idServicoReserva` = `reserva_tipo_servico`.`idServicoReserva`)"""
+#                        INNER JOIN `reserva_status` ON (`reserva_encomenda`.`idStatusEncomenda` = `reserva_status`.`idStatusReserva`)
+#                               `reserva_status`.`StatusReservaDescricao`,
 #                        INNER JOIN `reserva_encomenda_encomendas` ON (`reserva_encomenda`.`IdTransacaoUnica` = `reserva_encomenda_encomendas`.`IdTransacaoUnica`)
 #                               Count(reserva_encomenda_encomendas.IdEncomenda)
 
