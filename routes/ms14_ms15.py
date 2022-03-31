@@ -40,7 +40,7 @@ def ms14(ms14: MS14, public_id=Depends(auth_handler.auth_wrapper)):
         if len(ms14.ID_do_Solicitante_Designado) != 20:  # 20 caracteres
             return {"status_code": 422, "detail": "M012007 - ID_do_Solicitante_Designado deve conter 20 caracteres"}
 
-        # validando ID_do_Solicitante_Designador
+        # validando ID_do_Solicitante_Designado
         if ms14.ID_do_Solicitante_Designador is None:
             return {"status_code": 422, "detail": "M012006 - ID_do_Solicitante_Designador obrigatório"}
         if len(ms14.ID_do_Solicitante_Designador) != 20:  # 20 caracteres
@@ -61,10 +61,10 @@ def ms14(ms14: MS14, public_id=Depends(auth_handler.auth_wrapper)):
                 return {"status_code": 422, "detail": "M014001 - ID_TICKET_Ocorrencia_Encomenda não Existe"}
 
         # validando Codigo_Pais_Locker
-#        if ms14.Codigo_Pais_Locker is not None:
-#            command_sql = f"SELECT idPais from locker where locker.idPais = '{ms14.Codigo_Pais_Locker}';"
-#            if conn.execute(command_sql).fetchone() is None:
-#                return {"status_code": 422, "detail": "M014001 - Codigo_Pais_Locker não Existe"}
+        if ms14.Codigo_Pais_Locker is not None:
+            command_sql = f"SELECT idPais from locker where locker.idPais = '{ms14.Codigo_Pais_Locker}';"
+            if conn.execute(command_sql).fetchone() is None:
+                return {"status_code": 422, "detail": "M014001 - Codigo_Pais_Locker não Existe"}
 
         if ms14.DataHora_Inicio_Consuta_Encomendas_Designadas is None:
             return {"status_code": 422, "detail": "M014004 - DataHora_Inicio_Consuta_Encomendas_Designadas obrigatório"}
@@ -99,7 +99,7 @@ def ms14(ms14: MS14, public_id=Depends(auth_handler.auth_wrapper)):
         ms15['Data_Hora_Resposta'] = dt_string
 
         command_sql = f"""SELECT `reserva_encomenda`.`IdTransacaoUnica`,
-                                "Reserva efetivada" `StatusReservaDescricao`,
+                                `reserva_status`.`StatusReservaDescricao`,
                                 `reserva_encomenda`.`idPSLDesignado`,
                                 `locker`.`idPais`,
                                 `locker`.`LockerCidade`,
@@ -113,21 +113,19 @@ def ms14(ms14: MS14, public_id=Depends(auth_handler.auth_wrapper)):
                                 `reserva_encomenda`.`DataHoraInicioReserva`,
                                 `reserva_encomenda`.`DataHoraFinalReserva`,
                                 `reserva_tipo_servico`.`ServicoReservaTipo`,
-                                Count(`encomendas`.`IdEncomenda`)
+                                Count(encomendas.IdEncomenda)
                         FROM `rede1minuto`.`reserva_encomenda`
+                        INNER JOIN `reserva_status` ON (`reserva_encomenda`.`idStatusEncomenda` = `reserva_status`.`idStatusReserva`)
                         INNER JOIN `locker` ON (`reserva_encomenda`.`idLocker` = `locker`.`idLocker`)
                         INNER JOIN `encomendas` ON (`reserva_encomenda`.`IdTransacaoUnica` = `encomendas`.`IdTransacaoUnica`)
                         INNER JOIN `reserva_tipo_servico` ON (`reserva_encomenda`.`idServicoReserva` = `reserva_tipo_servico`.`idServicoReserva`)"""
-#                        INNER JOIN `reserva_status` ON (`reserva_encomenda`.`idStatusEncomenda` = `reserva_status`.`idStatusReserva`)
-#                               `reserva_status`.`StatusReservaDescricao`,
 
         if ms14.DataHora_Inicio_Consuta_Encomendas_Designadas and ms14.DataHora_Final_Consuta_Encomendas_Designadas is not None:
             command_sql += f" and reserva_encomenda.DateAt BETWEEN '{ms14.DataHora_Inicio_Consuta_Encomendas_Designadas}' AND '{ms14.DataHora_Final_Consuta_Encomendas_Designadas}'"
-#        if ms14.Codigo_Pais_Locker is not None:
-#            command_sql += f" and `locker`.`idPais` = '{ms14.Codigo_Pais_Locker}'"
-#        if ms14.Cidade_Locker is not None:
-#            command_sql += f" and `locker`.`LockerCidade` = '{ms14.Cidade_Locker}'"
-
+        if ms14.Codigo_Pais_Locker is not None:
+            command_sql += f" and `locker`.`idPais` = '{ms14.Codigo_Pais_Locker}'"
+        if ms14.Cidade_Locker is not None:
+            command_sql += f" and `locker`.`LockerCidade` = '{ms14.Cidade_Locker}'"
         if ms14.ID_TICKET_Ocorrencia_Encomenda is not None:
             command_sql += f" and `encomendas`.`IdEncomenda` = '{ms14.ID_TICKET_Ocorrencia_Encomenda}'"
         if ms14.ID_Rede_Lockers is not None:
@@ -135,7 +133,6 @@ def ms14(ms14: MS14, public_id=Depends(auth_handler.auth_wrapper)):
         command_sql += f" group by `reserva_encomenda`.`IdTransacaoUnica`"
         command_sql = command_sql.replace("'None'", "Null")
         command_sql = command_sql.replace("None", "Null")
-        logger.warning("Primeiro Select MS14: " + command_sql)
         records = conn.execute(command_sql).fetchall()
         reservas = []
         for row in records:
@@ -186,11 +183,10 @@ def ms14(ms14: MS14, public_id=Depends(auth_handler.auth_wrapper)):
                                     FROM `rede1minuto`.`encomendas`
                                     LEFT JOIN `reserva_encomenda` ON (`encomendas`.`IdTransacaoUnica` = `reserva_encomenda`.`IdTransacaoUnica`)
                                     LEFT JOIN `locker` ON (`reserva_encomenda`.`idLocker` = `locker`.`idLocker`)
-                                    where encomendas.IdTransacaoUnica = '{encomendas[0]}'"""
+                                    where encomendas.IdTransacaoUnica = '{reserva_encomenda_encomendas[0]}'"""
             command_sql = command_sql.replace("'None'", "Null")
             command_sql = command_sql.replace("None", "Null")
             records0 = conn.execute(command_sql).fetchall()
-            logger.warning("Segundo Select MS14: " + command_sql)
             encomendas = []
             for row in records0:
                 encomenda = {}
