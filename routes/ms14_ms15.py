@@ -133,6 +133,7 @@ def ms14(ms14: MS14, public_id=Depends(auth_handler.auth_wrapper)):
         command_sql += f" group by `reserva_encomenda`.`IdTransacaoUnica`"
         command_sql = command_sql.replace("'None'", "Null")
         command_sql = command_sql.replace("None", "Null")
+        logger.warning("Primeiro Select MS14: " + command_sql)
         records = conn.execute(command_sql).fetchall()
         reservas = []
         for row in records:
@@ -187,6 +188,7 @@ def ms14(ms14: MS14, public_id=Depends(auth_handler.auth_wrapper)):
             command_sql = command_sql.replace("'None'", "Null")
             command_sql = command_sql.replace("None", "Null")
             records0 = conn.execute(command_sql).fetchall()
+            logger.warning("Segundo Select MS14: " + command_sql)
             encomendas = []
             for row in records0:
                 encomenda = {}
