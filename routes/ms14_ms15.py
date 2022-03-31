@@ -117,8 +117,8 @@ def ms14(ms14: MS14, public_id=Depends(auth_handler.auth_wrapper)):
                         FROM `rede1minuto`.`reserva_encomenda`
                         INNER JOIN `reserva_status` ON (`reserva_encomenda`.`idStatusEncomenda` = `reserva_status`.`idStatusReserva`)
                         INNER JOIN `locker` ON (`reserva_encomenda`.`idLocker` = `locker`.`idLocker`)
-                        INNER JOIN `reserva_encomenda_encomendas` ON (`reserva_encomenda`.`IdTransacaoUnica` = `reserva_encomenda_encomendas`.`IdTransacaoUnica`)
                         INNER JOIN `reserva_tipo_servico` ON (`reserva_encomenda`.`idServicoReserva` = `reserva_tipo_servico`.`idServicoReserva`)"""
+#                        INNER JOIN `reserva_encomenda_encomendas` ON (`reserva_encomenda`.`IdTransacaoUnica` = `reserva_encomenda_encomendas`.`IdTransacaoUnica`)
 
         if ms14.DataHora_Inicio_Consuta_Encomendas_Designadas and ms14.DataHora_Final_Consuta_Encomendas_Designadas is not None:
             command_sql += f" and reserva_encomenda.DateAt BETWEEN '{ms14.DataHora_Inicio_Consuta_Encomendas_Designadas}' AND '{ms14.DataHora_Final_Consuta_Encomendas_Designadas}'"
