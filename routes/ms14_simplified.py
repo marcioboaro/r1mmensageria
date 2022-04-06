@@ -44,7 +44,7 @@ def ms14_simplified(ms14s: MS14Simplified, public_id=Depends(auth_handler.auth_w
         if ms14s.ID_Rede_Lockers is None:
             return {"status_code": 422, "detail": "M012004 - ID_Rede_Lockers obrigatório"}
         if ms14s.ID_Rede_Lockers is not None:
-            command_sql = f"SELECT idRede from rede where rede.idRede = '{ms14.ID_Rede_Lockers}';"
+            command_sql = f"SELECT idRede from rede where rede.idRede = '{ms14s.ID_Rede_Lockers}';"
             if conn.execute(command_sql).fetchone() is None:
                 return {"status_code": 422, "detail": "M012005 - ID_Rede_Lockers inválido"}
 
