@@ -10,7 +10,6 @@ from routes.ms09_ms10 import ms09_ms10
 from routes.ms11_ms11 import ms11_ms11
 from routes.ms12_ms12 import ms12_ms12
 from routes.ms14_ms15 import ms14_ms15
-#from routes.ms14_simplified import ms14_simplified
 from routes.ms16_ms17 import ms16_ms17
 from routes.ms18_ms19 import ms18_ms19
 from routes.ms20_ms21 import ms20_ms21
@@ -205,7 +204,6 @@ app.include_router(ms11_ms11)
 app.include_router(ms12_ms12)
 app.include_router(ms12_ms12)
 app.include_router(ms14_ms15)
-#app.include_router(ms14_simplified)
 app.include_router(ms16_ms17)
 app.include_router(ms18_ms19)
 app.include_router(ms20_ms21)

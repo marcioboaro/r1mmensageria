@@ -51,8 +51,8 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
 
         if ms05.ID_do_Solicitante is None:
             return {"status_code": 422, "detail": "M06006 - ID_do_Solicitante obrigatório"}
-        if len(ms05.ID_do_Solicitante) != 20:  # 20 caracteres
-            return {"status_code": 422, "detail": "M06006 - ID_do_Solicitante deve conter 20 caracteres"}
+#        if len(ms05.ID_do_Solicitante) != 20:  # 20 caracteres
+#            return {"status_code": 422, "detail": "M06006 - ID_do_Solicitante deve conter 20 caracteres"}
         if ms05.ID_Rede_Lockers is None:
             return {"status_code": 422, "detail": "M06008 - ID_Rede_Lockers obrigatório"}
         if ms05.ID_Rede_Lockers is not None:
