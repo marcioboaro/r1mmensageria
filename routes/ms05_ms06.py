@@ -353,10 +353,12 @@ def insert_reserva_encomenda_encomendas(idTransacaoUnica, ms05, etiqueta):
 
             command_sql = command_sql.replace("'None'", "Null")
             command_sql = command_sql.replace("None", "Null")
-            conn.execute(command_sql)
+
             logtxt = f"{datetime.now()} - {command_sql}"
-            log = f"INSERT INTO `rede1minuto`.`log` (`logtxt`) VALUES (<{logtxt}>)"
+            log = f"INSERT INTO `rede1minuto`.`log` (`logtxt`) VALUES ({logtxt})"
             conn.execute(log)
+
+            conn.execute(command_sql)
     except:
         logger.error(sys.exc_info())
         result = dict()
@@ -410,10 +412,12 @@ def insert_reserva_encomenda(ms05, idTransacaoUnica, Inicio_reserva, Final_reser
                         );"""
         command_sql = command_sql.replace("'None'", "Null")
         command_sql = command_sql.replace("None", "Null")
-        conn.execute(command_sql)
+
         logtxt = f"{datetime.now()} - {command_sql}"
         log = f"INSERT INTO `rede1minuto`.`log` (`logtxt`) VALUES ({logtxt})"
         conn.execute(log)
+
+        conn.execute(command_sql)
     except:
         logger.error(sys.exc_info())
         result = dict()
