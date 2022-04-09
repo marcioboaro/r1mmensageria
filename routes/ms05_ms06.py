@@ -74,9 +74,10 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
         if ms05.URL_CALL_BACK is None:
             return {"status_code": 422, "detail": "M06046 - URL para Call Back é obrigatória"}
 
-        if ms05.Versao_Mensageria is not None:
-            if ms05.Versao_Mensageria != "1.0.0":
-                return {"status_code": 422, "detail": "M04025 - Versao_Mensageria inválido"}
+     #   if ms05.Versao_Mensageria is not None:
+     #       if ms05.Versao_Mensageria != "1.0.0":
+     #           return {"status_code": 422, "detail": "M04025 - Versao_Mensageria inválido"}
+        ms05.Versao_Mensageria = "1.0.0"
 
         if ms05.ID_Transacao_Unica is None:
             ms05.ID_Transacao_Unica = str(uuid.uuid1())
