@@ -412,7 +412,10 @@ def insert_reserva_encomenda(ms05, idTransacaoUnica, Inicio_reserva, Final_reser
         command_sql = command_sql.replace("'None'", "Null")
         command_sql = command_sql.replace("None", "Null")
         conn.execute(command_sql)
-        logger.warning(command_sql)
+        conn.execute("INSERT INTO `rede1minuto`.`log` (`logtxt`) VALUES (<{logtxt: }>)"
+                        .format(logtxt=f"{datetime.now()} - Inseriu a reserva {ms05.idTransacaoUnica} na tabela reserva_encomenda"))
+        conn.execute("INSERT INTO `rede1minuto`.`log` (`logtxt`) VALUES (<{logtxt: }>)"
+                        .format(command_sql))
     except:
         logger.error(sys.exc_info())
         result = dict()
@@ -450,7 +453,10 @@ def insert_tracking_reserva(ms05, idTransacaoUnica):
             command_sql = command_sql.replace("'None'", "Null")
             command_sql = command_sql.replace("None", "Null")
             conn.execute(command_sql)
-            logger.warning(command_sql)
+            conn.execute("INSERT INTO `rede1minuto`.`log` (`logtxt`) VALUES (<{logtxt: }>)"
+                            .format(logtxt=f"{datetime.now()} - Inseriu o tracking da encomenda {idTicketOcorrencia} na tabela tracking_encomenda"))
+            conn.execute("INSERT INTO `rede1minuto`.`log` (`logtxt`) VALUES (<{logtxt: }>)"
+                            .format(command_sql))
     except:
         logger.error(sys.exc_info())
         result = dict()
