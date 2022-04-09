@@ -354,7 +354,10 @@ def insert_reserva_encomenda_encomendas(idTransacaoUnica, ms05, etiqueta):
             command_sql = command_sql.replace("'None'", "Null")
             command_sql = command_sql.replace("None", "Null")
             conn.execute(command_sql)
-            logger.warning(command_sql)
+            conn.execute("INSERT INTO `rede1minuto`.`log` (`logtxt`) VALUES (<{logtxt: }>)"
+                         .format(logtxt=f"{datetime.now()} - Inseriu a encomenda {encomenda.ID_Encomenda} na tabela encomendas"))
+            conn.execute("INSERT INTO `rede1minuto`.`log` (`logtxt`) VALUES (<{logtxt: }>)"
+                         .format(command_sql))
     except:
         logger.error(sys.exc_info())
         result = dict()
