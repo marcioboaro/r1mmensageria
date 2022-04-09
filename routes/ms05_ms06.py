@@ -295,6 +295,8 @@ def send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_res
         return True
     except:
         logger.error(sys.exc_info())
+        conn.execute("INSERT INTO `rede1minuto`.`log` (`logtxt`) VALUES (<{logtxt: }>)"
+                            .format(Logtxt=f"{datetime.now()} - {sys.exc_info()}"))        
         return False
 
 
@@ -362,6 +364,8 @@ def insert_reserva_encomenda_encomendas(idTransacaoUnica, ms05, etiqueta):
         logger.error(sys.exc_info())
         result = dict()
         result['Error insert_reserva_encomenda_encomendas'] = sys.exc_info()
+        conn.execute("INSERT INTO `rede1minuto`.`log` (`logtxt`) VALUES (<{logtxt: }>)"
+                            .format(Logtxt=f"{datetime.now()} - {sys.exc_info()}"))        
         return result
 
 
@@ -420,6 +424,8 @@ def insert_reserva_encomenda(ms05, idTransacaoUnica, Inicio_reserva, Final_reser
         logger.error(sys.exc_info())
         result = dict()
         result['Error insert_reserva_encomenda'] = sys.exc_info()
+        conn.execute("INSERT INTO `rede1minuto`.`log` (`logtxt`) VALUES (<{logtxt: }>)"
+                            .format(Logtxt=f"{datetime.now()} - {sys.exc_info()}"))        
         return result
 
 
@@ -461,6 +467,8 @@ def insert_tracking_reserva(ms05, idTransacaoUnica):
         logger.error(sys.exc_info())
         result = dict()
         result['Error insert_tracking'] = sys.exc_info()
+        conn.execute("INSERT INTO `rede1minuto`.`log` (`logtxt`) VALUES (<{logtxt: }>)"
+                            .format(Logtxt=f"{datetime.now()} - {sys.exc_info()}"))        
         return result
 
 
