@@ -74,10 +74,9 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
         if ms05.URL_CALL_BACK is None:
             return {"status_code": 422, "detail": "M06046 - URL para Call Back é obrigatória"}
 
-     #   if ms05.Versao_Mensageria is not None:
-     #       if ms05.Versao_Mensageria != "1.0.0":
-     #           return {"status_code": 422, "detail": "M04025 - Versao_Mensageria inválido"}
-        ms05.Versao_Mensageria = "1.0.0"
+        if ms05.Versao_Mensageria is not None:
+            if ms05.Versao_Mensageria != "1.0.0":
+                return {"status_code": 422, "detail": "M04025 - Versao_Mensageria inválido"}
 
         if ms05.ID_Transacao_Unica is None:
             ms05.ID_Transacao_Unica = str(uuid.uuid1())
@@ -357,16 +356,16 @@ def insert_reserva_encomenda_encomendas(idTransacaoUnica, ms05, etiqueta):
             command_sql = command_sql.replace("'None'", "Null")
             command_sql = command_sql.replace("None", "Null")
             conn.execute(command_sql)
-            conn.execute("INSERT INTO `rede1minuto`.`log` (`logtxt`) VALUES (<{logtxt: }>)"
-                         .format(logtxt=f"{datetime.now()} - Inseriu a encomenda {encomenda.ID_Encomenda} na tabela encomendas"))
-            conn.execute("INSERT INTO `rede1minuto`.`log` (`logtxt`) VALUES (<{logtxt: }>)"
-                         .format(command_sql))
+            logtxt = f"{datetime.now()} - {command_sql}"
+            log = f"INSERT INTO `rede1minuto`.`log` (`logtxt`) VALUES (<{logtxt: }>)"
+            conn.execute(log)
     except:
         logger.error(sys.exc_info())
         result = dict()
         result['Error insert_reserva_encomenda_encomendas'] = sys.exc_info()
-        conn.execute("INSERT INTO `rede1minuto`.`log` (`logtxt`) VALUES (<{logtxt: }>)"
-                            .format(Logtxt=f"{datetime.now()} - {sys.exc_info()}"))        
+        logtxt = f"{datetime.now()} - ERRO - {command_sql}"
+        log = f"INSERT INTO `rede1minuto`.`log` (`logtxt`) VALUES (<{logtxt: }>)"
+        conn.execute(log)
         return result
 
 
@@ -424,9 +423,6 @@ def insert_reserva_encomenda(ms05, idTransacaoUnica, Inicio_reserva, Final_reser
     except:
         logger.error(sys.exc_info())
         result = dict()
-        result['Error insert_reserva_encomenda'] = sys.exc_info()
-        conn.execute("INSERT INTO `rede1minuto`.`log` (`logtxt`) VALUES (<{logtxt: }>)"
-                            .format(Logtxt=f"{datetime.now()} - {sys.exc_info()}"))        
         return result
 
 
@@ -467,9 +463,6 @@ def insert_tracking_reserva(ms05, idTransacaoUnica):
     except:
         logger.error(sys.exc_info())
         result = dict()
-        result['Error insert_tracking'] = sys.exc_info()
-        conn.execute("INSERT INTO `rede1minuto`.`log` (`logtxt`) VALUES (<{logtxt: }>)"
-                            .format(Logtxt=f"{datetime.now()} - {sys.exc_info()}"))        
         return result
 
 
