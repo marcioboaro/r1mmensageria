@@ -420,6 +420,7 @@ def insert_reserva_encomenda(ms05, idTransacaoUnica, Inicio_reserva, Final_reser
         conn.execute(command_sql)
     except:
         logger.error(sys.exc_info())
+        logger.warning(command_sql)
         result = dict()
         result['Error insert_reserva_encomenda'] = sys.exc_info()
         return result
