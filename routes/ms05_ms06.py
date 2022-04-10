@@ -355,7 +355,7 @@ def insert_reserva_encomenda_encomendas(idTransacaoUnica, ms05, etiqueta):
             command_sql = command_sql.replace("None", "Null")
 
             logtxt = f"{datetime.now()} - {command_sql}"
-            log = f"INSERT INTO `rede1minuto`.`log` (`logtxt`) VALUES ({logtxt})"
+            log = f"INSERT INTO `log` (`logtxt`) VALUES ({logtxt})"
             conn.execute(log)
 
             conn.execute(command_sql)
@@ -412,11 +412,6 @@ def insert_reserva_encomenda(ms05, idTransacaoUnica, Inicio_reserva, Final_reser
                         );"""
         command_sql = command_sql.replace("'None'", "Null")
         command_sql = command_sql.replace("None", "Null")
-
-        logtxt = f"{datetime.now()} - {command_sql}"
-        log = f"INSERT INTO `rede1minuto`.`log` (`logtxt`) VALUES ({logtxt})"
-        conn.execute(log)
-
         conn.execute(command_sql)
     except:
         logger.error(sys.exc_info())
@@ -431,7 +426,7 @@ def insert_tracking_reserva(ms05, idTransacaoUnica):
         encomendas = ms05.Info_Encomendas
         for encomenda in encomendas:
             idTicketOcorrencia = str(uuid.uuid1())
-            command_sql = f'''INSERT INTO `rede1minuto`.`tracking_encomenda`
+            command_sql = f'''INSERT INTO `tracking_encomenda`
                                             (`idTicketOcorrencia`,
                                             `IdTransacaoUnica`,
                                             `idRede`,
@@ -469,7 +464,7 @@ def insert_tracking_porta(ms05, record_Porta):
         record = conn.execute(command_sql).fetchone()
         if record is None:
             idTicketOcorrencia = str(uuid.uuid1())
-            command_sql = f'''INSERT INTO `rede1minuto`.`tracking_portas`
+            command_sql = f'''INSERT INTO `tracking_portas`
                                             (`idTicketOcorrencia`,
                                             `idRede`,
                                             `idLocker`,
@@ -522,7 +517,7 @@ def insert_shopper(ms05):
             if encomenda.CPF_CNPJ_Shopper is not None:
                 command_sql = f"SELECT idShopperCPF_CNPJ from shopper where shopper.idShopperCPF_CNPJ = '{encomenda.CPF_CNPJ_Shopper}';"
                 if conn.execute(command_sql).fetchone() is None:
-                    command_sql = f'''INSERT INTO `rede1minuto`.`shopper`
+                    command_sql = f'''INSERT INTO `shopper`
                                                     (`idShopperCPF_CNPJ`,
                                                     `ShopperMobileNumero`,
                                                     `ShopperEmail`,
