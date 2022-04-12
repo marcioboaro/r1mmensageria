@@ -49,8 +49,8 @@ def ms03(ms03: MS03, public_id=Depends(auth_handler.auth_wrapper)):
         logger.info(f"Usuário que fez a solicitação: {public_id}")
         if ms03.ID_do_Solicitante is None:
             return {"status_code": 422, "detail": "M02006 - ID_do_Solicitante obrigatório"}
-        if len(ms03.ID_do_Solicitante) != 20: # 20 caracteres
-            return {"status_code": 422, "detail": "M04009 - ID_de_Solicitante inválido"}
+#        if len(ms03.ID_do_Solicitante) != 20: # 20 caracteres
+#            return {"status_code": 422, "detail": "M04009 - ID_de_Solicitante inválido"}
         if ms03.ID_Rede_Lockers is None:
             return {"status_code": 422, "detail": "M04007 - ID_Rede_Lockers obrigatório"}
         if ms03.ID_Rede_Lockers is not None:
