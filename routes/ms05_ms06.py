@@ -100,20 +100,20 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
                 return {"status_code": 203, "detail": "Por favor entre com um endereço de e-mail valido."}
 
             # validando CEP_Shopper
-            if encomenda.CEP_Shopper is not None:
-                command_sql = f"SELECT cep from cepbr_endereco where cepbr_endereco.cep = '{encomenda.CEP_Shopper}';"
-                if conn.execute(command_sql).fetchone() is None:
-                    return {"status_code": 422, "detail": "M06023 - CEP_Shopper inválido"}
+            #if encomenda.CEP_Shopper is not None:
+            #    command_sql = f"SELECT cep from cepbr_endereco where cepbr_endereco.cep = '{encomenda.CEP_Shopper}';"
+            #    if conn.execute(command_sql).fetchone() is None:
+            #        return {"status_code": 422, "detail": "M06023 - CEP_Shopper inválido"}
 
             # validando Moeda_Shopper
-            if encomenda.Moeda_Shopper is not None:
-                command_sql = f"SELECT idMoeda from Moedas where Moedas.idMoeda = '{encomenda.Moeda_Shopper}';"
-                if conn.execute(command_sql).fetchone() is None:
-                    return {"status_code": 422, "detail": "M06023 - Moeda_Shopper inválido"}
+            #if encomenda.Moeda_Shopper is not None:
+            #    command_sql = f"SELECT idMoeda from Moedas where Moedas.idMoeda = '{encomenda.Moeda_Shopper}';"
+            #    if conn.execute(command_sql).fetchone() is None:
+            #        return {"status_code": 422, "detail": "M06023 - Moeda_Shopper inválido"}
 
             # validando Codigo_País_Shopper
-            if encomenda.Codigo_Pais_Shopper is None:
-                encomenda.Codigo_Pais_Shopper = "BR"
+            #if encomenda.Codigo_Pais_Shopper is None:
+            #    encomenda.Codigo_Pais_Shopper = "BR"
 
         idTransacaoUnica = ms05.ID_Transacao_Unica
         etiqueta = "rede1minuto"
