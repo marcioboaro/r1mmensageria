@@ -73,7 +73,7 @@ def register(auth_details: AuthDetails):
                 pass_msg = "Por favor a senha deve ter pelo menos 1 posição caracter especial."
             return {"status_code":203, "detail":pass_msg}
         # montando a chave idSolicitante
-        idSolicitante = auth_details.cnpj + str(auth_details.rede).zfill(3) + str(auth_details.idmarketplace).zfill(3)
+        #idSolicitante = auth_details.cnpj + str(auth_details.rede).zfill(3) + str(auth_details.idmarketplace).zfill(3)
 
         # checando se já usuário cadastrado
         command_sql = f'''SELECT `AuthDetails`.`public_id`,
