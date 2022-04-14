@@ -59,19 +59,20 @@ def register(auth_details: AuthDetails):
         if not re.match(r"[^@]+@[^@]+\.[^@]+", auth_details.email):
             return {"status_code":203, "detail":"Por favor entre com um endereço de e-mail valido."}
 
-        pass_ret = password_check(auth_details.password)
-        if not pass_ret["password_ok"]:
-            if pass_ret["length_error"]:
-                pass_msg = "Por favor a senha deve ter pelo menos 12 posições."
-            elif pass_ret["digit_error"]:
-                pass_msg = "Por favor a senha deve ter pelo menos 1 posição númerica."
-            elif pass_ret["uppercase_error"]:
-                pass_msg = "Por favor a senha deve ter pelo menos 1 posição maiúscula."
-            elif pass_ret["lowercase_error"]:
-                pass_msg = "Por favor a senha deve ter pelo menos 1 posição minúscula."
-            elif pass_ret["symbol_error"]:
-                pass_msg = "Por favor a senha deve ter pelo menos 1 posição caracter especial."
-            return {"status_code":203, "detail":pass_msg}
+        if auth_details.idmarketplace != 8:
+            pass_ret = password_check(auth_details.password)
+            if not pass_ret["password_ok"]:
+                if pass_ret["length_error"]:
+                    pass_msg = "Por favor a senha deve ter pelo menos 12 posições."
+                elif pass_ret["digit_error"]:
+                    pass_msg = "Por favor a senha deve ter pelo menos 1 posição númerica."
+                elif pass_ret["uppercase_error"]:
+                    pass_msg = "Por favor a senha deve ter pelo menos 1 posição maiúscula."
+                elif pass_ret["lowercase_error"]:
+                    pass_msg = "Por favor a senha deve ter pelo menos 1 posição minúscula."
+                elif pass_ret["symbol_error"]:
+                    pass_msg = "Por favor a senha deve ter pelo menos 1 posição caracter especial."
+                return {"status_code":203, "detail":pass_msg}
         # montando a chave idSolicitante
         if auth_details.idmarketplace != 8:
             idSolicitante = auth_details.cnpj + str(auth_details.rede).zfill(3) + str(auth_details.idmarketplace).zfill(3) 
