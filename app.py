@@ -62,7 +62,7 @@ def register(auth_details: AuthDetails):
         pass_ret = password_check(auth_details.password)
         if not pass_ret["password_ok"]:
             if pass_ret["length_error"]:
-                pass_msg = "Por favor a senha deve ter pelo menos 12 posições."
+                pass_msg = "Por favor a senha deve ter pelo menos 8 posições."
             elif pass_ret["digit_error"]:
                 pass_msg = "Por favor a senha deve ter pelo menos 1 posição númerica."
             elif pass_ret["uppercase_error"]:
@@ -173,7 +173,7 @@ def password_check(password):
         1 lowercase letter or more
     """
     try:
-        length_error = len(password) < 12
+        length_error = len(password) < 8
         digit_error = re.search(r"\d", password) is None
         uppercase_error = re.search(r"[A-Z]", password) is None
         lowercase_error = re.search(r"[a-z]", password) is None
