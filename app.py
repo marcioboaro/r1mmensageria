@@ -89,11 +89,10 @@ def register(auth_details: AuthDetails):
                             and `AuthDetails`.`idRede`= "{auth_details.rede}"
                             and `AuthDetails`.`idMarketPlace`= "{auth_details.idmarketplace}";'''                      
         row = conn.execute(command_sql).fetchone()
-
         # checando se o usuário cadastrado está na lista de participantes
         if row is not None:
-            return {"status_code":203, "detail":"Usuário já cadastrado ===> " + command_sql + "."}
-
+            return {"status_code":203, "detail":"Usuário já cadastrado."}
+        conn.close()
         command_sql = f'''SELECT `participantes`.`idParticipanteCNPJ`,
                                 `participantes`.`idRede`,
                                 `participantes`.`idMarketPlace`
@@ -128,7 +127,7 @@ def register(auth_details: AuthDetails):
         command_sql = command_sql.replace("'None'", "Null")
         command_sql = command_sql.replace("None", "Null")
         row = conn.execute(command_sql)
-
+        conn.close()    
         return { 'idSolicitante': idSolicitante }
 
     except:
@@ -137,6 +136,7 @@ def register(auth_details: AuthDetails):
         if command_sql is not None:
             result["command_sql"] = command_sql
         result['Error register'] = sys.exc_info()
+        conn.close()
         return result
 
 @app.post('/login')
