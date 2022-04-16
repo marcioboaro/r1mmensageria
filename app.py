@@ -29,7 +29,7 @@ from routes.lc65_lc65 import lc65_lc65
 from routes.lc67_lc67 import lc67_lc67
 from routes.lc69_lc69 import lc69_lc69
 import uuid  
-from config.db import conn
+from config.db import conn, engine
 from config.log import logger
 from auth.auth import AuthHandler
 from schemas.auth import AuthDetails
@@ -79,57 +79,58 @@ def register(auth_details: AuthDetails):
         else:
             idSolicitante = auth_details.cnpj 
 
-        # checando se já usuário cadastrado
-        command_sql = f'''SELECT `AuthDetails`.`public_id`,
-                                 `AuthDetails`.`username`,
-                                 `AuthDetails`.`email`,
-                                 `AuthDetails`.`password`,
-                                 `AuthDetails`.`DateAt`,
-                                 `AuthDetails`.`DateUpdate`
-                            FROM `AuthDetails`
-                            where `AuthDetails`.`email` = "{auth_details.email}"
-                            and `AuthDetails`.`idRede`= "{auth_details.rede}"
-                            and `AuthDetails`.`idMarketPlace`= "{auth_details.idmarketplace}";'''                      
-        row = conn.execute(command_sql).fetchone()
-        # checando se o usuário cadastrado está na lista de participantes
-        if row is not None:
-            conn.close()    
-            return {"status_code":203, "detail":"Usuário já cadastrado."}
-        command_sql = f'''SELECT `participantes`.`idParticipanteCNPJ`,
-                                `participantes`.`idRede`,
-                                `participantes`.`idMarketPlace`
-                                    FROM `participantes`
-                                    where `participantes`.`idParticipanteCNPJ` = "{auth_details.cnpj}"
-                                    and `participantes`.`idRede`= "{auth_details.rede}"
-                                    and `participantes`.`idMarketPlace`= "{auth_details.idmarketplace}";'''
-        row = conn.execute(command_sql).fetchone()
-        if row is None:
-            conn.close()
-            return {"status_code": 400, "detail": "Usuário não é um participante cadastrado"}
 
-        hashed_password = auth_handler.get_password_hash(auth_details.password)
-        public_id = str(uuid.uuid4())
+        with engine.connect() as con:
+            # checando se já usuário cadastrado
+            command_sql = f'''SELECT `AuthDetails`.`public_id`,
+                                    `AuthDetails`.`username`,
+                                    `AuthDetails`.`email`,
+                                    `AuthDetails`.`password`,
+                                    `AuthDetails`.`DateAt`,
+                                    `AuthDetails`.`DateUpdate`
+                                FROM `AuthDetails`
+                                where `AuthDetails`.`email` = "{auth_details.email}"
+                                and `AuthDetails`.`idRede`= "{auth_details.rede}"
+                                and `AuthDetails`.`idMarketPlace`= "{auth_details.idmarketplace}";'''                      
+            
+            row = con.execute(command_sql).fetchone()        # checando se já usuário cadastrado
+            # checando se o usuário cadastrado está na lista de participantes
+            if row is not None:
+                return {"status_code":203, "detail":"Usuário já cadastrado."}
+            command_sql = f'''SELECT `participantes`.`idParticipanteCNPJ`,
+                                    `participantes`.`idRede`,
+                                    `participantes`.`idMarketPlace`
+                                        FROM `participantes`
+                                        where `participantes`.`idParticipanteCNPJ` = "{auth_details.cnpj}"
+                                        and `participantes`.`idRede`= "{auth_details.rede}"
+                                        and `participantes`.`idMarketPlace`= "{auth_details.idmarketplace}";'''
+            row = con.execute(command_sql).fetchone()
+            if row is None:
+                return {"status_code": 400, "detail": "Usuário não é um participante cadastrado"}
 
-        # se está na lista de participantes então inserir usuário no banco
-        command_sql = f'''INSERT INTO `AuthDetails`
-                                    (`public_id`,
-                                    `idRede`,
-                                    `idMarketPlace`,
-                                    `idParticipanteCNPJ`,
-                                    `username`,
-                                    `email`,
-                                    `password`)
-                                VALUES
-                                    ('{public_id}',
-                                    '{auth_details.rede}',
-                                    '{auth_details.idmarketplace}',
-                                    '{auth_details.cnpj}',
-                                    '{auth_details.username}',
-                                    '{auth_details.email}',
-                                    '{hashed_password}');'''
-        command_sql = command_sql.replace("'None'", "Null")
-        command_sql = command_sql.replace("None", "Null")
-        row = conn.execute(command_sql)
+            hashed_password = auth_handler.get_password_hash(auth_details.password)
+            public_id = str(uuid.uuid4())
+
+            # se está na lista de participantes então inserir usuário no banco
+            command_sql = f'''INSERT INTO `AuthDetails`
+                                        (`public_id`,
+                                        `idRede`,
+                                        `idMarketPlace`,
+                                        `idParticipanteCNPJ`,
+                                        `username`,
+                                        `email`,
+                                        `password`)
+                                    VALUES
+                                        ('{public_id}',
+                                        '{auth_details.rede}',
+                                        '{auth_details.idmarketplace}',
+                                        '{auth_details.cnpj}',
+                                        '{auth_details.username}',
+                                        '{auth_details.email}',
+                                        '{hashed_password}');'''
+            command_sql = command_sql.replace("'None'", "Null")
+            command_sql = command_sql.replace("None", "Null")
+            row = con.execute(command_sql)
         return { 'idSolicitante': idSolicitante }
 
     except:
