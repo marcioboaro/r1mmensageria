@@ -92,7 +92,7 @@ def register(auth_details: AuthDetails):
 
         # checando se o usuário cadastrado está na lista de participantes
         if row is not None:
-            return {"status_code":203, "detail":"Usuário já cadastrado " + row["username"] + "." + command_sql}} 
+            return {"status_code":203, "detail":"Usuário já cadastrado " + row["username"] + "." + command_sql}
 
         command_sql = f'''SELECT `participantes`.`idParticipanteCNPJ`,
                                 `participantes`.`idRede`,
