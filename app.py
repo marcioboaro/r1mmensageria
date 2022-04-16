@@ -85,7 +85,9 @@ def register(auth_details: AuthDetails):
                                  `AuthDetails`.`DateAt`,
                                  `AuthDetails`.`DateUpdate`
                             FROM `AuthDetails`
-                            where `AuthDetails`.`email` = "{auth_details.email}";'''
+                            where `AuthDetails`.`email` = "{auth_details.email}"
+                            and `AuthDetails`.`idRede`= "{auth_details.rede}"
+                            and `AuthDetails`.`idMarketPlace`= "{auth_details.idmarketplace}";'''                      
         row = conn.execute(command_sql).fetchone()
 
         # checando se o usuário cadastrado está na lista de participantes
