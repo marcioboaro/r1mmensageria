@@ -76,6 +76,8 @@ def register(auth_details: AuthDetails):
         # montando a chave idSolicitante
         if auth_details.idmarketplace != 8:
             idSolicitante = auth_details.cnpj + str(auth_details.rede).zfill(3) + str(auth_details.idmarketplace).zfill(3) 
+        else:
+            idSolicitante = auth_details.cnpj 
 
         # checando se já usuário cadastrado
         command_sql = f'''SELECT `AuthDetails`.`public_id`,
@@ -91,8 +93,8 @@ def register(auth_details: AuthDetails):
         row = conn.execute(command_sql).fetchone()
         # checando se o usuário cadastrado está na lista de participantes
         if row is not None:
+            conn.close()    
             return {"status_code":203, "detail":"Usuário já cadastrado."}
-        conn.close()
         command_sql = f'''SELECT `participantes`.`idParticipanteCNPJ`,
                                 `participantes`.`idRede`,
                                 `participantes`.`idMarketPlace`
@@ -102,6 +104,7 @@ def register(auth_details: AuthDetails):
                                     and `participantes`.`idMarketPlace`= "{auth_details.idmarketplace}";'''
         row = conn.execute(command_sql).fetchone()
         if row is None:
+            conn.close()
             return {"status_code": 400, "detail": "Usuário não é um participante cadastrado"}
 
         hashed_password = auth_handler.get_password_hash(auth_details.password)
@@ -127,7 +130,6 @@ def register(auth_details: AuthDetails):
         command_sql = command_sql.replace("'None'", "Null")
         command_sql = command_sql.replace("None", "Null")
         row = conn.execute(command_sql)
-        conn.close()    
         return { 'idSolicitante': idSolicitante }
 
     except:
@@ -136,7 +138,6 @@ def register(auth_details: AuthDetails):
         if command_sql is not None:
             result["command_sql"] = command_sql
         result['Error register'] = sys.exc_info()
-        conn.close()
         return result
 
 @app.post('/login')
