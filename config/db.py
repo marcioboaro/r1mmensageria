@@ -1,10 +1,10 @@
 from sqlalchemy import create_engine, MetaData
 
-user = "admin"
-passw = "V8Awdu2PdN7P6QLv"
+user = "rede1minuto"
+passw = "k9X1wj2UEj5FD5G2H4pl"
 port = 3306
 base = "rede1minuto"
-host = "database-1.czsak8q16ylr.us-east-1.rds.amazonaws.com"
+host = "dbprod.rede1minuto.com.br"
 charset = "utf8"
 
 str_conn = "mysql+pymysql://"+str(user)+":"+str(passw)+"@"+str(host)+":"+str(port)+"/"+str(base)+"?charset="+charset
