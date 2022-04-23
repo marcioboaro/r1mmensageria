@@ -205,7 +205,7 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
             ms06['info_encomendas'] = encomendas
             ms06['Versao_Mensageria'] = ms05.Versao_Mensageria
 
-            logger.warning("insert_reserva_encomenda_encomendas")
+            logger.warning("insert_reserva_encomenda_encomendas     **************************")
             insert_reserva_encomenda_encomendas(idTransacaoUnica, ms05, etiqueta)
             insert_reserva_encomenda(ms05, idTransacaoUnica, Inicio_reserva, Final_reserva, record_Porta,Codigo_Abertura_Porta)
             insert_tracking_reserva(ms05, idTransacaoUnica)
