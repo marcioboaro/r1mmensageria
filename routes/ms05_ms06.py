@@ -302,7 +302,7 @@ def insert_reserva_encomenda_encomendas(idTransacaoUnica, ms05, etiqueta):
     try:
         encomendas = ms05.Info_Encomendas
         for encomenda in encomendas:
-            command_sql = f"""INSERT INTO `encomendas`
+            command_sql = f"""INSERT INTO rede1minuto.encomendas
                                 (`IdEncomenda`,
                                 `IdTransacaoUnica`,
                                 `ShopperMobileNumero`,
@@ -351,6 +351,9 @@ def insert_reserva_encomenda_encomendas(idTransacaoUnica, ms05, etiqueta):
                                 {encomenda.Profundidade_Encomenda},
                                 '{etiqueta}');"""
 
+            command_sql = command_sql.replace("0,", "Null,")
+            command_sql = command_sql.replace("'0'", "Null")
+            command_sql = command_sql.replace("''", "Null")
             command_sql = command_sql.replace("'None'", "Null")
             command_sql = command_sql.replace("None", "Null")
             logger.info(command_sql)
