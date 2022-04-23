@@ -353,10 +353,7 @@ def insert_reserva_encomenda_encomendas(idTransacaoUnica, ms05, etiqueta):
 
             command_sql = command_sql.replace("'None'", "Null")
             command_sql = command_sql.replace("None", "Null")
-
-            logtxt = f"{datetime.now()} - {command_sql}"
-            log = f"INSERT INTO `log` (`logtxt`) VALUES ({logtxt})"
-            conn.execute(log)
+            logger.info(command_sql)
 
             conn.execute(command_sql)
     except:
