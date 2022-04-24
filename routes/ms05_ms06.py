@@ -90,9 +90,9 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
             # validando Numero_Mobile_Shopper
             if encomenda.Numero_Mobile_Shopper is None:
                 return {"status_code": 422, "detail": "M06046 - Numero_Mobile_Shopper é obrigatória"}
-            if len(encomenda.Numero_Mobile_Shopper) != 11:
-                if len(encomenda.Numero_Mobile_Shopper) != 10:
-                    return {"status_code": 422, "detail": "M06006 - Numero_Mobile_Shopper deve conter entre 10 a 11 caracteres"}
+            # if len(encomenda.Numero_Mobile_Shopper) != 11:
+            #     if len(encomenda.Numero_Mobile_Shopper) != 10:
+            #         return {"status_code": 422, "detail": "M06006 - Numero_Mobile_Shopper deve conter entre 10 a 11 caracteres"}
 
             # validando Endereco_de_Email_do_Shopper
             if encomenda.Endereco_de_Email_do_Shopper is None:
