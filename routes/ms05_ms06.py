@@ -17,11 +17,15 @@ import os
 import json
 import re
 import requests
+from rabbitmq import RabbitMQ
+
 
 ms05_ms06 = APIRouter()
 key = Fernet.generate_key()
 f = Fernet(key)
 auth_handler = AuthHandler()
+
+rabbitMq = RabbitMQ()
 
 
 # Consulta catalogo Lockers
@@ -269,30 +273,12 @@ def send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_res
 
         lc01["Content"] = content
 
-        MQ_Name = 'Rede1Min_MQ'
-        URL = 'amqp://rede1min:Minuto@167.71.26.87'  # URL do RabbitMQ
-        queue_name = ms05.ID_da_Estacao_do_Locker + '_locker_output'  # Nome da fila do RabbitMQ
-
-        url = os.environ.get(MQ_Name, URL)
-        params = pika.URLParameters(url)
-        params.socket_timeout = 6
-
-        connection = pika.BlockingConnection(params)
-        channel = connection.channel()
-
-        channel.queue_declare(queue=queue_name, durable=True)
-
+        #************************
+        #Marcio mexi aqui
+        #************************
         message = json.dumps(lc01)  # Converte o dicionario em string
-
-        channel.basic_publish(
-            exchange='amq.direct',
-            routing_key=queue_name,
-            body=message,
-            properties=pika.BasicProperties(
-                delivery_mode=2,  # make message persistent
-            ))
-
-        connection.close()
+        rabbitMq.send_locker_queue(ms05.ID_da_Estacao_do_Locker,message)
+        
         return True
     except:
         logger.error(sys.exc_info())
