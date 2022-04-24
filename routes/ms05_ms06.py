@@ -391,8 +391,11 @@ def insert_reserva_encomenda(ms05, idTransacaoUnica, Inicio_reserva, Final_reser
                         , '{ms05.URL_CALL_BACK}'
                         , '{Inicio_reserva}'
                         , '{Final_reserva}'
-                        , {1}
+                        , {39}
                         );"""
+
+        #idStatusReserva = 39 (Reserva programada)
+
         command_sql = command_sql.replace("'None'", "Null")
         command_sql = command_sql.replace("None", "Null")
         conn.execute(command_sql)
