@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine, MetaData
 from config.config import ConfigServer
 
+
 config = ConfigServer()
 
 database_config = config.get_database_config()

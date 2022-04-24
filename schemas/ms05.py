@@ -6,7 +6,7 @@ from datetime import datetime,time
 class Encomendas(BaseModel):
     ID_Encomenda : str
     Numero_Mobile_Shopper : str
-    Endereco_de_Email_do_Shopper : str
+    Endereco_de_Email_do_Shopper : Optional[str] = None
     CPF_CNPJ_Shopper : Optional[str] = None
     Moeda_Shopper : Optional[str] = None
     Valor_Encomenda_Shopper : Optional[str] = None
@@ -33,7 +33,7 @@ class MS05(BaseModel):
     ID_Rede_Lockers: int
     Data_Hora_Solicitacao: datetime
     ID_da_Estacao_do_Locker: str
-    Tipo_de_Servico_Reserva: str
+    Tipo_de_Servico_Reserva: Optional[str] = None
     ID_Transacao_Unica: Optional[str] = None
     ID_PSL_Designado:  Optional[int] = None
     Autenticacao_Login_Operador_Logistico: int

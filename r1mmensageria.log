@@ -1,20 +1,4 @@
-2022/04/24 12:44:25 PM - uvicorn.error - INFO - Started server process [18312]
-2022/04/24 12:44:25 PM - uvicorn.error - INFO - Waiting for application startup.
-2022/04/24 12:44:25 PM - uvicorn.error - INFO - Application startup complete.
-2022/04/24 12:44:25 PM - uvicorn.error - INFO - Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-2022/04/24 12:50:01 PM - uvicorn.error - INFO - Started server process [16588]
-2022/04/24 12:50:01 PM - uvicorn.error - INFO - Waiting for application startup.
-2022/04/24 12:50:01 PM - uvicorn.error - INFO - Application startup complete.
-2022/04/24 12:50:01 PM - uvicorn.error - INFO - Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-2022/04/24 01:00:09 PM - uvicorn.error - INFO - Started server process [18772]
-2022/04/24 01:00:09 PM - uvicorn.error - INFO - Waiting for application startup.
-2022/04/24 01:00:09 PM - uvicorn.error - INFO - Application startup complete.
-2022/04/24 01:00:09 PM - uvicorn.error - INFO - Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-2022/04/24 01:01:15 PM - uvicorn.error - INFO - Started server process [20724]
-2022/04/24 01:01:15 PM - uvicorn.error - INFO - Waiting for application startup.
-2022/04/24 01:01:15 PM - uvicorn.error - INFO - Application startup complete.
-2022/04/24 01:01:15 PM - uvicorn.error - INFO - Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-2022/04/24 01:15:29 PM - uvicorn.error - INFO - Started server process [18140]
-2022/04/24 01:15:29 PM - uvicorn.error - INFO - Waiting for application startup.
-2022/04/24 01:15:29 PM - uvicorn.error - INFO - Application startup complete.
-2022/04/24 01:15:29 PM - uvicorn.error - INFO - Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+2022/04/24 01:54:01 PM - uvicorn.error - INFO - Started server process [16920]
+2022/04/24 01:54:01 PM - uvicorn.error - INFO - Waiting for application startup.
+2022/04/24 01:54:01 PM - uvicorn.error - INFO - Application startup complete.
+2022/04/24 01:54:01 PM - uvicorn.error - INFO - Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)

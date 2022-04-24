@@ -194,11 +194,12 @@ def ms01(ms01: MS01, public_id=Depends(auth_handler.auth_wrapper)):
                             JOIN `locker_categoria` ON (`locker_categoria`.`idLockerCategoria` = `locker`.`idLockerCategoria`)
                             JOIN `locker_refrigeracao_coluna` ON (`locker_refrigeracao_coluna`.`idLockerRefrigeracaoColuna` = `locker`.`idLockerRefrigeracaoColuna`)
                             JOIN `locker_operacao` ON (`locker_operacao`.`idLockerOperacao` = `locker`.`idLockerOperacao`)
-                            where `locker`.`idLockerStatus` = 1
+                            where `locker`.`idLockerStatus` = 2
                               and `locker`.`idRede` = {ms01.ID_Rede_Lockers}"""
+        command_sql = command_sql.replace("'None'", "Null")
 
-        if ms01.Codigo_Pais_Locker is not None:
-            command_sql += f" and `idPais` = '{ms01.Codigo_Pais_Locker}'"
+#        if ms01.Codigo_Pais_Locker is not None:
+#            command_sql += f" and `idPais` = '{ms01.Codigo_Pais_Locker}'"
         if ms01.Cep_Locker is not None:
             command_sql += f" and `cep` = '{ms01.Cep_Locker}'"
         if ms01.Cidade_Locker is not None:
@@ -215,6 +216,9 @@ def ms01(ms01: MS01, public_id=Depends(auth_handler.auth_wrapper)):
             command_sql += f" and `locker_operacao`.`idLockerOperacao` = '{ms01.Modelo_Operacao_Locker}'"
         if ms01.ID_da_Estacao_do_Locker is not None:
             command_sql += f" and `idLocker` = '{ms01.ID_da_Estacao_do_Locker}'"
+#        logger.info(command_sql)
+#        logger.info("******************************************************************************************")
+
         records = conn.execute(command_sql).fetchall()
         Estacao_Locker = []    
         for record in records:

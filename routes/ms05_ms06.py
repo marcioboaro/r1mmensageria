@@ -19,14 +19,11 @@ import re
 import requests
 from rabbitmq import RabbitMQ
 
-
 ms05_ms06 = APIRouter()
 key = Fernet.generate_key()
 f = Fernet(key)
 auth_handler = AuthHandler()
-
 rabbitMq = RabbitMQ()
-
 
 # Consulta catalogo Lockers
 def latlong_valid(latlong):
@@ -55,8 +52,8 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
 
         if ms05.ID_do_Solicitante is None:
             return {"status_code": 422, "detail": "M06006 - ID_do_Solicitante obrigatório"}
-        if len(ms05.ID_do_Solicitante) != 20:  # 20 caracteres
-            return {"status_code": 422, "detail": "M06006 - ID_do_Solicitante deve conter 20 caracteres"}
+#        if len(ms05.ID_do_Solicitante) != 20:  # 20 caracteres
+#            return {"status_code": 422, "detail": "M06006 - ID_do_Solicitante deve conter 20 caracteres"}
         if ms05.ID_Rede_Lockers is None:
             return {"status_code": 422, "detail": "M06008 - ID_Rede_Lockers obrigatório"}
         if ms05.ID_Rede_Lockers is not None:
@@ -104,20 +101,20 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
                 return {"status_code": 203, "detail": "Por favor entre com um endereço de e-mail valido."}
 
             # validando CEP_Shopper
-            if encomenda.CEP_Shopper is not None:
-                command_sql = f"SELECT cep from cepbr_endereco where cepbr_endereco.cep = '{encomenda.CEP_Shopper}';"
-                if conn.execute(command_sql).fetchone() is None:
-                    return {"status_code": 422, "detail": "M06023 - CEP_Shopper inválido"}
+            #if encomenda.CEP_Shopper is not None:
+            #    command_sql = f"SELECT cep from cepbr_endereco where cepbr_endereco.cep = '{encomenda.CEP_Shopper}';"
+            #    if conn.execute(command_sql).fetchone() is None:
+            #        return {"status_code": 422, "detail": "M06023 - CEP_Shopper inválido"}
 
             # validando Moeda_Shopper
-            if encomenda.Moeda_Shopper is not None:
-                command_sql = f"SELECT idMoeda from Moedas where Moedas.idMoeda = '{encomenda.Moeda_Shopper}';"
-                if conn.execute(command_sql).fetchone() is None:
-                    return {"status_code": 422, "detail": "M06023 - Moeda_Shopper inválido"}
+            #if encomenda.Moeda_Shopper is not None:
+            #    command_sql = f"SELECT idMoeda from Moedas where Moedas.idMoeda = '{encomenda.Moeda_Shopper}';"
+            #    if conn.execute(command_sql).fetchone() is None:
+            #        return {"status_code": 422, "detail": "M06023 - Moeda_Shopper inválido"}
 
             # validando Codigo_País_Shopper
-            if encomenda.Codigo_Pais_Shopper is None:
-                encomenda.Codigo_Pais_Shopper = "BR"
+            #if encomenda.Codigo_Pais_Shopper is None:
+            #    encomenda.Codigo_Pais_Shopper = "BR"
 
         idTransacaoUnica = ms05.ID_Transacao_Unica
         etiqueta = "rede1minuto"
@@ -209,8 +206,7 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
             ms06['info_encomendas'] = encomendas
             ms06['Versao_Mensageria'] = ms05.Versao_Mensageria
 
-            logger.warning("insert_reserva_encomenda_encomendas(idTransacaoUnica, ms05, etiqueta)")
-            
+            logger.warning("insert_reserva_encomenda_encomendas     **************************")
             insert_reserva_encomenda_encomendas(idTransacaoUnica, ms05, etiqueta)
             insert_reserva_encomenda(ms05, idTransacaoUnica, Inicio_reserva, Final_reserva, record_Porta,Codigo_Abertura_Porta)
             insert_tracking_reserva(ms05, idTransacaoUnica)
@@ -288,9 +284,8 @@ def send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_res
 def insert_reserva_encomenda_encomendas(idTransacaoUnica, ms05, etiqueta):
     try:
         encomendas = ms05.Info_Encomendas
-        logger.warning("insert_reserva_encomenda_encomendas(idTransacaoUnica, ms05, etiqueta)")
         for encomenda in encomendas:
-            command_sql = f"""INSERT INTO `encomendas`
+            command_sql = f"""INSERT INTO rede1minuto.encomendas
                                 (`IdEncomenda`,
                                 `IdTransacaoUnica`,
                                 `ShopperMobileNumero`,
@@ -339,14 +334,18 @@ def insert_reserva_encomenda_encomendas(idTransacaoUnica, ms05, etiqueta):
                                 {encomenda.Profundidade_Encomenda},
                                 '{etiqueta}');"""
 
+            command_sql = command_sql.replace("0,", "Null,")
+            command_sql = command_sql.replace("'0'", "Null")
+            command_sql = command_sql.replace("''", "Null")
             command_sql = command_sql.replace("'None'", "Null")
             command_sql = command_sql.replace("None", "Null")
+            logger.info(command_sql)
+
             conn.execute(command_sql)
-            logger.warning(command_sql)
     except:
         logger.error(sys.exc_info())
         result = dict()
-        result['Error insert_reserva_encomenda_encomendas'] = sys.exc_info()
+        result['Error insert_reserva_encomenda'] = sys.exc_info()
         return result
 
 
@@ -397,9 +396,10 @@ def insert_reserva_encomenda(ms05, idTransacaoUnica, Inicio_reserva, Final_reser
         command_sql = command_sql.replace("'None'", "Null")
         command_sql = command_sql.replace("None", "Null")
         conn.execute(command_sql)
-        logger.warning('insert_reserva_encomenda')
+        logger.info(command_sql)
     except:
         logger.error(sys.exc_info())
+        logger.warning(command_sql)
         result = dict()
         result['Error insert_reserva_encomenda'] = sys.exc_info()
         return result
@@ -410,7 +410,7 @@ def insert_tracking_reserva(ms05, idTransacaoUnica):
         encomendas = ms05.Info_Encomendas
         for encomenda in encomendas:
             idTicketOcorrencia = str(uuid.uuid1())
-            command_sql = f'''INSERT INTO `rede1minuto`.`tracking_encomenda`
+            command_sql = f'''INSERT INTO `tracking_encomenda`
                                             (`idTicketOcorrencia`,
                                             `IdTransacaoUnica`,
                                             `idRede`,
@@ -435,11 +435,10 @@ def insert_tracking_reserva(ms05, idTransacaoUnica):
             command_sql = command_sql.replace("'None'", "Null")
             command_sql = command_sql.replace("None", "Null")
             conn.execute(command_sql)
-            logger.warning(command_sql)
     except:
         logger.error(sys.exc_info())
         result = dict()
-        result['Error insert_tracking'] = sys.exc_info()
+        result['Error insert_tracking_reserva'] = sys.exc_info()
         return result
 
 
@@ -449,7 +448,7 @@ def insert_tracking_porta(ms05, record_Porta):
         record = conn.execute(command_sql).fetchone()
         if record is None:
             idTicketOcorrencia = str(uuid.uuid1())
-            command_sql = f'''INSERT INTO `rede1minuto`.`tracking_portas`
+            command_sql = f'''INSERT INTO `tracking_portas`
                                             (`idTicketOcorrencia`,
                                             `idRede`,
                                             `idLocker`,
@@ -502,7 +501,7 @@ def insert_shopper(ms05):
             if encomenda.CPF_CNPJ_Shopper is not None:
                 command_sql = f"SELECT idShopperCPF_CNPJ from shopper where shopper.idShopperCPF_CNPJ = '{encomenda.CPF_CNPJ_Shopper}';"
                 if conn.execute(command_sql).fetchone() is None:
-                    command_sql = f'''INSERT INTO `rede1minuto`.`shopper`
+                    command_sql = f'''INSERT INTO `shopper`
                                                     (`idShopperCPF_CNPJ`,
                                                     `ShopperMobileNumero`,
                                                     `ShopperEmail`,

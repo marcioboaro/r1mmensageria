@@ -49,8 +49,8 @@ def ms03(ms03: MS03, public_id=Depends(auth_handler.auth_wrapper)):
         logger.info(f"Usuário que fez a solicitação: {public_id}")
         if ms03.ID_do_Solicitante is None:
             return {"status_code": 422, "detail": "M02006 - ID_do_Solicitante obrigatório"}
-        if len(ms03.ID_do_Solicitante) != 20: # 20 caracteres
-            return {"status_code": 422, "detail": "M04009 - ID_de_Solicitante inválido"}
+#        if len(ms03.ID_do_Solicitante) != 20: # 20 caracteres
+#            return {"status_code": 422, "detail": "M04009 - ID_de_Solicitante inválido"}
         if ms03.ID_Rede_Lockers is None:
             return {"status_code": 422, "detail": "M04007 - ID_Rede_Lockers obrigatório"}
         if ms03.ID_Rede_Lockers is not None:
@@ -61,10 +61,10 @@ def ms03(ms03: MS03, public_id=Depends(auth_handler.auth_wrapper)):
             ms03.Data_Hora_Solicitacao = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         if ms03.Codigo_Pais_Locker is None:
             ms03.Codigo_Pais_Locker = "BR" # Considerando Brasil com Default
-        else:
-            command_sql = f"SELECT idPais from Pais where Pais.idPais = '{ms03.Codigo_Pais_Locker}';"
-            if conn.execute(command_sql).fetchone() is None:
-                return {"status_code": 422, "detail": "M04012 - Codigo País_Locker inválido"}
+#        else:
+#            command_sql = f"SELECT idPais from Pais where Pais.idPais = '{ms03.Codigo_Pais_Locker}';"
+#            if conn.execute(command_sql).fetchone() is None:
+#                return {"status_code": 422, "detail": "M04012 - Codigo País_Locker inválido"}
         if ms03.Cidade_Locker is not None:
             command_sql = f"SELECT cidade from cepbr_cidade where cidade = '{ms03.Cidade_Locker}';"
             if conn.execute(command_sql).fetchone() is None:
@@ -183,8 +183,8 @@ def ms03(ms03: MS03, public_id=Depends(auth_handler.auth_wrapper)):
             JOIN `locker_refrigeracao_coluna` ON (`locker_refrigeracao_coluna`.`idLockerRefrigeracaoColuna` = `locker`.`idLockerRefrigeracaoColuna`))
             JOIN `locker_operacao` ON (`locker_operacao`.`idLockerOperacao` = `locker`.`idLockerOperacao`))
             where `idRede` = '{ms03.ID_Rede_Lockers}'"""
-        if ms03.Codigo_Pais_Locker is not None:
-            command_sql += f" and `idPais` = '{ms03.Codigo_Pais_Locker}'"
+#        if ms03.Codigo_Pais_Locker is not None:
+#            command_sql += f" and `idPais` = '{ms03.Codigo_Pais_Locker}'"
         if ms03.Cep_Locker is not None:
             command_sql += f" and `cep` = '{ms03.Cep_Locker}'"
         if ms03.Cidade_Locker is not None:
@@ -241,17 +241,22 @@ def ms03(ms03: MS03, public_id=Depends(auth_handler.auth_wrapper)):
                         `locker_porta_dimensao`.`LockerPortaComprimento`,
                         `locker_porta_dimensao`.`LockerPortaLargura`,
                         `locker_porta_dimensao`.`LockerPortaAltura`,
-                        `locker_porta_dimensao`.`LockerPortaPesoMax`
+                        `locker_porta_dimensao`.`LockerPortaPesoMax`,
+                        `locker_porta_status`.`LockerPortaStatusDescricao`
+                                               
             FROM
-                    ((((`locker_porta`
+                    (((((`locker_porta`
                     JOIN `locker_porta_categoria` ON (`locker_porta_categoria`.`idLockerPortaCategoria` = `locker_porta`.`idLockerPortaCategoria`))
                     JOIN `locker_porta_uso` ON (`locker_porta_uso`.`idLockerPortaUso` = `locker_porta`.`idLockerPortaUso`))
                     JOIN `locker_porta_operacao` ON (`locker_porta_operacao`. `idLockerPortaOperacao` = `locker_porta`.`idLockerPortaOperacao`))
                     JOIN `locker_porta_dimensao` ON (`locker_porta_dimensao`.`idLockerPortaDimensao` = `locker_porta`.`idLockerPortaDimensao`))
-                    WHERE `locker_porta`.`idLockerPortaStatus` = 1
-                        AND `locker_porta`.`idLocker` = '{locker_porta[0]}'"""
+                    JOIN `locker_porta_status` ON (`locker_porta_status`.`idLockerPortaStatus` = `locker_porta`.`idLockerPortaStatus`))
+                    WHERE `locker_porta`.`idLocker` = '{locker_porta[0]}'"""
+
             command_sql = command_sql.replace("'None'", "Null")
             command_sql = command_sql.replace("None", "Null")
+            logger.info(command_sql)
+            logger.info("******************************************************************************************")
             records0 = conn.execute(command_sql).fetchall()
             portas = []
             for row in records0:
@@ -266,6 +271,7 @@ def ms03(ms03: MS03, public_id=Depends(auth_handler.auth_wrapper)):
                 portalocker['Largura_Porta'] = row[7]
                 portalocker['Altura_Porta'] = row[8]
                 portalocker['Peso_Maximo_Porta'] = row[9]
+                portalocker['Status_Porta'] = row['LockerPortaStatusDescricao']
                 portas.append(portalocker)
             for locker in lockers:
                 if locker['Id_da_Estacao_do_Locker'] == locker_porta[0]:

@@ -113,11 +113,11 @@ def ms14(ms14: MS14, public_id=Depends(auth_handler.auth_wrapper)):
                                 `reserva_encomenda`.`DataHoraInicioReserva`,
                                 `reserva_encomenda`.`DataHoraFinalReserva`,
                                 `reserva_tipo_servico`.`ServicoReservaTipo`,
-                                Count(reserva_encomenda_encomendas.IdEncomenda)
+                                Count(encomendas.IdEncomenda)
                         FROM `rede1minuto`.`reserva_encomenda`
                         INNER JOIN `reserva_status` ON (`reserva_encomenda`.`idStatusEncomenda` = `reserva_status`.`idStatusReserva`)
                         INNER JOIN `locker` ON (`reserva_encomenda`.`idLocker` = `locker`.`idLocker`)
-                        INNER JOIN `reserva_encomenda_encomendas` ON (`reserva_encomenda`.`IdTransacaoUnica` = `reserva_encomenda_encomendas`.`IdTransacaoUnica`)
+                        INNER JOIN `encomendas` ON (`reserva_encomenda`.`IdTransacaoUnica` = `encomendas`.`IdTransacaoUnica`)
                         INNER JOIN `reserva_tipo_servico` ON (`reserva_encomenda`.`idServicoReserva` = `reserva_tipo_servico`.`idServicoReserva`)"""
 
         if ms14.DataHora_Inicio_Consuta_Encomendas_Designadas and ms14.DataHora_Final_Consuta_Encomendas_Designadas is not None:
@@ -127,7 +127,7 @@ def ms14(ms14: MS14, public_id=Depends(auth_handler.auth_wrapper)):
         if ms14.Cidade_Locker is not None:
             command_sql += f" and `locker`.`LockerCidade` = '{ms14.Cidade_Locker}'"
         if ms14.ID_TICKET_Ocorrencia_Encomenda is not None:
-            command_sql += f" and `reserva_encomenda_encomendas`.`IdEncomenda` = '{ms14.ID_TICKET_Ocorrencia_Encomenda}'"
+            command_sql += f" and `encomendas`.`IdEncomenda` = '{ms14.ID_TICKET_Ocorrencia_Encomenda}'"
         if ms14.ID_Rede_Lockers is not None:
             command_sql += f" and `reserva_encomenda`.`idRede` = '{ms14.ID_Rede_Lockers}'"
         command_sql += f" group by `reserva_encomenda`.`IdTransacaoUnica`"
