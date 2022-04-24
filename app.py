@@ -41,7 +41,7 @@ import sys
 app = FastAPI(
     title="Users API",
     description="a REST API using python and mysql",
-    version="1.0.2",
+    version="1.0.3",
 )
 
 auth_handler = AuthHandler()
