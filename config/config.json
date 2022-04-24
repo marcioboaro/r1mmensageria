@@ -1,0 +1,74 @@
+{
+    "ENVIROMENT": "PRODUCTION",
+    "RABBITMQ": {
+        "PRODUCTION": {
+            "URL": "rabbitprod.rede1minuto.com.br",
+            "USER": "rede1minuto",
+            "PASSWORD": "23-11-Firenze",
+            "PORT": 5671,
+            "QUEUE_LOCKERS": "locker_input",
+            "QUEUE_MESSAGES": "rede1minuto_messages",
+            "EXCHANGE":"",
+            "REGION_AWS":"sa-east-1",
+            "BROKER_ID_AWS":"b-c3839e21-f74c-4bd7-b18f-51d99ba768b2"
+
+        },
+        "HOMOLOG": {
+            "URL": "rabbithm.rede1minuto.com.br",
+            "USER": "rede1minutohomolog",
+            "PASSWORD": "KGUfp2d9SRtF",
+            "PORT": 5671,
+            "QUEUE_LOCKERS": "locker_input",
+            "QUEUE_MESSAGES": "rede1minuto_messages",
+            "EXCHANGE":"",
+            "REGION_AWS":"sa-east-1",
+            "BROKER_ID_AWS":"b-c3839e21-f74c-4bd7-b18f-51d99ba768b2"
+        },
+        "DEVELOPMENT": {
+            "URL": "rabbitdev.rede1minuto.com.br",
+            "USER": "rede1minutodev",
+            "PASSWORD": "dDoSHeBDsTSn",
+            "PORT": 5671,
+            "QUEUE_LOCKERS": "locker_input",
+            "QUEUE_MESSAGES": "rede1minuto_messages",
+            "EXCHANGE":"",
+            "REGION_AWS":"sa-east-1",
+            "BROKER_ID_AWS":"b-c3839e21-f74c-4bd7-b18f-51d99ba768b2"
+        }
+    },
+    "DATABASE": {
+        "PRODUCTION": {
+            "HOST": "dbprod.rede1minuto.com.br",
+            "BASE": "rede1minuto",
+            "PORT": 3306,
+            "USER": "rede1minuto",
+            "PASSWORD": "k9X1wj2UEj5FD5G2H4pl"
+        },
+        "HOMOLOG": {
+            "HOST": "dbprod.rede1minuto.com.br",
+            "BASE": "rede1minuto",
+            "PORT": 3306,
+            "USER": "rede1minuto",
+            "PASSWORD": "k9X1wj2UEj5FD5G2H4pl"
+        },
+        "DEVELOPMENT": {
+            "HOST": "dbprod.rede1minuto.com.br",
+            "BASE": "rede1minuto",
+            "PORT": 3306,
+            "USER": "rede1minuto",
+            "PASSWORD": "k9X1wj2UEj5FD5G2H4pl"
+        }
+    },
+    "USERS_NOTIFICATION": [
+        {
+            "NOME": "André Monteiro",
+            "EMAIL": "andre@algore.com.br",
+            "CELULAR": "5511972830350"
+        },
+        {
+            "NOME": "Marcio Boaro",
+            "EMAIL": "marcio.boaro@rede1minuto.com.br",
+            "CELULAR": "5511948906687"
+        }
+    ]
+}
