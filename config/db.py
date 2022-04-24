@@ -17,3 +17,5 @@ engine = create_engine(str_conn, pool_size=20, max_overflow=100, execution_optio
 
 meta = MetaData()
 conn = engine.connect()
+
+#mudei
