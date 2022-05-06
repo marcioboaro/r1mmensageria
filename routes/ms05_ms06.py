@@ -200,7 +200,8 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
                 enc_temp = {}
                 enc_temp['ID_Encomenda'] = encomenda.ID_Encomenda
                 enc_temp['Etiqueta_Encomenda_Rede1minuto'] = etiqueta
-                enc_temp['Geracao_QRCODE'] = idTransacaoUnica
+#                enc_temp['Geracao_QRCODE'] = idTransacaoUnica
+                enc_temp['Geracao_QRCODE'] = Codigo_Abertura_Porta
                 enc_temp['Geracao_Codigo_Abertura_Porta'] = Codigo_Abertura_Porta
                 encomendas.append(enc_temp)
             ms06['info_encomendas'] = encomendas
@@ -243,7 +244,8 @@ def send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_res
         content["idLockerPortaFisica"] = record_Porta[1]
         content["ID_OpLog"] = record_Porta[2]
         content["OpLogAutenticacao"] = 0
-        content["QRCODE"] = idTransacaoUnica
+#       content["QRCODE"] = idTransacaoUnica - Por determinação do cliente o QRCODE é o mesmo do codigo de abertura da porta
+        content["QRCODE"] = str(Codigo_Abertura_Porta)
         content["CD_PortaAbertura"] = str(Codigo_Abertura_Porta)
 
         encomenda = {}
