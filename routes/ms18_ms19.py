@@ -150,7 +150,7 @@ def ms18(ms18: MS18, public_id=Depends(auth_handler.auth_wrapper)):
             ms19['ID_Transacao_Unica'] = idTransacaoUnica
 #            ms19['ID_Geracao_QRCODE'] = idTransacaoUnica - Determinção do cliente passa a ser o codigo de abertura da porta
 
-            Codigo_Abertura_Porta = random.randint(100000000000, 1000000000000)
+            Codigo_Abertura_Porta = str(random.randint(100000000000, 1000000000000))
             ms19['Codigo_Abertura_Porta'] = Codigo_Abertura_Porta
             ms19['ID_Geracao_QRCODE'] = Codigo_Abertura_Porta
 

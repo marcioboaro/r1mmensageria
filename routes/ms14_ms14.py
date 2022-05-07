@@ -150,8 +150,9 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
                 enc_temp = {}
                 enc_temp['ID_Encomenda'] = encomenda.ID_Encomenda
                 enc_temp['Etiqueta_Encomenda_Rede1minuto'] = etiqueta
-                enc_temp['Geracao_QRCODE'] = idTransacaoUnica
-                enc_temp['Geracao_Codigo_Abertura_Porta'] = Codigo_Abertura_Porta
+                # idTransacaoUnica 
+                enc_temp['Geracao_QRCODE'] =  str(Codigo_Abertura_Porta)
+                enc_temp['Geracao_Codigo_Abertura_Porta'] = str(Codigo_Abertura_Porta)
                 encomendas.append(enc_temp)
                 command_sql = f"""INSERT INTO `encomendas`
                                             (`IdTransacaoUnica`,

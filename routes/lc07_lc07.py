@@ -109,11 +109,11 @@ def send_lc07_mq(lc07):
             content["AcaoExecutarPorta"] = 2
         if lc07.AcaoExecutarPorta == 5:
             NovoQRCODE = str(uuid.uuid1())
-            NovoCD_PortaAbertura = random.randint(100000000000, 1000000000000)
+            NovoCD_PortaAbertura = str(random.randint(100000000000, 1000000000000))
             NovoQRCODE = NovoCD_PortaAbertura # Solicitação da Flash Courier
             content["AcaoExecutarPorta"] = 5
             content["NovoQRCODE"] = NovoQRCODE # Por solicitação dos clientes o codigo passa a ser o mesmo da digitação
-            content["NovoCD_PortaAbertura"] = str(NovoCD_PortaAbertura)
+            content["NovoCD_PortaAbertura"] = NovoCD_PortaAbertura
         if lc07.AcaoExecutarPorta == 4:
             content["AcaoExecutarPorta"] = 4
             content["ID_Transacao"] = reserva[0]
