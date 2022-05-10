@@ -19,7 +19,9 @@ import requests
 import logging
 import random
 import uuid
+from service.rabbitmq import RabbitMQ
 
+rabbitMq = RabbitMQ().instance()
 
 lc07_lc07 = APIRouter()
 key = Fernet.generate_key()
@@ -112,8 +114,8 @@ def send_lc07_mq(lc07):
             NovoCD_PortaAbertura = str(random.randint(100000000000, 1000000000000))
             NovoQRCODE = NovoCD_PortaAbertura # Solicitação da Flash Courier
             content["AcaoExecutarPorta"] = 5
-            content["NovoQRCODE"] = NovoQRCODE # Por solicitação dos clientes o codigo passa a ser o mesmo da digitação
-            content["NovoCD_PortaAbertura"] = NovoCD_PortaAbertura
+            content["NovoQRCODE"] = NovoQRCODE + "." # Por solicitação dos clientes o codigo passa a ser o mesmo da digitação
+            content["NovoCD_PortaAbertura"] = NovoCD_PortaAbertura 
         if lc07.AcaoExecutarPorta == 4:
             content["AcaoExecutarPorta"] = 4
             content["ID_Transacao"] = reserva[0]
@@ -134,30 +136,8 @@ def send_lc07_mq(lc07):
 
         lc007["Content"] = content
 
-        MQ_Name = 'Rede1Min_MQ'
-        URL = 'amqp://rede1min:Minuto@167.71.26.87' # URL do RabbitMQ
-        queue_name = lc07.idLocker + '_locker_output' # Nome da fila do RabbitMQ
-
-        url = os.environ.get(MQ_Name, URL)
-        params = pika.URLParameters(url)
-        params.socket_timeout = 6
-
-        connection = pika.BlockingConnection(params)
-        channel = connection.channel()
-
-        channel.queue_declare(queue=queue_name, durable=True)
-
         message = json.dumps(lc007) # Converte o dicionario em string
-
-        channel.basic_publish(
-                    exchange='amq.direct',
-                    routing_key=queue_name,
-                    body=message,
-                    properties=pika.BasicProperties(
-                        delivery_mode=2,  # make message persistent
-                    ))
-
-        connection.close()
+        rabbitMq.send_locker_queue(lc07.idLocker, message)
         return True
     except:
         logger.error(sys.exc_info())

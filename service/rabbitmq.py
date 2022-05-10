@@ -30,8 +30,7 @@ class RabbitMQ:
             logger.error(e)
 
 
-        
-    def send_locker_queue(self,idLocker, message):
+    def send_locker_queue(self, idLocker, message):
         try:
             print("Enviando mensagem ao locker: " + idLocker)
             name_queue = idLocker + '_locker_output'
