@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from typing import Any
 from sqlalchemy import create_engine
 from json import dumps

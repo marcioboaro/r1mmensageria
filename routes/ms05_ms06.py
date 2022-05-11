@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from typing import Any
 import sys
 import uuid  # for public id
@@ -279,7 +278,6 @@ def send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_res
         logger.error(sys.exc_info())
         return False
 
-
 def insert_reserva_encomenda_encomendas(idTransacaoUnica, ms05, etiqueta):
     try:
         encomendas = ms05.Info_Encomendas
@@ -346,7 +344,6 @@ def insert_reserva_encomenda_encomendas(idTransacaoUnica, ms05, etiqueta):
         result = dict()
         result['Error insert_reserva_encomenda'] = sys.exc_info()
         return result
-
 
 def insert_reserva_encomenda(ms05, idTransacaoUnica, Inicio_reserva, Final_reserva,record_Porta,Codigo_Abertura_Porta):
     try:
@@ -443,7 +440,6 @@ def insert_tracking_reserva(ms05, idTransacaoUnica):
         result['Error insert_tracking_reserva'] = sys.exc_info()
         return result
 
-
 def insert_tracking_porta(ms05, record_Porta):
     try:
         command_sql = f"SELECT idTicketOcorrencia from tracking_portas where tracking_portas.idLockerPorta = '{record_Porta[0]}';"
@@ -493,8 +489,6 @@ def insert_tracking_porta(ms05, record_Porta):
         result = dict()
         result['Error insert_tracking_porta'] = sys.exc_info()
         return result
-
-
 
 def insert_shopper(ms05):
     try:

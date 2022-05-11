@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from typing import Any
 import sys
 import uuid  # for public id
@@ -19,12 +18,13 @@ import requests
 import logging
 import random
 import uuid
-
+from rabbitmq import RabbitMQ
 
 lc59_lc59 = APIRouter()
 key = Fernet.generate_key()
 f = Fernet(key)
 auth_handler = AuthHandler()
+rabbitMq = RabbitMQ()
 
 @lc59_lc59.post("/api/v01/lc59", tags=["lc59"], description="Limpa o arquivo de Log de Erro: locker.engine_error.txt")
 def lc59(lc59: LC59, public_id=Depends(auth_handler.auth_wrapper)):
@@ -48,8 +48,6 @@ def lc59(lc59: LC59, public_id=Depends(auth_handler.auth_wrapper)):
             if conn.execute(command_sql).fetchone() is None:
                 return {"status_code": 422, "detail": "LC5903 - IdLocker inválido"}
 
-
-
         now = datetime.now()
         ret_fila = send_lc59_mq(lc59)
         if ret_fila is False:
@@ -64,9 +62,7 @@ def lc59(lc59: LC59, public_id=Depends(auth_handler.auth_wrapper)):
 
 
 def send_lc59_mq(lc59):
-    try: 
-
- 
+    try: # Insere no RabbitMQ
         lc059 = {}
         lc059["CD_MSG"] = "LC59"
 
@@ -90,15 +86,7 @@ def send_lc59_mq(lc59):
 
         message = json.dumps(lc059) # Converte o dicionario em string
 
-        channel.basic_publish(
-                    exchange='amq.direct',
-                    routing_key=queue_name,
-                    body=message,
-                    properties=pika.BasicProperties(
-                        delivery_mode=2,  # make message persistent
-                    ))
-
-        connection.close()
+        rabbitMq.send_locker_queue(lc59.idLocker, message)
         return True
     except:
         logger.error(sys.exc_info())

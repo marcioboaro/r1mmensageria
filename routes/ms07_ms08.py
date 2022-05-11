@@ -17,7 +17,6 @@ import json
 import requests
 from rabbitmq import RabbitMQ
 
-
 ms07_ms08 = APIRouter()
 key = Fernet.generate_key()
 f = Fernet(key)
@@ -203,7 +202,6 @@ def wh04_encomendacd(ms07):
         result['Error wh04_encomendacd'] = sys.exc_info()
         return result
 
-
 def wh04_encomendaembarcada(ms07):
     try:
         now = datetime.now() - timedelta(hours=3)
@@ -256,7 +254,6 @@ def wh04_encomendanolocker(ms07):
         result['Error wh04_encomendanolocker'] = sys.exc_info()
         return result
 ###################### teste no webhook a ser retirado posteriormente ###############################
-
 
 def update_porta(ms07):
     try:
@@ -486,8 +483,6 @@ def send_lc07_mq(ms07):
         content["Versao_Mensageria"] = "1.0.0"
         
         lc07["Content"] = content
-
-        channel.queue_declare(queue=queue_name, durable=True)
 
         message = json.dumps(lc07) # Converte o dicionario em string
 

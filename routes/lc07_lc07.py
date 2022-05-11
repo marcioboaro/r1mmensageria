@@ -78,7 +78,6 @@ def lc07(lc07: LC07, public_id=Depends(auth_handler.auth_wrapper)):
         result['Error lc07'] = sys.exc_info()
         return {"status_code": 500, "detail": "LC07 - Notificação da Central para Procedimentos a executar no Locker"}
 
-
 def send_lc07_mq(lc07):
     try:  # Envia LC01 para fila do RabbitMQ o aplicativo do locker a pega lá
 
