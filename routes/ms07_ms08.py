@@ -15,12 +15,14 @@ import os
 import pika
 import json
 import requests
+from rabbitmq import RabbitMQ
 
 
 ms07_ms08 = APIRouter()
 key = Fernet.generate_key()
 f = Fernet(key)
 auth_handler = AuthHandler()
+rabbitMq = RabbitMQ()
 
 # @ms07_ms08.post("/ms05", tags=["ms08"], response_model=MS08, description="Cancelamento de reserva")
 @ms07_ms08.post("/msg/v01/lockers/cancellation", tags=["ms08"], description="Cancelamento de reserva")
@@ -119,8 +121,6 @@ def ms07(ms07: MS07, public_id=Depends(auth_handler.auth_wrapper)):
         result = dict()
         result['Error ms05'] = sys.exc_info()
         return {"status_code": 500, "detail": "MS07 - Cancelamento de reserva"}
-
-
 
 ###################### teste no webhook a ser retirado posteriormente ###############################
 def reserva_wb03(ms07):
@@ -484,31 +484,14 @@ def send_lc07_mq(ms07):
         content["DT_Prorrogacao"] = None
         content["Versao_Software"] = "0.1"
         content["Versao_Mensageria"] = "1.0.0"
-
+        
         lc07["Content"] = content
-
-        MQ_Name = 'Rede1Min_MQ'
-        URL = 'amqp://rede1min:Minuto@167.71.26.87' # URL do RabbitMQ
-        queue_name = idLocker + '_locker_output' # Nome da fila do RabbitMQ
-
-        url = os.environ.get(MQ_Name, URL)
-        params = pika.URLParameters(url)
-        params.socket_timeout = 6
-
-        connection = pika.BlockingConnection(params)
-        channel = connection.channel()
 
         channel.queue_declare(queue=queue_name, durable=True)
 
         message = json.dumps(lc07) # Converte o dicionario em string
 
-        channel.basic_publish(
-                    exchange='amq.direct',
-                    routing_key=queue_name,
-                    body=message,
-                    properties=pika.BasicProperties(
-                        delivery_mode=2,  # make message persistent
-                    ))
+        rabbitMq.send_locker_queue(idLocker, message)
 
         connection.close()
         return True
