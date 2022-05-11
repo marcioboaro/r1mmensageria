@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from typing import Any
 import sys
 import uuid  # for public id
@@ -19,12 +18,14 @@ import requests
 import logging
 import random
 import uuid
+from rabbitmq import RabbitMQ
 
 
 lc07_lc07 = APIRouter()
 key = Fernet.generate_key()
 f = Fernet(key)
 auth_handler = AuthHandler()
+rabbitMq = RabbitMQ()
 
 @lc07_lc07.post("/api/v01/lc07", tags=["lc07"], description="Notificação da Central para Procedimentos a executar no Locker")
 def lc07(lc07: LC07, public_id=Depends(auth_handler.auth_wrapper)):
@@ -134,28 +135,9 @@ def send_lc07_mq(lc07):
 
         lc007["Content"] = content
 
-        MQ_Name = 'Rede1Min_MQ'
-        URL = 'amqp://rede1min:Minuto@167.71.26.87' # URL do RabbitMQ
-        queue_name = lc07.idLocker + '_locker_output' # Nome da fila do RabbitMQ
-
-        url = os.environ.get(MQ_Name, URL)
-        params = pika.URLParameters(url)
-        params.socket_timeout = 6
-
-        connection = pika.BlockingConnection(params)
-        channel = connection.channel()
-
-        channel.queue_declare(queue=queue_name, durable=True)
-
         message = json.dumps(lc007) # Converte o dicionario em string
 
-        channel.basic_publish(
-                    exchange='amq.direct',
-                    routing_key=queue_name,
-                    body=message,
-                    properties=pika.BasicProperties(
-                        delivery_mode=2,  # make message persistent
-                    ))
+        rabbitMq.send_locker_queue(lc07.idLocker, message)
 
         connection.close()
         return True
