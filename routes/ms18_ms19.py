@@ -14,12 +14,13 @@ import random
 import os
 import json
 import pika
+from rabbitmq import RabbitMQ
 
 ms18_ms19 = APIRouter()
 key = Fernet.generate_key()
 f = Fernet(key)
 auth_handler = AuthHandler()
-
+rabbitMq = RabbitMQ()
 
 # Consulta catalogo Lockers
 def latlong_valid(latlong):
@@ -241,7 +242,6 @@ def insert_tracking_locacao(ms18, idTransacaoUnica):
         result['Error insert_tracking'] = sys.exc_info()
         return result
 
-
 def insert_tracking_porta(ms18):
     try:
         command_sql = f"""SELECT idLockerPorta
@@ -282,10 +282,6 @@ def insert_tracking_porta(ms18):
         result['Error insert_tracking_porta'] = sys.exc_info()
         return result
 
-
-
-
-
 def send_lc01_mq(ms18, idTransacaoUnica, record_Porta):
     try:  # Envia LC01 para fila do RabbitMQ o aplicativo do locker a pega lá
 
@@ -307,30 +303,9 @@ def send_lc01_mq(ms18, idTransacaoUnica, record_Porta):
 
         lc01["Content"] = content
 
-        MQ_Name = 'Rede1Min_MQ'
-        URL = 'amqp://rede1min:Minuto@167.71.26.87' # URL do RabbitMQ
-        queue_name = ms18.ID_da_Estacao_do_Locker + '_locker_output' # Nome da fila do RabbitMQ
-
-        url = os.environ.get(MQ_Name, URL)
-        params = pika.URLParameters(url)
-        params.socket_timeout = 6
-
-        connection = pika.BlockingConnection(params)
-        channel = connection.channel()
-
-        channel.queue_declare(queue=queue_name, durable=True)
-
         message = json.dumps(lc01) # Converte o dicionario em string
 
-        channel.basic_publish(
-                    exchange='',
-                    routing_key=queue_name,
-                    body=message,
-                    properties=pika.BasicProperties(
-                        delivery_mode=2,  # make message persistent
-                    ))
-
-        connection.close()
+        rabbitMq.send_locker_queue(ms18.ID_da_Estacao_do_Locker, message)
         logger.info(sys.exc_info())
 
     except:

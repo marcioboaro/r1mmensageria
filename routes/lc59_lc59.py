@@ -71,19 +71,6 @@ def send_lc59_mq(lc59):
         content["idLocker"] = lc59.idLocker
         lc059["Content"] = content
 
-        MQ_Name = 'Rede1Min_MQ'
-        URL = 'amqp://rede1min:Minuto@167.71.26.87' # URL do RabbitMQ
-        queue_name = lc59.idLocker + '_locker_output' # Nome da fila do RabbitMQ
-
-        url = os.environ.get(MQ_Name, URL)
-        params = pika.URLParameters(url)
-        params.socket_timeout = 6
-
-        connection = pika.BlockingConnection(params)
-        channel = connection.channel()
-
-        channel.queue_declare(queue=queue_name, durable=True)
-
         message = json.dumps(lc059) # Converte o dicionario em string
 
         rabbitMq.send_locker_queue(lc59.idLocker, message)
