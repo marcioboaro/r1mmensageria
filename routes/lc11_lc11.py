@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from typing import Any
 import sys
 import uuid  # for public id
@@ -17,13 +16,13 @@ import os
 import json
 import requests
 import logging
-
+from rabbitmq import RabbitMQ
 
 lc11_lc11 = APIRouter()
 key = Fernet.generate_key()
 f = Fernet(key)
 auth_handler = AuthHandler()
-
+rabbitMq = RabbitMQ()
 
 @lc11_lc11.post("/api/v01/lc11", tags=["lc11"], description="Central Solicita Inicialização de Locker - Autoboot")
 def lc11(lc11: LC11, public_id=Depends(auth_handler.auth_wrapper)):
@@ -49,7 +48,6 @@ def lc11(lc11: LC11, public_id=Depends(auth_handler.auth_wrapper)):
         if lc11.VersaoSoftware is None:
             lc11.VersaoSoftware = "0.1"
 
-
         if lc11.VersaoMensageria is None:
             lc11.VersaoMensageria = "1.0.0"
 
@@ -72,10 +70,8 @@ def lc11(lc11: LC11, public_id=Depends(auth_handler.auth_wrapper)):
         result['Error lc11'] = sys.exc_info()
         return {"status_code": 500, "detail": "LC11 - Central Solicita Inicialização de Locker - Autoboot"}
 
-
 def send_lc011_mq(lc11):
     try:
-
         lc011 = {}
         lc011["CD_MSG"] = "LC11"
 
@@ -88,32 +84,11 @@ def send_lc011_mq(lc11):
 
         lc011["Content"] = content
 
-        MQ_Name = 'Rede1Min_MQ'
-        URL = 'amqp://rede1min:Minuto@167.71.26.87'  # URL do RabbitMQ
-        queue_name = lc11.idLocker + '_locker_output'  # Nome da fila do RabbitMQ
-
-        url = os.environ.get(MQ_Name, URL)
-        params = pika.URLParameters(url)
-        params.socket_timeout = 6
-
-        connection = pika.BlockingConnection(params)
-        channel = connection.channel()
-
-        channel.queue_declare(queue=queue_name, durable=True)
-
         message = json.dumps(lc011)  # Converte o dicionario em string
 
-        channel.basic_publish(
-            exchange='amq.direct',
-            routing_key=queue_name,
-            body=message,
-            properties=pika.BasicProperties(
-                delivery_mode=2,  # make message persistent
-            ))
+        rabbitMq.send_locker_queue(lc11.idLocker, message)
 
-        connection.close()
         return True
     except:
         logger.error(sys.exc_info())
         return False
-

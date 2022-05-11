@@ -271,9 +271,6 @@ def send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_res
 
         lc01["Content"] = content
 
-        #************************
-        #Marcio mexi aqui
-        #************************
         message = json.dumps(lc01)  # Converte o dicionario em string
         rabbitMq.send_locker_queue(ms05.ID_da_Estacao_do_Locker,message)
         

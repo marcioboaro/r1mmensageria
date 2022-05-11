@@ -20,7 +20,6 @@ import random
 import uuid
 from rabbitmq import RabbitMQ
 
-
 lc07_lc07 = APIRouter()
 key = Fernet.generate_key()
 f = Fernet(key)
@@ -67,7 +66,6 @@ def lc07(lc07: LC07, public_id=Depends(auth_handler.auth_wrapper)):
             elif lc07.AcaoExecutarPorta != 4:
                 lc07.DT_Prorrogacao = None
 
-
         now = datetime.now()
         ret_fila = send_lc07_mq(lc07)
         if ret_fila is False:
@@ -93,7 +91,6 @@ def send_lc07_mq(lc07):
                         where reserva_encomenda.idLockerPorta = '{lc07.idLockerPorta}'
                         order by reserva_encomenda.DataHoraInicioReserva DESC;"""
         reserva = conn.execute(command_sql).fetchone()
-
 
         lc007 = {}
         lc007["CD_MSG"] = "LC07"
@@ -138,8 +135,6 @@ def send_lc07_mq(lc07):
         message = json.dumps(lc007) # Converte o dicionario em string
 
         rabbitMq.send_locker_queue(lc07.idLocker, message)
-
-        connection.close()
         return True
     except:
         logger.error(sys.exc_info())

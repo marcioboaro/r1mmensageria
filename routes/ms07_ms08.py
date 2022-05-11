@@ -493,7 +493,6 @@ def send_lc07_mq(ms07):
 
         rabbitMq.send_locker_queue(idLocker, message)
 
-        connection.close()
         return True
     except:
         logger.error(sys.exc_info())

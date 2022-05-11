@@ -17,13 +17,13 @@ import os
 import json
 import requests
 import logging
-
+from rabbitmq import RabbitMQ
 
 lc18_lc18 = APIRouter()
 key = Fernet.generate_key()
 f = Fernet(key)
 auth_handler = AuthHandler()
-
+rabbitMq = RabbitMQ()
 
 @lc18_lc18.post("/api/v01/lc18", tags=["lc18"], description="Transferencia de  Carga de Nova Versão de Software")
 def lc18(lc18: LC18, public_id=Depends(auth_handler.auth_wrapper)):
@@ -48,7 +48,6 @@ def lc18(lc18: LC18, public_id=Depends(auth_handler.auth_wrapper)):
 
         if lc18.VersaoSoftware is None:
             lc18.VersaoSoftware = "0.1"
-
 
         if lc18.VersaoMensageria is None:
             lc18.VersaoMensageria = "1.0.0"
@@ -105,38 +104,11 @@ def send_lc018_mq(lc18):
 
         lc018["Content"] = content
 
-        print(logger.warning)
-
-        MQ_Name = 'Rede1Min_MQ'
-        URL = 'amqp://rede1min:Minuto@167.71.26.87'  # URL do RabbitMQ
-        queue_name = lc18.idLocker + '_locker_output'  # Nome da fila do RabbitMQ
-
-        url = os.environ.get(MQ_Name, URL)
-        params = pika.URLParameters(url)
-        params.socket_timeout = 6
-
-        connection = pika.BlockingConnection(params)
-        channel = connection.channel()
-        print(logger.warning)
-
-        channel.queue_declare(queue=queue_name, durable=True)
-
-        print(logger.warning)
-
         message = json.dumps(lc018)  # Converte o dicionario em string
 
-        channel.basic_publish(
-            exchange='amq.direct',
-            routing_key=queue_name,
-            body=message,
-            properties=pika.BasicProperties(
-                delivery_mode=2,  # make message persistent
-            ))
+        rabbitMq.send_locker_queue(lc18.idLocker, message)
 
-        connection.close()
         return True
-
-        print(logger.warning)
     except:
         logger.error(sys.exc_info())
         return False
