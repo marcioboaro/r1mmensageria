@@ -72,6 +72,8 @@ def send_lc53_mq(lc53):
         content["idLocker"] = lc53.idLocker
         lc053["Content"] = content
 
+        message = json.dumps(lc053) # Converte o dicionario em string
+
         rabbitMq.send_locker_queue(lc53.idLocker, message)
 
         return True
