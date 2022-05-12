@@ -149,7 +149,7 @@ def ms01(ms01: MS01, public_id=Depends(auth_handler.auth_wrapper)):
             ms01.ID_de_Referencia = "Não informado"
             
         ms02 = dict()
-        ms02['Codigo_de_MSG'] = ms01.Codigo_de_MSG
+        ms02['Codigo_de_MSG'] = "MS02"
         ms02['ID_de_Referencia'] = ms01.ID_de_Referencia
         ms02['ID_do_Solicitante'] = ms01.ID_do_Solicitante
         ms02['ID_Rede_Lockers'] = ms01.ID_Rede_Lockers
