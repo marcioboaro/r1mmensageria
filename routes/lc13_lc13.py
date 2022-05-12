@@ -17,13 +17,13 @@ import os
 import json
 import requests
 import logging
-
+from rabbitmq import RabbitMQ
 
 lc13_lc13 = APIRouter()
 key = Fernet.generate_key()
 f = Fernet(key)
 auth_handler = AuthHandler()
-
+rabbitMq = RabbitMQ()
 
 @lc13_lc13.post("/api/v01/lc13", tags=["lc13"], description="Envio de Mensagem de Sonda de Monitorização da Central para Locker")
 def lc13(lc13: LC13, public_id=Depends(auth_handler.auth_wrapper)):
@@ -87,30 +87,10 @@ def send_lc013_mq(lc13):
 
         lc013["Content"] = content
 
-        MQ_Name = 'Rede1Min_MQ'
-        URL = 'amqp://rede1min:Minuto@167.71.26.87'  # URL do RabbitMQ
-        queue_name = lc13.idLocker + '_locker_output'  # Nome da fila do RabbitMQ
-
-        url = os.environ.get(MQ_Name, URL)
-        params = pika.URLParameters(url)
-        params.socket_timeout = 6
-
-        connection = pika.BlockingConnection(params)
-        channel = connection.channel()
-
-        channel.queue_declare(queue=queue_name, durable=True)
-
         message = json.dumps(lc013)  # Converte o dicionario em string
+        
+        rabbitMq.send_locker_queue(lc13.idLocker, message)
 
-        channel.basic_publish(
-            exchange='amq.direct',
-            routing_key=queue_name,
-            body=message,
-            properties=pika.BasicProperties(
-                delivery_mode=2,  # make message persistent
-            ))
-
-        connection.close()
         return True
     except:
         logger.error(sys.exc_info())

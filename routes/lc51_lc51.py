@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from typing import Any
 import sys
 import uuid  # for public id
@@ -19,12 +18,13 @@ import requests
 import logging
 import random
 import uuid
-
+from rabbitmq import RabbitMQ
 
 lc51_lc51 = APIRouter()
 key = Fernet.generate_key()
 f = Fernet(key)
 auth_handler = AuthHandler()
+rabbitMq = RabbitMQ()
 
 @lc51_lc51.post("/api/v01/lc51", tags=["lc51"], description="Delete Config Device")
 def lc51(lc51: LC51, public_id=Depends(auth_handler.auth_wrapper)):
@@ -48,8 +48,6 @@ def lc51(lc51: LC51, public_id=Depends(auth_handler.auth_wrapper)):
             if conn.execute(command_sql).fetchone() is None:
                 return {"status_code": 422, "detail": "LC5103 - IdLocker inválido"}
 
-
-
         now = datetime.now()
         ret_fila = send_lc51_mq(lc51)
         if ret_fila is False:
@@ -62,11 +60,8 @@ def lc51(lc51: LC51, public_id=Depends(auth_handler.auth_wrapper)):
         result['Error lc51'] = sys.exc_info()
         return {"status_code": 500, "detail": "lc51 - Notificação da Central para Procedimentos a executar no Locker"}
 
-
 def send_lc51_mq(lc51):
     try: 
-
- 
         lc051 = {}
         lc051["CD_MSG"] = "LC51"
 
@@ -75,30 +70,10 @@ def send_lc51_mq(lc51):
         content["idLocker"] = lc51.idLocker
         lc051["Content"] = content
 
-        MQ_Name = 'Rede1Min_MQ'
-        URL = 'amqp://rede1min:Minuto@167.71.26.87' # URL do RabbitMQ
-        queue_name = lc51.idLocker + '_locker_output' # Nome da fila do RabbitMQ
-
-        url = os.environ.get(MQ_Name, URL)
-        params = pika.URLParameters(url)
-        params.socket_timeout = 6
-
-        connection = pika.BlockingConnection(params)
-        channel = connection.channel()
-
-        channel.queue_declare(queue=queue_name, durable=True)
-
         message = json.dumps(lc051) # Converte o dicionario em string
 
-        channel.basic_publish(
-                    exchange='amq.direct',
-                    routing_key=queue_name,
-                    body=message,
-                    properties=pika.BasicProperties(
-                        delivery_mode=2,  # make message persistent
-                    ))
+        rabbitMq.send_locker_queue(lc51.idLocker, message)
 
-        connection.close()
         return True
     except:
         logger.error(sys.exc_info())

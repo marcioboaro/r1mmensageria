@@ -70,7 +70,6 @@ def ms12(ms12: MS12, public_id=Depends(auth_handler.auth_wrapper)):
             if conn.execute(command_sql).fetchone() is None:
                 return {"status_code": 422, "detail": "M012003 - ID_da_Estacao_do_ Locker inválido"}
 
-
         # validando versao mensageria
         if ms12.Versao_Mensageria is None:
             ms12.Versao_Mensageria = "1.0.0"
@@ -86,7 +85,6 @@ def ms12(ms12: MS12, public_id=Depends(auth_handler.auth_wrapper)):
         rotina_pod(ms12, dt_string)
 
         return {"status_code": 200, "detail": "M012000 - Enviado com sucesso"}
-
 
     except:
         logger.error(sys.exc_info())

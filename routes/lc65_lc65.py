@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from typing import Any
 import sys
 import uuid  # for public id
@@ -19,12 +18,13 @@ import requests
 import logging
 import random
 import uuid
-
+from rabbitmq import RabbitMQ
 
 lc65_lc65 = APIRouter()
 key = Fernet.generate_key()
 f = Fernet(key)
 auth_handler = AuthHandler()
+rabbitMq = RabbitMQ()
 
 @lc65_lc65.post("/api/v01/lc65", tags=["lc65"], description="Envio dos dados da tabela Slot")
 def lc65(lc65: LC65, public_id=Depends(auth_handler.auth_wrapper)):
@@ -48,8 +48,6 @@ def lc65(lc65: LC65, public_id=Depends(auth_handler.auth_wrapper)):
             if conn.execute(command_sql).fetchone() is None:
                 return {"status_code": 422, "detail": "LC6503 - IdLocker inválido"}
 
-
-
         now = datetime.now()
         ret_fila = send_lc65_mq(lc65)
         if ret_fila is False:
@@ -62,11 +60,8 @@ def lc65(lc65: LC65, public_id=Depends(auth_handler.auth_wrapper)):
         result['Error lc65'] = sys.exc_info()
         return {"status_code": 500, "detail": "lc65 - Envio dos dados da tabela Slot"}
 
-
 def send_lc65_mq(lc65):
     try: 
-
- 
         lc065 = {}
         lc065["CD_MSG"] = "LC65"
 
@@ -75,30 +70,9 @@ def send_lc65_mq(lc65):
         content["idLocker"] = lc65.idLocker
         lc065["Content"] = content
 
-        MQ_Name = 'Rede1Min_MQ'
-        URL = 'amqp://rede1min:Minuto@167.71.26.87' # URL do RabbitMQ
-        queue_name = lc65.idLocker + '_locker_output' # Nome da fila do RabbitMQ
-
-        url = os.environ.get(MQ_Name, URL)
-        params = pika.URLParameters(url)
-        params.socket_timeout = 6
-
-        connection = pika.BlockingConnection(params)
-        channel = connection.channel()
-
-        channel.queue_declare(queue=queue_name, durable=True)
-
         message = json.dumps(lc065) # Converte o dicionario em string
 
-        channel.basic_publish(
-                    exchange='amq.direct',
-                    routing_key=queue_name,
-                    body=message,
-                    properties=pika.BasicProperties(
-                        delivery_mode=2,  # make message persistent
-                    ))
-
-        connection.close()
+        rabbitMq.send_locker_queue(lc65.idLocker, message)
         return True
     except:
         logger.error(sys.exc_info())

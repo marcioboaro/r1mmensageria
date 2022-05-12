@@ -71,7 +71,7 @@ def ms09(ms09: MS09, public_id=Depends(auth_handler.auth_wrapper)):
         dt_string = now.strftime("%Y-%m-%dT%H:%M:%S")
 
         command_sql = f"""SELECT `reserva_encomenda`.`QRCODE`,
-                                    `reserva_encomenda`.`CodigoAberturaPorta`
+                              `reserva_encomenda`.`CodigoAberturaPorta`
                                 FROM `rede1minuto`.`reserva_encomenda`
                                 where reserva_encomenda.IdTransacaoUnica = '{ms09.ID_Transacao_Unica}';"""
         record = conn.execute(command_sql).fetchone()

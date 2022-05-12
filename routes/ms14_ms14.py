@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from typing import Any
 import sys
 import uuid  # for public id
@@ -15,12 +14,13 @@ import pika
 import random
 import os
 import json
+from rabbitmq import RabbitMQ
 
 ms05_ms06 = APIRouter()
 key = Fernet.generate_key()
 f = Fernet(key)
 auth_handler = AuthHandler()
-
+rabbitMq = RabbitMQ()
 
 # Consulta catalogo Lockers
 def latlong_valid(latlong):
@@ -34,7 +34,6 @@ def latlong_valid(latlong):
             return False
     except:
         return False
-
 
 # @ms05_ms06.post("/ms05", tags=["ms06"], response_model=MS06, description="Consulta da disponibilidade de Portas em Locker")
 @ms05_ms06.post("/msg/v01/lockers/reservation", tags=["ms06"],
@@ -55,7 +54,6 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
                 return {"status_code": 422, "detail": "M06011 - ID_Rede_Lockers inválido"}
         if ms05.Data_Hora_Solicitacao is None:
             ms05.Data_Hora_Solicitacao = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
 
         if ms05.ID_da_Estacao_do_Locker is not None:
             command_sql = f"SELECT idLocker from locker where locker.idLocker = '{ms05.ID_da_Estacao_do_Locker}';"
@@ -264,30 +262,9 @@ def send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_res
 
         lc01["Content"] = content
 
-        MQ_Name = 'Rede1Min_MQ'
-        URL = 'amqp://rede1min:Minuto@167.71.26.87'  # URL do RabbitMQ
-        queue_name = ms05.ID_da_Estacao_do_Locker + '_locker_output'  # Nome da fila do RabbitMQ
-
-        url = os.environ.get(MQ_Name, URL)
-        params = pika.URLParameters(url)
-        params.socket_timeout = 6
-
-        connection = pika.BlockingConnection(params)
-        channel = connection.channel()
-
-        channel.queue_declare(queue=queue_name, durable=True)
-
         message = json.dumps(lc01)  # Converte o dicionario em string
 
-        channel.basic_publish(
-            exchange='',
-            routing_key=queue_name,
-            body=message,
-            properties=pika.BasicProperties(
-                delivery_mode=2,  # make message persistent
-            ))
-
-        connection.close()
+        rabbitMq.send_locker_queue(ms05.ID_da_Estacao_do_Locker, message)
         logger.info(sys.exc_info())
 
     except:
@@ -355,7 +332,6 @@ def insert_ms05_encomendas(idTransacaoUnica, encomenda, ms05, etiqueta):
         result = dict()
         result['Error insert_ms05_encomendas'] = sys.exc_info()
         return result
-
 
 def insert_ms05(ms05, idTransacaoUnica, Inicio_reserva, Final_reserva,record_Porta):
     try:

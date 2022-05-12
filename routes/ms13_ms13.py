@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from typing import Any
 import sys
 import uuid  # for public id
@@ -17,11 +16,13 @@ import os
 import json
 import requests
 import logging
+from rabbitmq import RabbitMQ
 
 ms13_ms13 = APIRouter()
 key = Fernet.generate_key()
 f = Fernet(key)
 auth_handler = AuthHandler()
+rabbitMq = RabbitMQ()
 
 @ms13_ms13.post("/msg/v01/lockers/order/tracking/encomenda", tags=["ms13"], description="Notificação de Eventos de Tracking de Encomenda")
 def ms13(ms13: MS13, public_id=Depends(auth_handler.auth_wrapper)):
@@ -145,7 +146,6 @@ def rotina_avaria(ms13,dt_string):
         result['Error rotina_avaria'] = sys.exc_info()
         return result
 
-
 def rotina_extravio(ms13,dt_string):
     try:
         # atualizando status do pedido no webhook
@@ -178,8 +178,6 @@ def rotina_extravio(ms13,dt_string):
         result = dict()
         result['Error rotina_extravio'] = sys.exc_info()
         return result
-
-
 
 def rotina_roubo(ms13,dt_string):
     try:
@@ -259,20 +257,19 @@ def  rotina_operador(ms11,dt_string):
 
 def  rotina_prorrogacao_sla(ms11):
     try:
-        command_sql = f"SELECT idLockerPorta, idLockerPortaFisica, idLocker from reserva_encomenda where reserva_encomenda.IdTransacaoUnica = '{ms13.ID_Transacao_Unica}'";
+        command_sql = f"SELECT idLockerPorta, idLockerPortaFisica, idLocker from reserva_encomenda where reserva_encomenda.IdTransacaoUnica = '{ms11.ID_Transacao_Unica}'";
         record_Porta = conn.execute(command_sql).fetchone()
-
 
         # enviando pedido de prorrogação de reserva
         lc07 = {}
         lc07["CD_MSG"] = "LC07"
 
         content = {}
-        content["ID_Referencia"] = ms13.ID_de_Referencia
-        content["ID_Solicitante"] = ms13.ID_do_Solicitante
-        content["ID_Rede"] = ms13.ID_Rede_Lockers
-        content["ID_Transacao"] = ms13.ID_Transacao_Unica
-        content["idLocker"] = record_Porta[3]
+        content["ID_Referencia"] = ms11.ID_de_Referencia
+        content["ID_Solicitante"] = ms11.ID_do_Solicitante
+        content["ID_Rede"] = ms11.ID_Rede_Lockers
+        content["ID_Transacao"] = ms11.ID_Transacao_Unica
+        content["idLocker"] = record_Porta[2]
         content["AcaoExecutarPorta"] = 4
         content["idLockerPorta"] = record_Porta[0]
         content["idLockerPortaFisica"] = record_Porta[1]
@@ -281,30 +278,10 @@ def  rotina_prorrogacao_sla(ms11):
 
         lc07["Content"] = content
 
-        MQ_Name = 'Rede1Min_MQ'
-        URL = 'amqp://rede1min:Minuto@167.71.26.87'  # URL do RabbitMQ
-        queue_name = record_Porta[3] + '_locker_output'  # Nome da fila do RabbitMQ
-
-        url = os.environ.get(MQ_Name, URL)
-        params = pika.URLParameters(url)
-        params.socket_timeout = 6
-
-        connection = pika.BlockingConnection(params)
-        channel = connection.channel()
-
-        channel.queue_declare(queue=queue_name, durable=True)
-
         message = json.dumps(lc07)  # Converte o dicionario em string
 
-        channel.basic_publish(
-            exchange='',
-            routing_key=queue_name,
-            body=message,
-            properties=pika.BasicProperties(
-                delivery_mode=2,  # make message persistent
-            ))
+        rabbitMq.send_locker_queue(record_Porta[2], message)
 
-        connection.close()
         logger.info(sys.exc_info())
 
     except:

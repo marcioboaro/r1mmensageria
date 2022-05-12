@@ -17,12 +17,13 @@ import os
 import json
 import requests
 import logging
-
+from rabbitmq import RabbitMQ
 
 lc16_lc16 = APIRouter()
 key = Fernet.generate_key()
 f = Fernet(key)
 auth_handler = AuthHandler()
+rabbitMq = RabbitMQ()
 
 @lc16_lc16.post("/api/v01/lc16", tags=["lc16"], description="Envio de Atualização de Mapa de Status de Portas da Central para Locker")
 def lc16(lc16: LC16, public_id=Depends(auth_handler.auth_wrapper)):
@@ -85,31 +86,11 @@ def send_lc016_mq(lc16):
 
         lc016["Content"] = content
 
-        MQ_Name = 'Rede1Min_MQ'
-        URL = 'amqp://rede1min:Minuto@167.71.26.87'  # URL do RabbitMQ
-        queue_name = lc16.idLocker + '_locker_output'  # Nome da fila do RabbitMQ
-
-        url = os.environ.get(MQ_Name, URL)
-        params = pika.URLParameters(url)
-        params.socket_timeout = 6
-
-        connection = pika.BlockingConnection(params)
-        channel = connection.channel()
-
-        channel.queue_declare(queue=queue_name, durable=True)
-
         message = json.dumps(lc016)  # Converte o dicionario em string
 
-        channel.basic_publish(
-            exchange='amq.direct',
-            routing_key=queue_name,
-            body=message,
-            properties=pika.BasicProperties(
-                delivery_mode=2,  # make message persistent
-            ))
+        rabbitMq.send_locker_queue(lc16.idLocker, message)
 
-        connection.close()
-        print("passou 3")
+        print("send_lc016_mq")
         return True
     except:
         logger.error(sys.exc_info())

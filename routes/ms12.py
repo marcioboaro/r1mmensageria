@@ -256,7 +256,6 @@ def  update_wh04_WH4007(ms11):
         result['Error update_wh04_WH4007'] = sys.exc_info()
         return result
 
-
 def  update_wh04_WH4008(ms11):
     try:
         command_sql = f"""SELECT `tracking_encomenda`.`idStatusReservaAtual`
@@ -322,7 +321,6 @@ def  update_wh04_WH4009(ms11):
         result['Error update_wh04_WH4009'] = sys.exc_info()
         return result
 
-
 def  update_wh04_WH4011(ms11):
     try:
         command_sql = f"""SELECT `tracking_encomenda`.`idStatusReservaAtual`
@@ -354,7 +352,6 @@ def  update_wh04_WH4011(ms11):
         result = dict()
         result['Error update_wh04_WH4011'] = sys.exc_info()
         return result
-
 
 def  update_wh04_WH4012(ms11):
     try:
@@ -420,7 +417,6 @@ def  update_wh04_WH4013(ms11):
         result['Error update_wh04_WH4013'] = sys.exc_info()
         return result
 
-
 def  update_wh04_WH4014(ms11):
     try:
         command_sql = f"""SELECT `tracking_encomenda`.`idStatusReservaAtual`
@@ -452,7 +448,6 @@ def  update_wh04_WH4014(ms11):
         result = dict()
         result['Error update_wh04_WH4014'] = sys.exc_info()
         return result
-
 
 def  update_wh04_WH4015(ms11):
     try:
@@ -486,7 +481,6 @@ def  update_wh04_WH4015(ms11):
         result['Error update_wh04_WH4015'] = sys.exc_info()
         return result
 
-
 def  update_wh04_WH4016(ms11):
     try:
         command_sql = f"""SELECT `tracking_encomenda`.`idStatusReservaAtual`
@@ -518,7 +512,6 @@ def  update_wh04_WH4016(ms11):
         result = dict()
         result['Error update_wh04_WH4016'] = sys.exc_info()
         return result
-
 
 def  update_wh04_WH4017(ms11):
     try:
@@ -552,7 +545,6 @@ def  update_wh04_WH4017(ms11):
         result['Error update_wh04_WH4017'] = sys.exc_info()
         return result
 
-
 def  update_wh04_WH4018(ms11):
     try:
         command_sql = f"""SELECT `tracking_encomenda`.`idStatusReservaAtual`
@@ -584,7 +576,6 @@ def  update_wh04_WH4018(ms11):
         result = dict()
         result['Error update_wh04_WH4018'] = sys.exc_info()
         return result
-
 
 def  update_wh04_WH4020(ms11):
     try:
@@ -618,7 +609,6 @@ def  update_wh04_WH4020(ms11):
         result['Error update_wh04_WH4020'] = sys.exc_info()
         return result
 
-
 def  update_wh04_WH4021(ms11):
     try:
         command_sql = f"""SELECT `tracking_encomenda`.`idStatusReservaAtual`
@@ -650,7 +640,6 @@ def  update_wh04_WH4021(ms11):
         result = dict()
         result['Error update_wh04_WH4021'] = sys.exc_info()
         return result
-
 
 def  update_wh04_WH4022(ms11):
     try:

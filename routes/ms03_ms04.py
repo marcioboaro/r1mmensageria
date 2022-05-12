@@ -1,4 +1,3 @@
-
 from typing import Any
 from sqlalchemy import create_engine
 from json import dumps
@@ -278,7 +277,6 @@ def ms03(ms03: MS03, public_id=Depends(auth_handler.auth_wrapper)):
                     locker['Portas'] = portas
         ms04['lockers'] = lockers
         ms04['Versao_Mensageria'] = ms03.Versao_Mensageria
-
         return ms04
     except:
         logger.error(sys.exc_info())

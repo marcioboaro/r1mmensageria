@@ -194,9 +194,6 @@ def  rotina_teste(ms11):
 
 ######################## teste no webhook a ser retirado posteriormente ###############################
 
-
-
-
 def rotina_avaria(ms11):
     try:
         # atualizando status do pedido no webhook
@@ -263,8 +260,6 @@ def rotina_extravio(ms11):
         result = dict()
         result['Error rotina_extravio'] = sys.exc_info()
         return result
-
-
 
 def rotina_roubo(ms11):
     try:

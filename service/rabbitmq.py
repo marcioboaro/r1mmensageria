@@ -25,7 +25,6 @@ class RabbitMQ:
             self.parameters = pika.URLParameters(url)
             self.parameters.ssl_options = pika.SSLOptions(context=ssl_context)
 
-            
         except Exception as e:
             logger.error(e)
 
