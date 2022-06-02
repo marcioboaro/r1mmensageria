@@ -42,14 +42,14 @@ def latlong_valid(latlong):
 
 #@ms01_ms02.post("/ms01", tags=["ms02"], response_model=MS04, description="Consulta ao Catalogo de Estações Lockers")
 @ms01_ms02.post("/msg/v01/lockers", tags=["ms02"], description="Consulta ao Catalogo de Estações Lockers")
-def ms01(ms01: MS01, public_id=Depends(auth_handler.auth_wrapper)):
+async def ms01(ms01: MS01, public_id=Depends(auth_handler.auth_wrapper)):
     try:
         logger.info("Consulta ao Catalogo de Estações Lockers")
         logger.info(f"Usuário que fez a solicitação: {public_id}")
         if ms01.ID_do_Solicitante is None:
             return {"status_code":422, "detail":"M02006 - ID_do_Solicitante obrigatório"}
-        if len(ms01.ID_do_Solicitante) != 20: # 20 caracteres
-            return {"status_code":422, "detail":"M02009 - ID_de_Solicitante inválido"}
+#        if len(ms01.ID_do_Solicitante) != 20: # 20 caracteres
+#            return {"status_code":422, "detail":"M02009 - ID_de_Solicitante inválido"}
         if ms01.ID_Rede_Lockers is None:
             return {"status_code":422, "detail":"M02007 - ID_Rede_Lockers obrigatório"}
         if ms01.ID_Rede_Lockers is not None:

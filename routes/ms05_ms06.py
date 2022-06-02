@@ -123,8 +123,6 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
         #        for encomenda in info_encomendas:
         #            insert_ms05_encomendas(idTransacaoUnica, encomenda)
 
-
-
         ms06 = {}
         ms06['Codigo_de_MSG'] = "MS06"
         ms06['ID_de_Referencia'] = ms05.ID_de_Referencia

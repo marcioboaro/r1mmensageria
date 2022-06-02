@@ -38,11 +38,11 @@
     },
     "DATABASE": {
         "PRODUCTION": {
-            "HOST": "dbprod.rede1minuto.com.br",
+            "HOST": "127.0.0.1",
             "BASE": "rede1minuto",
             "PORT": 3306,
-            "USER": "rede1minuto",
-            "PASSWORD": "k9X1wj2UEj5FD5G2H4pl"
+            "USER": "root",
+            "PASSWORD": "23-11-Firenze"
         },
         "HOMOLOG": {
             "HOST": "dbprod.rede1minuto.com.br",
@@ -60,11 +60,6 @@
         }
     },
     "USERS_NOTIFICATION": [
-        {
-            "NOME": "André Monteiro",
-            "EMAIL": "andre@algore.com.br",
-            "CELULAR": "5511972830350"
-        },
         {
             "NOME": "Marcio Boaro",
             "EMAIL": "marcio.boaro@rede1minuto.com.br",

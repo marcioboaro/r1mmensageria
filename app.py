@@ -37,11 +37,27 @@ from fastapi.exceptions import HTTPException
 from pydantic import BaseModel
 import re
 import sys
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
     title="Users API",
     description="a REST API using python and mysql",
     version="1.0.1",
+)
+
+origins = [
+"http://localhost",
+"http://localhost:8080",
+"http://localhost:*",
+"*",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 auth_handler = AuthHandler()
@@ -80,7 +96,6 @@ def register(auth_details: AuthDetails):
             idSolicitante = auth_details.cnpj 
 
 
-        with engine.connect() as con:
             # checando se já usuário cadastrado
             command_sql = f'''SELECT `AuthDetails`.`public_id`,
                                     `AuthDetails`.`username`,
@@ -93,7 +108,7 @@ def register(auth_details: AuthDetails):
                                 and `AuthDetails`.`idRede`= "{auth_details.rede}"
                                 and `AuthDetails`.`idMarketPlace`= "{auth_details.idmarketplace}";'''                      
             
-            row = con.execute(command_sql).fetchone()        # checando se já usuário cadastrado
+            row = conn.execute(command_sql).fetchone()        # checando se já usuário cadastrado
             # checando se o usuário cadastrado está na lista de participantes
             if row is not None:
                 return {"status_code":203, "detail":"Usuário já cadastrado."}
@@ -104,8 +119,8 @@ def register(auth_details: AuthDetails):
                                         where `participantes`.`idParticipanteCNPJ` = "{auth_details.cnpj}"
                                         and `participantes`.`idRede`= "{auth_details.rede}"
                                         and `participantes`.`idMarketPlace`= "{auth_details.idmarketplace}";'''
-            row = con.execute(command_sql).fetchone()
-            if row is None:
+            row = conn.execute(command_sql).fetchone()
+            if row is None and auth_details.idmarketplace != 8:
                 return {"status_code": 400, "detail": "Usuário não é um participante cadastrado"}
 
             hashed_password = auth_handler.get_password_hash(auth_details.password)
@@ -130,7 +145,7 @@ def register(auth_details: AuthDetails):
                                         '{hashed_password}');'''
             command_sql = command_sql.replace("'None'", "Null")
             command_sql = command_sql.replace("None", "Null")
-            row = con.execute(command_sql)
+            row = conn.execute(command_sql)
         return { 'idSolicitante': idSolicitante }
 
     except:
@@ -142,8 +157,9 @@ def register(auth_details: AuthDetails):
         return result
 
 @app.post('/login')
-def login(auth_details: AuthDetails):
+async def login(auth_details: AuthDetails):
     try:
+        print("started login")
         command_sql = f'''SELECT    `AuthDetails`.`public_id`,
                                     `AuthDetails`.`idRede`,
                                     `AuthDetails`.`idMarketPlace`,
@@ -151,11 +167,18 @@ def login(auth_details: AuthDetails):
                                     `AuthDetails`.`password`
                             FROM    `AuthDetails`
                             where   `AuthDetails`.`email` = "{auth_details.email}";'''
+        print("before sql command exec")
         row = conn.execute(command_sql).fetchone()
+        print("after sql command exec: ")
+        print(row)
         ID_do_Solicitante = row[3] + str(row[1]).zfill(3) + str(row[2]).zfill(3)
+        print("after generating ID_do_Solicitante")
         if (row is None) or (not auth_handler.verify_password(auth_details.password, row['password'])):
+            print("case error before returning")
             return {'status_code':401, 'detail':'Invalid username and/or password'}
+        print("before encoding token")
         token = auth_handler.encode_token(row['public_id'])
+        print("after encoding token | before returning result")
         return { 'token': token, 'ID_do_Solicitante': ID_do_Solicitante }
     except:
         logger.error(sys.exc_info())
