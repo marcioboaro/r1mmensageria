@@ -38,6 +38,8 @@ from pydantic import BaseModel
 import re
 import sys
 from fastapi.middleware.cors import CORSMiddleware
+from auth.auth import AuthHandler
+from schemas.password_change import ChangePassword
 
 app = FastAPI(
     title="Users API",
@@ -65,6 +67,34 @@ auth_handler = AuthHandler()
 @app.get("/")
 def raiz():
     return OK
+
+@app.post("/password-change", status_code=201)
+def passwordChange(change_password: ChangePassword, public_id=Depends(auth_handler.auth_wrapper)):
+    try:
+
+        if change_password.new_password is not None and change_password.new_password_verify is not None:
+            command_sql = f'''SELECT * from `AuthDetails` WHERE `AuthDetails`.`email` = "{change_password.email}";'''
+            row = conn.execute(command_sql).fetchone()
+
+            if row is None:
+                return {"status_code": 203, "detail": "Usuário não encontrado"}
+
+        if change_password.new_password != change_password.new_password_verify:
+            return {"status_code": 400, "detail": "As senhas não conferem"}
+
+        hashed_password = auth_handler.get_password_hash(change_password.new_password)
+
+        command_sql = f'''UPDATE `AuthDetails` SET password="{hashed_password}" WHERE email="{change_password.email}";'''
+        row = conn.execute(command_sql)
+        return {"status_code": 200, "detail": "Success"}
+        
+    except:
+        logger.error(sys.exc_info())
+        result = dict()
+        if command_sql is not None:
+            result["command_sql"] = command_sql
+        result['Error register'] = sys.exc_info()
+        return result
 
 @app.post('/signup', status_code=201)
 def register(auth_details: AuthDetails):
