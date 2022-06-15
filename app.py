@@ -201,11 +201,10 @@ async def login(auth_details: AuthDetails):
         row = conn.execute(command_sql).fetchone()
         print("after sql command exec: ")
         print(row)
-        ID_do_Solicitante = row[3] + str(row[1]).zfill(3) + str(row[2]).zfill(3)
-        print("after generating ID_do_Solicitante")
         if (row is None) or (not auth_handler.verify_password(auth_details.password, row['password'])):
             print("case error before returning")
             return {'status_code':401, 'detail':'Invalid username and/or password'}
+        ID_do_Solicitante = row[3] + str(row[1]).zfill(3) + str(row[2]).zfill(3)
         print("before encoding token")
         token = auth_handler.encode_token(row['public_id'])
         print("after encoding token | before returning result")
