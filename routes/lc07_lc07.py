@@ -79,7 +79,7 @@ def lc07(lc07: LC07, public_id=Depends(auth_handler.auth_wrapper)):
         return {"status_code": 500, "detail": "LC07 - Notificação da Central para Procedimentos a executar no Locker"}
 
 def send_lc07_mq(lc07):
-    try:  # Envia LC01 para fila do RabbitMQ o aplicativo do locker a pega lá
+    try:  # Envia LC07 para fila do RabbitMQ o aplicativo do locker a pega lá
 
         command_sql = f"SELECT idLockerPortaFisica from locker_porta where locker_porta.idLockerPorta = '{lc07.idLockerPorta}';"
         record_Porta = conn.execute(command_sql).fetchone()
@@ -105,7 +105,6 @@ def send_lc07_mq(lc07):
         if lc07.AcaoExecutarPorta == 2:
             content["AcaoExecutarPorta"] = 2
         if lc07.AcaoExecutarPorta == 5:
-            NovoQRCODE = str(uuid.uuid1())
             NovoCD_PortaAbertura = str(random.randint(100000000000, 1000000000000))
             NovoQRCODE = NovoCD_PortaAbertura # Solicitação da Flash Courier
             content["AcaoExecutarPorta"] = 5

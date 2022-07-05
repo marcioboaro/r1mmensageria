@@ -123,8 +123,6 @@ def ms05(ms05: MS05, public_id=Depends(auth_handler.auth_wrapper)):
         #        for encomenda in info_encomendas:
         #            insert_ms05_encomendas(idTransacaoUnica, encomenda)
 
-
-
         ms06 = {}
         ms06['Codigo_de_MSG'] = "MS06"
         ms06['ID_de_Referencia'] = ms05.ID_de_Referencia
@@ -243,7 +241,6 @@ def send_lc01_mq(ms05, idTransacaoUnica, record_Porta, Inicio_reserva, Final_res
         content["idLockerPortaFisica"] = record_Porta[1]
         content["ID_OpLog"] = record_Porta[2]
         content["OpLogAutenticacao"] = 0
-#       content["QRCODE"] = idTransacaoUnica - Por determinação do cliente o QRCODE é o mesmo do codigo de abertura da porta
         content["QRCODE"] = str(Codigo_Abertura_Porta)
         content["CD_PortaAbertura"] = str(Codigo_Abertura_Porta)
 
